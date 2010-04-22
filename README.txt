@@ -13,7 +13,7 @@ The JW Player for Flash Plugin enables you to deliver video content through your
 
 In addition, it supports a powerful tag system that allows for dynamic customization at embed time, and gives you the capability of referencing external video content.
 
-This plugin also expands the built in WordPress Media Library.  You can now add media files from a URL (including full support for YouTube videos and the YouTube API).  You can aslo create and embed playlists on the fly using the new Playlist Manager.
+This plugin also expands the built in WordPress Media Library.  You can now add media files from a URL (including full support for YouTube videos and the YouTube API).  You can also create and embed playlists on the fly using the new Playlist Manager.
 
 For more information about the JW Player and the LongTail AdSolution please visit http://www.longtailvideo.com.
 
@@ -30,10 +30,10 @@ Note that to use the LongTail Ad Solution you will need to apply on the LongTail
 
 == Screenshots ==
 
-1. Manage multiple player configurations.
-2. Configure settings for your custom player configuration.
-3. Manage and embed your media while editing your posts.
-4. Create a playlist and arrange your media as required.
+1. Manage multiple player configurations
+2. Configure settings for your custom player configuration
+3. Manage and embed your media while editing your posts
+4. Create a playlist and arrange your media as required
 
 == Usage ==
 
