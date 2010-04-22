@@ -42,5 +42,8 @@ Note that to use the LongTail Ad Solution you will need to apply on the LongTail
 
 == Changelog ==
 
+= 1.1 =
+* Fixes path resolution of player.swf on the LAMP stack.
+
 = 1.0 =
 * Initial release of the JW Player Plugin for WordPress
