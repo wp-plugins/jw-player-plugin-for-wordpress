@@ -4,7 +4,7 @@ include "SWFObjectConfig.php";
 include "FlashVar.php";
 include "Plugin.php";
 
-define("JWPLAYER_PATH", str_replace("\\", "/", dirname(str_replace(realpath($_SERVER["DOCUMENT_ROOT"]) . "\\", "", __DIR__))));
+define("JWPLAYER_PATH", str_replace("/framework/LongTailFramework.php", "", str_replace($_SERVER["DOCUMENT_ROOT"] . "/", "", str_replace("\\", "/", __FILE__))));
 define("LONGTAIL_KEY", "jwplayermodule_");
 
 /**
