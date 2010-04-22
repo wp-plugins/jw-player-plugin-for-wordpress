@@ -2,7 +2,7 @@
 Contributors: LongTail Video Inc.
 Tags: JW Player, Video, Flash
 Requires at least: 2.8.6
-Tested up to 2.9.2
+Tested up to: 2.9.2
 Stable tag: 1.0
 
 This module is provided by LongTail Video Inc.  It enables you to configure and embed the JW Player for Flash for use on your WordPress website.
