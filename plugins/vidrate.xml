@@ -1,0 +1,23 @@
+<plugin>
+    <title>VidRate</title>
+    <filename>vidrate.swf</filename>
+    <repository>vidrate-1</repository>
+    <version>1.0</version>
+    <compatibility>Compatible with 5.0</compatibility>
+    <author>LongTail Video</author>
+    <description>This plugin allows people to rate your videos within the body of the player. The rating functionality displays upon completion of the video, or can be triggered by mousing over the top of the player.  This service is provided by RateItAll.</description>
+    <href></href>
+    <page>http://www.longtailvideo.com/addons/plugins/133/VidRate</page>
+    
+    <flashvars>
+        <flashvar type="select">
+            <name>showcomments</name>
+            <default>true</default>
+            <description>Configure the plugin to show comments or not.</description>
+            <select>
+                <option>false</option>
+                <option>true</option>
+            </select>
+        </flashvar>
+    </flashvars>
+</plugin>
