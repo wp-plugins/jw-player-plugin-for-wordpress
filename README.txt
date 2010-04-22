@@ -30,10 +30,10 @@ Note that to use the LongTail Ad Solution you will need to apply on the LongTail
 
 == Screenshots ==
 
-1. Manage multiple player configurations.
-2. Configure settings for your custom player configuration.
-3. Manage and embed your media while editing your posts.
-4. Create a playlist and arrange your media as required.
+1. Manage multiple player configurations
+2. Configure settings for your custom player configuration
+3. Manage and embed your media while editing your posts
+4. Create a playlist and arrange your media as required
 
 == Usage ==
 
