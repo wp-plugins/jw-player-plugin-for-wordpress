@@ -9,7 +9,7 @@ This module is provided by LongTail Video Inc.  It enables you to configure and 
 
 == Description ==
 
-The JW Player for Flash Plugin enables you to deliver video content through your WordPress website. This plugin has been developed by LongTail Video, the creator of the JW Player, and allows for easy customization and embedding of the Player in the body of your WordPress articles. It provides support for all of the player’s configuration options, including skins, plugins and the LongTail Video AdSolution. 
+The JW Player for Flash Plugin enables you to deliver video content through your WordPress website. This plugin has been developed by LongTail Video, the creator of the JW Player, and allows for easy customization and embedding of the Player in the body of your WordPress articles. It provides support for all of the player's configuration options, including skins, plugins and the LongTail Video AdSolution. 
 
 In addition, it supports a powerful tag system that allows for dynamic customization at embed time, and gives you the capability of referencing external video content.
 
