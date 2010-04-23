@@ -50,7 +50,7 @@ include_once (dirname (__FILE__) . "/media/JWShortcode.php");
 
 // Error if the player doesn't exist
 if (!file_exists(LongTailFramework::getPlayerPath())) {
-	add_action('admin_notices', create_function('', 'echo \'<div id="message" class="error fade"><p><strong>' . __('The player.swf cannot be found at ' . LongTailFramework::getPlayerPath() . ', the player will not work.') . '</strong></p></div>\';'));
+	add_action('admin_notices', create_function('', 'echo \'<div id="message" class="error fade"><p><strong>' . __('The player.swf cannot be found at ' . LongTailFramework::getPlayerPath() . '.  The plugin will not work!') . '</strong></p></div>\';'));
 	return;
 }
 
