@@ -3,7 +3,7 @@
 Plugin Name: JW Player Plugin for WordPress
 Plugin URI: http://www.longtailvideo.com/
 Description: Embed a JW Player for Flash into your WordPress articles.
-Version: 1.1.1
+Version: 1.1.2
 Author: LongTail Video Inc.
 Author URI: http://www.longtailvideo.com/
 
@@ -47,6 +47,10 @@ include_once (dirname (__FILE__) . "/framework/LongTailFramework.php");
 include_once (dirname (__FILE__) . "/admin/AdminContext.php");
 include_once (dirname (__FILE__) . "/media/JWMediaFunctions.php");
 include_once (dirname (__FILE__) . "/media/JWShortcode.php");
+
+//Define the plugin directory and url for file access.
+define("JWPLAYER_DIR", WP_PLUGIN_DIR . "/" . plugin_basename(dirname(__FILE__)));
+define("JWPLAYER_URL", WP_PLUGIN_URL . "/" . plugin_basename(dirname(__FILE__)));
 
 // Error if the player doesn't exist
 if (!file_exists(LongTailFramework::getPlayerPath())) {

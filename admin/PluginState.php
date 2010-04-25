@@ -111,7 +111,7 @@ class PluginState extends AdminState {
                   <td>
                     <input name="<?php echo $name; ?>" type="checkbox" value="1" <?php checked(true , $value); ?> />
                     <input name="<?php echo $name . "_hidden"; ?>" type="hidden" value="0"/>
-                    <span class="description"><?php echo $plugin->getDescription(); ?></span>
+                    <span class="description"><?php echo $plugin->getDescription() . "  <a href=" . $plugin->getPage() . " target=_blank>Learn more...</a>"; ?></span>
                   </td>
                 </tr>
                 <tr>

@@ -4,7 +4,6 @@ include "SWFObjectConfig.php";
 include "FlashVar.php";
 include "Plugin.php";
 
-define("JWPLAYER_PATH", str_replace("http://" . $_SERVER["SERVER_NAME"] . "/", "", plugins_url(plugin_basename(dirname(dirname(__FILE__))))));
 define("LONGTAIL_KEY", "jwplayermodule_");
 
 /**
@@ -19,7 +18,8 @@ class LongTailFramework
   const BASIC = "Basic Player Settings";
   const ADVANCED = "Advanced Player Settings";
 
-  private static $path = JWPLAYER_PATH;
+  private static $dir = JWPLAYER_DIR;
+  private static $url = JWPLAYER_URL;
   private static $current_config = "";
   private static $current_config_values;
   private static $div_id = 1;
@@ -77,7 +77,7 @@ class LongTailFramework
     if ($target == "") {
       $xml_file = LongTailFramework::getConfigPath();
     } else {
-      $xml_file = $_SERVER["DOCUMENT_ROOT"] . "/" . LongTailFramework::$path . "/configs/" . $target . ".xml";
+      $xml_file = LongTailFramework::$dir . "/configs/" . $target . ".xml";
     }
     $xml_handle = fopen($xml_file, "w");
     fwrite($xml_handle, "<config>\n" . $xml_string . "</config>");
@@ -127,7 +127,7 @@ class LongTailFramework
     if ($config == "") {
       return "";
     }
-    return "http://" . $_SERVER["SERVER_NAME"] . "/" . LongTailFramework::$path . "/configs/" . $config . ".xml";
+    return LongTailFramework::$url . "/configs/" . $config . ".xml";
   }
 
   /**
@@ -141,7 +141,7 @@ class LongTailFramework
     if ($config == "") {
       return "";
     }
-    return $_SERVER["DOCUMENT_ROOT"] . "/" . LongTailFramework::$path . "/configs/" . $config . ".xml";
+    return LongTailFramework::$dir . "/configs/" . $config . ".xml";
   }
 
   /**
@@ -150,7 +150,7 @@ class LongTailFramework
    */
   public static function getConfigs() {
     $results = array();
-    $handler = opendir($_SERVER["DOCUMENT_ROOT"] . "/" . LongTailFramework::$path . "/configs");
+    $handler = opendir(LongTailFramework::$dir . "/configs");
     $results[] = "New Player";
     while ($file = readdir($handler)) {
       if ($file != "." && $file != ".." && strstr($file, ".xml")) {
@@ -178,7 +178,7 @@ class LongTailFramework
    * @return string The path to the player.swf.
    */
   public static function getPlayerPath() {
-    return $_SERVER["DOCUMENT_ROOT"] . "/" . LongTailFramework::$path . "/player.swf";
+    return LongTailFramework::$dir . "/player.swf";
   }
 
   /**
@@ -186,7 +186,7 @@ class LongTailFramework
    * @return string The complete URL.
    */
   public static function getPlayerURL() {
-    return "http://" . $_SERVER["SERVER_NAME"] . "/" . LongTailFramework::$path . "/player.swf";
+    return LongTailFramework::$url . "/player.swf";
   }
 
   /**
@@ -211,7 +211,7 @@ class LongTailFramework
    * @return string The relative path
    */
   public static function getPluginPath() {
-    return $_SERVER["DOCUMENT_ROOT"] . "/" . LongTailFramework::$path . "/plugins/";
+    return LongTailFramework::$dir . "/plugins/";
   }
 
   /**
@@ -236,7 +236,7 @@ class LongTailFramework
    * @return string The relative path
    */
   public static function getSkinPath() {
-    return $_SERVER["DOCUMENT_ROOT"] . "/" . LongTailFramework::$path . "/skins/";
+    return LongTailFramework::$dir . "/skins/";
   }
 
   /**
@@ -244,7 +244,7 @@ class LongTailFramework
    * @return string The complete URL
    */
   public static function getSkinURL() {
-    return "http://" . $_SERVER["SERVER_NAME"] . "/" . LongTailFramework::$path . "/skins/";
+    return LongTailFramework::$url . "/skins/";
   }
 
   /**
@@ -300,7 +300,7 @@ class LongTailFramework
   private static function loadPlayerFlashVars() {
     $f_vars = array();
     //Load the player xml file.
-    $xml = simplexml_load_file($_SERVER["DOCUMENT_ROOT"] . "/" . LongTailFramework::$path . "/player.xml");
+    $xml = simplexml_load_file(LongTailFramework::$dir . "/player.xml");
     $config_file = LongTailFramework::$current_config_values;
     //Process the flashvars in the player xml file.
     foreach ($xml->flashvars as $flash_vars) {

@@ -3,7 +3,7 @@
 define("JW_PLAYER_LTAS_DESC",
   "The LongTail AdSolution (LTAS) is a service provided by LongTail Video which allows you to run pre-roll, post-roll and overlay ads.  " .
   "This enables you to monetize your content.  In order to make use of LTAS you will need to purchase a commercial JW Player license and acquire a channel code.  " .
-  "For more information about LTAS please visit the <a href=http://www.longtailvideo.com/adsolution/" . JW_PLAYER_GA_VARS . " target=_blank>LTAS product page</a>."
+  "For more information about LTAS please visit the <a href=http://www.longtailvideo.com/adsolution target=_blank>LTAS product page</a>."
 );
 
 /**
