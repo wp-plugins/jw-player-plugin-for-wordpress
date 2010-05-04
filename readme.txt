@@ -1,4 +1,4 @@
-=== JW Player Plugin for Wordpress ===
+=== JW Player Plugin for WordPress ===
 Contributors: LongTail Video Inc.
 Tags: JW Player, Video, Flash
 Requires at least: 2.8.6
@@ -13,7 +13,7 @@ The JW Player for Flash Plugin enables you to deliver video content through your
 
 In addition, it supports a powerful tag system that allows for dynamic customization at embed time, and gives you the capability of referencing external video content.
 
-This plugin also expands the built in WordPress Media Library.  You can now add media files from a URL (including full support for YouTube videos and the YouTube API).  You can aslo create and embed playlists on the fly using the new Playlist Manager.
+This plugin also expands the built in WordPress Media Library.  You can now add media files from a URL (including full support for YouTube videos and the YouTube API).  You can also create and embed playlists on the fly using the new Playlist Manager.
 
 For more information about the JW Player and the LongTail AdSolution please visit http://www.longtailvideo.com.
 
@@ -28,6 +28,12 @@ Note that to use the LongTail Ad Solution you will need to apply on the LongTail
 1. Click the activate link to enable the plugin.
 1. Click on Save configuration.
 
+== Requirements ==
+
+* WordPress 2.8.6 or higher
+* PHP 5.0 or higher
+* The "configs" directory contained in the plugin directory must be writable.
+
 == Usage ==
 
 1. Go to Site Admin > Settings > JW Player Plugin
@@ -36,7 +42,7 @@ Note that to use the LongTail Ad Solution you will need to apply on the LongTail
 1. (Optional) Configure Advanced flashvars and add plugins.
 1. Save your Player.
 1. Create or edit a post.
-1. Insert the following tag: [jwplayer config="<Player name>" file="<your video>"] into the body.  <your video> is a url to your file.
+1. Insert the following tag: [jwplayer config="&lt;Player name&gt;" file="&lt;your video&gt;"] into the body.  &lt;your video&gt; is a url to your file.  The "config" attribute is only need when using a player other than the default.
 1. Save your posts.
 1. For more advanced and detailed description of the module please refer to the provided manual.
 
