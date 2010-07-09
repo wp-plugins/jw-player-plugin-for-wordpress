@@ -179,7 +179,20 @@
             <default>90</default>
             <description>Startup volume of the player. Can be 0 to 100. The user's last volume setting is saved in a cookie and overrides this flashvar.</description>
         </flashvar>
-    </flashvars> 
+    </flashvars>
+
+    <flashvars section="Streaming" type="Advanced Player Settings">
+        <flashvar type="field">
+            <name>provider</name>
+            <default></default>
+            <description>this is determines what type of mediafile this item is, and thus which provider the player should use for playback. By default, the type is detected by the player based upon the file extension. If there's no suitable extension or the player detects the type wrong, it can be manually set.</description>
+        </flashvar>
+        <flashvar type="field">
+            <name>streamer</name>
+            <default></default>
+            <description>location of an rtmp/http server instance to use for streaming. Can be an RTMP application or external PHP/ASP file.</description>
+        </flashvar>
+    </flashvars>
 
     <flashvars section="Playlist Properties" type="None">
         <flashvar type="field">
@@ -215,7 +228,7 @@
         <flashvar type="field">
             <name>image</name>
             <default></default>
-            <description>location of a preview image; showin in display and playlist.</description>
+            <description>location of a preview image; shown in display and playlist.</description>
         </flashvar>
         <flashvar type="field">
             <name>link</name>
@@ -228,11 +241,6 @@
             <description>position in seconds where playback has to start. Won't work for regular (progressive) videos, but only for streaming (HTTP/RTMP).</description>
         </flashvar>
         <flashvar type="field">
-            <name>streamer</name>
-            <default></default>
-            <description>location of an rtmp/http server instance to use for streaming. Can be an RTMP application or external PHP/ASP file.</description>
-        </flashvar>
-        <flashvar type="field">
             <name>tags</name>
             <default></default>
             <description>keywords associated with the media file. Available since 4.3.</description>
@@ -242,11 +250,7 @@
             <default></default>
             <description>title of the video, shown in the display or playlist.</description>
         </flashvar>
-        <flashvar type="field">
-            <name>provider</name>
-            <default></default>
-            <description>this is determines what type of mediafile this item is, and thus which provider the player should use for playback. By default, the type is detected by the player based upon the file extension. If there's no suitable extension or the player detects the type wrong, it can be manually set.</description>
-        </flashvar>
+
     </flashvars>
     
 </player>

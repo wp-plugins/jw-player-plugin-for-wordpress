@@ -117,16 +117,15 @@ class AdminContext {
             $new_val = LongTailFramework::getSkinURL() . $val . "." . $skins[$val];
             $data[$new_name] = $new_val;
           }
-        }
-        else {
+        } else if ($new_name == "flashvars") {
+            $this->parseFlashvarString($new_val, $data);
+        } else {
           $data[$new_name] = $new_val;
         }
-      }
-      else if(strstr($name, LONGTAIL_KEY . "plugin_") && strstr($name, "_enable")) {
+      } else if(strstr($name, LONGTAIL_KEY . "plugin_") && strstr($name, "_enable")) {
         $plugins[str_replace("_enable", "", str_replace(LONGTAIL_KEY . "plugin_", "", $name))] = esc_html($value);
       //Process the plugin flashvars.
-      }
-      else if(strstr($name, LONGTAIL_KEY . "plugin_") && $value != null) {
+      } else if(strstr($name, LONGTAIL_KEY . "plugin_") && $value != null) {
         $plugin_key = str_replace("_", ".", str_replace(LONGTAIL_KEY . "plugin_", "", $name));
         foreach(array_keys($plugins) as $repo) {
           $key = explode(".", $plugin_key);
@@ -143,11 +142,19 @@ class AdminContext {
         $active_plugins[] = $name;
       }
     }
-    $plugin_string = implode(", ", $active_plugins);
+    $plugin_string = implode(",", $active_plugins);
     if ($plugin_string != "") {
       $data["plugins"] = $plugin_string;
     }
     return $data;
+  }
+
+  private function parseFlashvarString($fv_str, &$data) {
+    $pairs = preg_split("/,/", $fv_str);
+    foreach ($pairs as $pair) {
+      $key_val = preg_split("/=/", $pair);
+      $data[trim($key_val[0])] = trim($key_val[1]);
+    }
   }
 
   /**

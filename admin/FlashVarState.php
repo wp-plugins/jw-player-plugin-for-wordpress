@@ -62,6 +62,7 @@ class FlashVarState extends AdminState {
         <div id="poststuff">
           <div id="post-body">
             <div id="post-body-content">
+              <?php $this->getHeader(); ?>
               <?php foreach(array_keys($flash_vars) as $groups) { ?>
                 <div class="stuffbox">
                   <h3 class="hndle"><span><?php echo $groups; ?></span></h3>
@@ -93,6 +94,7 @@ class FlashVarState extends AdminState {
                   </div>
                 </div>
               <?php } ?>
+              <?php $this->getFooter(); ?>
             </div>
           </div>
         </div>
@@ -126,6 +128,14 @@ class FlashVarState extends AdminState {
    */
   protected function getTitle() {
     return "Player Settings";
+  }
+
+  protected function getHeader() {
+    return "";
+  }
+
+  protected function getFooter() {
+    return "";
   }
 
 }

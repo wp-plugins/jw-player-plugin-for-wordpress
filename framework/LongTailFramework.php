@@ -24,6 +24,7 @@ class LongTailFramework
   private static $current_config_values;
   private static $div_id = 1;
   private static $loaded_flash_vars;
+  private static $loaded_additional_flash_vars;
 
   /**
    * Sets the current config being worked with.  The passed in config is set as
@@ -64,6 +65,10 @@ class LongTailFramework
       return LongTailFramework::$loaded_flash_vars;
     }
     return LongTailFramework::$loaded_flash_vars[$flash_var_cat];
+  }
+
+  public static function getPlayerAdditionalFlashVars() {
+    return LongTailFramework::$loaded_additional_flash_vars;
   }
 
   /**
@@ -219,12 +224,12 @@ class LongTailFramework
    * @param string $config (optional) Pass in if you wish to load the plugin enabled state and flashvar values.
    * @return array The list of available plugins
    */
-  public static function getPlugins() {
+  public static function getPlugins(&$config_values = null) {
     $handler = opendir(LongTailFramework::getPluginPath());
     $plugins = array();
     while ($file = readdir($handler)) {
       if ($file != "." && $file != ".." && strstr($file, ".xml")) {
-        $plugin = LongTailFramework::processPlugin($file);
+        $plugin = LongTailFramework::processPlugin($file, $config_values);
         $plugins[$plugin->getRepository()] = $plugin;
       }
     }
@@ -292,6 +297,16 @@ class LongTailFramework
     return new SWFObjectConfig(LongTailFramework::$div_id++, LongTailFramework::getPlayerURL(), LongTailFramework::getConfigURL(), LongTailFramework::getEmbedParameters(), $flash_vars);
   }
 
+  private static function flattenAdditionalFlashVars($flashvars) {
+    $output = "";
+    $output_array = array();
+    foreach ($flashvars as $key => $value) {
+      $output_array[] = $key . "=" . $value;
+    }
+    $output = implode(",", $output_array);
+    return $output;
+  }
+
   /**
    * Generates the list of flashvars supported by this version of the player along with
    * their defaults.
@@ -302,6 +317,7 @@ class LongTailFramework
     //Load the player xml file.
     $xml = simplexml_load_file(LongTailFramework::$dir . "/player.xml");
     $config_file = LongTailFramework::$current_config_values;
+    $config_values = LongTailFramework::getConfigValues();
     //Process the flashvars in the player xml file.
     foreach ($xml->flashvars as $flash_vars) {
       $f_var = array();
@@ -314,6 +330,7 @@ class LongTailFramework
           //If the config file was loaded and has an entry for the current flashvar
           //use the value in the config file.
           if ($config_file && $config_file->{$flash_var->name}) {
+            unset($config_values[(string) $flash_var->name]);
             $default = (string) $config_file->{$flash_var->name};
             $default = str_replace(LongTailFramework::getSkinURL(), "", $default);
             $default = preg_replace("/(\.swf|\.zip)/", "", $default);
@@ -334,6 +351,8 @@ class LongTailFramework
         $f_vars[$f_var_advanced][$f_var_section] = $f_var;
       }
     }
+    unset($config_values["plugins"]);
+    LongTailFramework::getPlugins($config_values);
     LongTailFramework::$loaded_flash_vars = $f_vars;
   }
 
@@ -342,7 +361,7 @@ class LongTailFramework
    * @param file $file The xml file which represents the Plugin
    * @return A new Plugin object
    */
-  private static function processPlugin($file) {
+  private static function processPlugin($file, &$config_values = null) {
     $plugin_xml = simplexml_load_file(LongTailFramework::getPluginPath() . $file);
     $title = (string)$plugin_xml->{"title"};
     $version = (string) $plugin_xml->{"version"};
@@ -371,6 +390,8 @@ class LongTailFramework
         //If the config file was loaded and has an entry for the current flashvar
         //use the value in the config file and set the plugin as enabled.
         if ($config_found && $config_file->{$plugin_name . "." . $flash_var->name}) {
+          $p_key = $plugin_name . "." . $flash_var->name;
+          unset($config_values[(string) $p_key]);
           $default = (string) $config_file->{$plugin_name . "." . $flash_var->name};
         }
         $values = (array) $flash_var->select;
@@ -383,6 +404,9 @@ class LongTailFramework
       $f_vars[$f_var_section] = $f_var;
     }
     $plugin = new Plugin($title, $version, $repository, $file_name, $enabled, $description, $f_vars, $href);
+    if ($config_values) {
+      LongTailFramework::$loaded_additional_flash_vars = LongTailFramework::flattenAdditionalFlashVars($config_values);
+    }
     return $plugin;
   }
 }
