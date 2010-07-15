@@ -1,5 +1,7 @@
 <?php
 
+global $jw_query;
+
 /**
  * @file Definition of the JW Playlist Manager.
  */
@@ -15,7 +17,18 @@
  * @param undefined $errors List of any errors encountered.
  */
 function media_jwplayer_insert_form($errors) {
-	global $redir_tab, $type;
+	global $redir_tab, $type, $jw_query;
+
+  $args = array(
+    'post_parent' => null,
+    'posts_per_page' => 10,
+    'paged' => $_GET['paged'] ? $_GET['paged'] : 1,
+    'post_status' => 'inherit',
+    'post_type' => 'attachment',
+    'orderby' => 'menu_order ASC, ID', 'order' => 'DESC'
+  );
+  $jw_query = new WP_Query($args);
+//  echo print_r($jw_query) . "<br/>";
 
 	$redir_tab = 'jwplayer';
 	media_upload_header();
@@ -98,46 +111,43 @@ function media_jwplayer_insert_form($errors) {
   }
 </script>
 
-<div id="sort-buttons" class="hide-if-no-js">
-  <span>
-    <?php _e('All Tabs:'); ?>
-    <a href="#" id="showall"><?php _e('Show'); ?></a>
-    <a href="#" id="hideall" style="display:none;"><?php _e('Hide'); ?></a>
-  </span>
-  <?php _e('Sort Order:'); ?>
-  <a href="#" id="asc"><?php _e('Ascending'); ?></a> |
-  <a href="#" id="desc"><?php _e('Descending'); ?></a> |
-  <a href="#" id="clear"><?php echo _x('Clear', 'verb'); ?></a>
-</div>
 <form enctype="multipart/form-data" method="post" action="<?php echo esc_attr($form_action_url); ?>" class="media-upload-form validate" id="playlist-form">
   <?php wp_nonce_field('media-form'); ?>
   <?php //media_upload_form( $errors ); ?>
-  <div class="hide-if-no-js">
-    <p class="ml-submit">
-      <?php _e("Select Playlist:"); ?>
-      <select onchange="this.form.submit()" id="<?php echo LONGTAIL_KEY . "playlist_select"; ?>" name="<?php echo LONGTAIL_KEY . "playlist_select"; ?>">
-        <?php foreach ($playlists as $playlist) { ?>
-          <option value="<?php echo $playlist->ID; ?>" <?php selected($playlist->ID, $current_playlist); ?>>
-            <?php echo $playlist->post_title; ?>
-          </option>
-        <?php } ?>
-      </select>
-      <input type="submit" class="button savebutton" style="display:none;" name="save" id="save-all" value="<?php esc_attr_e( 'Save all changes' ); ?>" />
-      <input type="submit" class="button savebutton" style="display:none;" name="delete" id="delete-all" value="<?php esc_attr_e( 'Delete Playlist' ); ?>" onclick="return deletePlaylistHandler()" />
-      <input type="hidden" name="post_id" id="post_id" value="<?php echo (int) $post_id; ?>" />
-      <input type="hidden" name="type" value="<?php echo esc_attr( $GLOBALS['type'] ); ?>" />
-      <input type="hidden" name="tab" value="<?php echo esc_attr( $GLOBALS['tab'] ); ?>" />
-    </p>
+  <div class="tablenav" style="width: 626px;">
+    <?php
+      $page_links = paginate_links( array(
+        'base' => add_query_arg( 'paged', '%#%' ),
+        'format' => '',
+        'prev_text' => __('&laquo;'),
+        'next_text' => __('&raquo;'),
+        'total' => ceil($jw_query->found_posts / 10),
+        'current' => $_GET['paged'] ? $_GET['paged'] : 1
+      ));
+
+      if ( $page_links ) {
+        echo "<div class='tablenav-pages'>$page_links</div>";
+      }
+    ?>
+    <div class="alignleft actions">
+      <div class="hide-if-no-js">
+        <?php _e("Select Playlist:"); ?>
+        <select onchange="this.form.submit()" id="<?php echo LONGTAIL_KEY . "playlist_select"; ?>" name="<?php echo LONGTAIL_KEY . "playlist_select"; ?>">
+          <?php foreach ($playlists as $playlist) { ?>
+            <option value="<?php echo $playlist->ID; ?>" <?php selected($playlist->ID, $current_playlist); ?>>
+              <?php echo $playlist->post_title; ?>
+            </option>
+          <?php } ?>
+        </select>
+        <input type="submit" class="button savebutton" style="display:none;" name="save" id="save-all" value="<?php esc_attr_e( 'Save all changes' ); ?>" />
+        <input type="submit" class="button savebutton" style="display:none;" name="delete" id="delete-all" value="<?php esc_attr_e( 'Delete Playlist' ); ?>" onclick="return deletePlaylistHandler()" />
+        <input type="hidden" name="post_id" id="post_id" value="<?php echo (int) $post_id; ?>" />
+        <input type="hidden" name="type" value="<?php echo esc_attr( $GLOBALS['type'] ); ?>" />
+        <input type="hidden" name="tab" value="<?php echo esc_attr( $GLOBALS['tab'] ); ?>" />
+      </div>
+    </div>
   </div>
-  <table class="widefat" cellspacing="0">
-    <thead>
-      <tr>
-        <th><?php _e('Media'); ?></th>
-        <th class="order-head"><?php _e('Order'); ?></th>
-        <th class="actions-head"><?php _e('Actions'); ?></th>
-      </tr>
-    </thead>
-  </table>
+
   <div id="media-items">
     <?php add_filter('attachment_fields_to_edit', 'media_post_single_attachment_fields_to_edit', 10, 2); ?>
     <?php echo get_playlist_items($post_id, $errors, $current_playlist); ?>
@@ -175,14 +185,22 @@ function media_jwplayer_insert_form($errors) {
  * @return string The HTML to render the playlist items.
  */
 function get_playlist_items($post_id, $errors, $current_playlist) {
-  
-  $playlist_items = get_children( array( 'post_parent' => null, 'post_type' => 'attachment', 'orderby' => 'menu_order ASC, ID', 'order' => 'DESC') );
+  global $jw_query;
+  $playlist_items = array();
+//  $playlist_items = get_children( array( 'post_parent' => null, 'post_type' => 'attachment', 'orderby' => 'menu_order ASC, ID', 'order' => 'DESC') );
+  while($jw_query->have_posts()) {
+    $post = $jw_query->next_post();
+    $playlist_items[$post->ID] = $post;
+  }
+
+//  $playlist_items = $jw_query->get_posts();
+//  echo "Count: " . count($playlist_items);
 
   $playlist_item_ids = explode(",", get_post_meta($current_playlist, LONGTAIL_KEY. "playlist_items", true));
   $attachments = array();
-  foreach ($playlist_item_ids as $playlist_item_id) {
-    $attachments[$playlist_item_id] = $playlist_items[$playlist_item_id];
-  }
+//  foreach ($playlist_item_ids as $playlist_item_id) {
+//    $attachments[$playlist_item_id] = $playlist_items[$playlist_item_id];
+//  }
 
   foreach ($playlist_items as $playlist_item) {
     $attachments[$playlist_item->ID] = $playlist_item;
@@ -425,9 +443,9 @@ function get_playlist_item($attachment_id, $args = null, $current_playlist) {
 function jwplayer_get_playlists() {
   $playlist = array(
     "post_type" => "jw_playlist",
-    "numberposts" => -1,
     "post_status" => null,
     "post_parent" => null,
+    "nopaging" => true,
   );
   return query_posts($playlist);
 }

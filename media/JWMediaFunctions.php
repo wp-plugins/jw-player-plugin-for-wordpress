@@ -15,10 +15,20 @@ add_filter("attachment_fields_to_save", "jwplayer_attachment_fields_to_save", 10
  * @return array $post updated with the attachment fields to be saved.
  */
 function jwplayer_attachment_fields_to_save($post, $attachment) {
-  if (substr($post["post_mime_type"], 0, 5) == "video") {
+  $mime_type = substr($post["post_mime_type"], 0, 5);
+  $rtmp = get_post_meta($post["ID"], LONGTAIL_KEY . "rtmp");
+  if ($mime_type == "video" && isset($rtmp)) {
+    update_post_meta($post["ID"], LONGTAIL_KEY . "streamer", $attachment[LONGTAIL_KEY . "streamer"]);
+    update_post_meta($post["ID"], LONGTAIL_KEY . "file", $attachment[LONGTAIL_KEY . "file"]);
+    update_post_meta($post["ID"], LONGTAIL_KEY . "provider", $attachment[LONGTAIL_KEY . "provider"]);
+  }
+  if ($mime_type == "video" || $mime_type == "audio") {
     update_post_meta($post["ID"], LONGTAIL_KEY . "thumbnail", $attachment[LONGTAIL_KEY . "thumbnail"]);
     update_post_meta($post["ID"], LONGTAIL_KEY . "thumbnail_url", $attachment[LONGTAIL_KEY . "thumbnail_url"]);
     update_post_meta($post["ID"], LONGTAIL_KEY . "creator", $attachment[LONGTAIL_KEY . "creator"]);
+  }
+  if ($mime_type == "image") {
+    update_post_meta($post["ID"], LONGTAIL_KEY . "duration", $attachment[LONGTAIL_KEY . "duration"]);
   }
   return $post;
 }
@@ -34,31 +44,61 @@ add_filter("attachment_fields_to_edit", "jwplayer_attachment_fields", 10, 2);
  * @return array Updated $form_fields with the new fields.
  */
 function jwplayer_attachment_fields($form_fields, $post) {
-  if (substr($post->post_mime_type, 0, 5) == "video") {
-    $form_fields[LONGTAIL_KEY . 'thumbnail_url'] = array(
-      "label" => __("Thumbnail URL"),
-      "input" => "text",
-      "value" => get_post_meta($post->ID, LONGTAIL_KEY . "thumbnail_url", true)
-    );
-    $form_fields[LONGTAIL_KEY . "thumbnail"] = array(
-      "label" => __("Thumbnail"),
-      "input" => "html",
-      "html" => generateImageSelectorHTML($post->ID)
-    );
-    $form_fields[LONGTAIL_KEY . "creator"] = array(
-      "label" => __("Creator"),
-      "input" => "text",
-      "value" => get_post_meta($post->ID, LONGTAIL_KEY . "creator", true)
-    );
-    if (isset($_GET["post_id"])) {
-      $insert = "<input type='submit' class='button-primary' name='send[$post->ID]' value='" . esc_attr__( 'Insert JW Player' ) . "' />";
-      $form_fields[LONGTAIL_KEY . "player_select"] = array(
-        "label" => __("Select Player"),
-        "input" => "html",
-        "html" => generatePlayerSelectorHTML($post->ID)
+  $mime_type = substr($post->post_mime_type, 0, 5);
+  switch($mime_type) {
+    case "image":
+      $form_fields[LONGTAIL_KEY . "duration"] = array(
+        "label" => __("Duration"),
+        "input" => "text",
+        "value" => get_post_meta($post->ID, LONGTAIL_KEY . "duration", true)
       );
-      $form_fields["jwplayer"] = array("tr" => "\t\t<tr class='submit'><td></td><td class='savesend'>$insert</td></tr>\n");    
-    }
+      break;
+    case "audio":
+    case "video":
+      $form_fields[LONGTAIL_KEY . 'thumbnail_url'] = array(
+        "label" => __("Thumbnail URL"),
+        "input" => "text",
+        "value" => get_post_meta($post->ID, LONGTAIL_KEY . "thumbnail_url", true)
+      );
+      $form_fields[LONGTAIL_KEY . "thumbnail"] = array(
+        "label" => __("Thumbnail"),
+        "input" => "html",
+        "html" => generateImageSelectorHTML($post->ID)
+      );
+      $form_fields[LONGTAIL_KEY . "creator"] = array(
+        "label" => __("Creator"),
+        "input" => "text",
+        "value" => get_post_meta($post->ID, LONGTAIL_KEY . "creator", true)
+      );
+      break;
+  }
+  $rtmp = get_post_meta($post->ID, LONGTAIL_KEY . "rtmp");
+  if ($mime_type == "video" && isset($rtmp) && $rtmp) {
+    unset($form_fields["url"]);
+    $form_fields[LONGTAIL_KEY . "streamer"] = array(
+        "label" => __("Streamer"),
+        "input" => "text",
+        "value" => get_post_meta($post->ID, LONGTAIL_KEY . "streamer", true)
+    );
+    $form_fields[LONGTAIL_KEY . "file"] = array(
+        "label" => __("File"),
+        "input" => "text",
+        "value" => get_post_meta($post->ID, LONGTAIL_KEY . "file", true)
+    );
+    $form_fields[LONGTAIL_KEY . "provider"] = array(
+        "label" => __("Provider"),
+        "input" => "text",
+        "value" => get_post_meta($post->ID, LONGTAIL_KEY . "Provider", true)
+    );
+  }
+  if (isset($_GET["post_id"]) && ($mime_type == "video" || $mime_type == "audio" || $mime_type == "image")) {
+    $insert = "<input type='submit' class='button-primary' name='send[$post->ID]' value='" . esc_attr__( 'Insert JW Player' ) . "' />";
+    $form_fields[LONGTAIL_KEY . "player_select"] = array(
+      "label" => __("Select Player"),
+      "input" => "html",
+      "html" => generatePlayerSelectorHTML($post->ID)
+    );
+    $form_fields["jwplayer"] = array("tr" => "\t\t<tr class='submit'><td></td><td class='savesend'>$insert</td></tr>\n");
   }
   return $form_fields;
 }
@@ -82,7 +122,7 @@ function generateImageSelectorHTML($id) {
     $output .= "<link rel='stylesheet' type='text/css' href='" . WP_PLUGIN_URL . '/' . plugin_basename(dirname(__FILE__)) . "/msdropdown/dd.css' />\n";
     $output .= "<script language='javascript'>jQuery(document).ready(function(e) {jQuery(\"#imageselector$id\").msDropDown({visibleRows:3, rowHeight:50});});</script>\n";
     $output .= "<select name='attachments[$id][" . LONGTAIL_KEY . "thumbnail]' id='imageselector$id' width='200' style='width:200px;'>\n";
-    $output .= "<option value='-1' title='None'>None</option>\n";
+    $output .= "<option value='-1'>None</option>\n";
     $image_id = get_post_meta($id, LONGTAIL_KEY . "thumbnail", true);
     foreach($attachments as $post) {
       if (substr($post->post_mime_type, 0, 5) == "image") {
@@ -191,8 +231,8 @@ add_filter("media_upload_tabs", "jwplayer_tab");
  * @return array $_default_tabs with the new tabs added.
  */
 function jwplayer_tab($_default_tabs) {
-  $_default_tabs["jwplayer_url"] = "External Media";
-  $_default_tabs["jwplayer"] = "JW Playlist Manager";
+  $_default_tabs["jwplayer_url"] = "From URL";
+  $_default_tabs["jwplayer"] = "Playlists";
   return $_default_tabs;
 }
 
@@ -206,7 +246,7 @@ add_filter("wp_get_attachment_url", "url_attachment_filter", 10, 2);
  * @return string The modified URL.
  */
 function url_attachment_filter($url, $id) {
-  preg_match_all("/http:\/\//", $url, $matches);
+  preg_match_all("/http:\/\/|rtmp:\/\//", $url, $matches);
   if (count($matches[0]) > 1) {
     $upload_dir = wp_upload_dir();
     return str_replace($upload_dir["baseurl"] . "/", "", $url);
@@ -224,8 +264,12 @@ add_filter("get_attached_file", "url_attached_file", 10, 2);
  * @return string The modified file path.
  */
 function url_attached_file($file, $attachment_id) {
-  $upload_dir = wp_upload_dir();
-  return str_replace($upload_dir["basedir"] . "/", "", $file);
+  $external = get_post_meta($attachment_id, LONGTAIL_KEY . "external", true);
+  if (substr($post["post_mime_type"], 0, 5) == "video" || $external) {
+    $upload_dir = wp_upload_dir();
+    return str_replace($upload_dir["basedir"] . "/", "", $file);
+  }
+  return $file;
 }
 
 ?>

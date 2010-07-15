@@ -71,21 +71,7 @@ function jwplayer_handler($atts) {
     unset($atts["config"]);
   }
   if (isset($atts["mediaid"])) {
-    $id = $atts["mediaid"];
-    $post = get_post($id);
-    $thumbnail = get_post_meta($id, LONGTAIL_KEY . "thumbnail_url", true);
-    if (!isset($thumbnail)) {
-      $image_id = get_post_meta($id, LONGTAIL_KEY . "thumbnail", true);
-      if (isset($image_id)) {
-        $image_attachment = get_post($image_id);
-        if (!isset($atts["image"])) {
-          $atts["image"] = $image_attachment->guid;
-        }
-      }
-    } else {
-      $atts["image"] = $thumbnail;
-    }
-    $atts["file"] = $post->guid;
+    resolve_media_id($atts);
   }
   if (empty($image)) {
     $image = $atts["image"];
@@ -114,6 +100,41 @@ function jwplayer_handler($atts) {
   $swf = LongTailFramework::generateSWFObject($atts);
 
   return $swf->generateEmbedScript();
+}
+
+function resolve_media_id(&$atts) {
+  $id = $atts["mediaid"];
+  $post = get_post($id);
+  $thumbnail = get_post_meta($id, LONGTAIL_KEY . "thumbnail_url", true);
+  if (!isset($thumbnail) || $thumbnail == null || $thumbnail == "") {
+    $image_id = get_post_meta($id, LONGTAIL_KEY . "thumbnail", true);
+    if (isset($image_id)) {
+      $image_attachment = get_post($image_id);
+      if (!isset($atts["image"])) {
+        $atts["image"] = $image_attachment->guid;
+      }
+    }
+  } else {
+    $atts["image"] = $thumbnail;
+  }
+  $mime_type = substr($post->post_mime_type, 0, 5);
+  if ($mime_type == "image") {
+    $duration = get_post_meta($id, LONGTAIL_KEY . "duration", true);
+    $atts["duration"] = $duration ? $duration : 10;
+    $atts["image"] = $post->guid;
+  } else if ($mime_type == "audio") {
+    if (empty($atts["image"])) {
+      $atts["playerReady"] = "function(obj) { document.getElementById(obj['id']).height = document.getElementById(obj['id']).getPluginConfig('controlbar')['height']}";
+      $atts["icons"] = false;
+    }
+  }
+  $rtmp = get_post_meta($id, LONGTAIL_KEY . "rtmp");
+  if (isset($rtmp) && $rtmp) {
+    $atts["streamer"] = get_post_meta($id, LONGTAIL_KEY . "streamer", true);
+    $atts["file"] = get_post_meta($id, LONGTAIL_KEY . "file", true);
+  } else {
+    $atts["file"] = $post->guid;
+  }
 }
 
 ?>

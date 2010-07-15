@@ -61,6 +61,7 @@ if (!file_exists(LongTailFramework::getPlayerPath())) {
 // Add swfobject.js from Google CDN.  Needed for player embedding.
 wp_enqueue_script("google-swfobject", "http://ajax.googleapis.com/ajax/libs/swfobject/2.2/swfobject.js");
 add_filter("the_content", "jwplayer_tag_callback", 11);
+add_filter("widget_text", "jwplayer_tag_callback", 11);
 
 // Player configuration and Media Management, limited to administrators.
 if (is_admin()) {

@@ -45,7 +45,13 @@ function media_jwplayer_url_insert_form($errors) {
     if (isset($youtube_api)) {
       update_post_meta($id, LONGTAIL_KEY . "thumbnail_url", $youtube_api["thumbnail_url"]);
       update_post_meta($id, LONGTAIL_KEY . "creator", $youtube_api["author"]);
+    } else if (strstr($url, "rtmp://")) {
+      update_post_meta($id, LONGTAIL_KEY . "streamer", str_replace(basename($url), "", $url));
+      update_post_meta($id, LONGTAIL_KEY . "file", basename($url));
+      update_post_meta($id, LONGTAIL_KEY . "rtmp", true);
     }
+    update_post_meta($id, LONGTAIL_KEY . "external", true);
+    wp_update_attachment_metadata( $id, wp_generate_attachment_metadata( $id, $url ) );
   }
 
 ?>
