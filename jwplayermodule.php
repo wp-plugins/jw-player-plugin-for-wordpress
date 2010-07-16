@@ -69,9 +69,11 @@ if (is_admin()) {
   add_action("admin_menu", "jwplayer_plugin_menu");
 }
 
-// Build the admin and media menues.
+// Build the admin and menu.
 function jwplayer_plugin_menu() {
-  $admin = add_options_page("JW Player Plugin Options", "JW Player Plugin", "administrator", "jwplayer", "jwplayer_plugin_options");
+  $admin = add_menu_page("JW Player Title", "JW Player", "administrator", "jwplayer", "jwplayer_plugin_pages");
+  add_submenu_page("jwplayer", "JW Player Plugin Licensing", "Licensing", "administrator", "jwplayer-license", "jwplayer_plugin_pages");
+  add_submenu_page("jwplayer", "JW Player Plugin Update", "Update", "administrator", "jwplayer-update", "jwplayer_plugin_pages");
   add_action("admin_print_scripts-$admin", "add_admin_js");
 }
 
@@ -82,11 +84,17 @@ function add_admin_js() {
 }
 
 // Entry point to the Player configuration wizard.
-function jwplayer_plugin_options() {
+function jwplayer_plugin_pages() {
   switch ($_GET["page"]) {
     case "jwplayer" :
       global $adminContext;
       $adminContext->processState();
+      break;
+    case "jwplayer-license" :
+      require_once (dirname(__FILE__) . "/admin/LicensePage.php");
+      break;
+    case "jwplayer-update" :
+      require_once (dirname(__FILE__) . "/admin/UpdatePage.php");
       break;
   }
 }
