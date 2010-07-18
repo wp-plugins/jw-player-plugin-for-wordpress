@@ -183,7 +183,7 @@ class LongTailFramework
    * @return string The path to the player.swf.
    */
   public static function getPlayerPath() {
-    return LongTailFramework::$dir . "/player.swf";
+    return LongTailFramework::$dir . "/player/player.swf";
   }
 
   /**
@@ -191,7 +191,7 @@ class LongTailFramework
    * @return string The complete URL.
    */
   public static function getPlayerURL() {
-    return LongTailFramework::$url . "/player.swf";
+    return LongTailFramework::$url . "/player/player.swf";
   }
 
   /**

@@ -97,6 +97,12 @@ class PlayerState extends AdminState {
       </script>
 
       <h2>JW Player Setup</h2>
+      <?php if (file_exists(LongTailFramework::getPlayerPath())) {?>
+        <form name="<?php echo LONGTAIL_KEY . "form" ?>" method="post" action="admin.php?page=jwplayer-update">
+          <span class="description"><?php echo "<strong>Current Player:</strong> JW Player 5.2 (Build 1065) Non-Commercial"; ?></span>
+          <input class="button-secondary" type="submit" name="Update_Player" value="Click Here to Upgrade" />
+        </form>
+      <?php } ?>
       <form name="<?php echo LONGTAIL_KEY . "form" ?>" method="post" action="">
         <table class="form-table">
           <tr>

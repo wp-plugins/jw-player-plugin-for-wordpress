@@ -4,5 +4,5 @@ if(preg_match('#' . basename(__FILE__) . '#', $_SERVER['PHP_SELF'])) { die('You 
 ?>
 
 <div class="wrap">
-  <h2><?php echo "JW Player Update"; ?></h2>
+  <h2><?php echo "JW Player Install & Update"; ?></h2>
 </div>

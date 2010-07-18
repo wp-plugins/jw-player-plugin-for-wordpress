@@ -54,8 +54,7 @@ define("JWPLAYER_URL", WP_PLUGIN_URL . "/" . plugin_basename(dirname(__FILE__)))
 
 // Error if the player doesn't exist
 if (!file_exists(LongTailFramework::getPlayerPath())) {
-	add_action('admin_notices', create_function('', 'echo \'<div id="message" class="error fade"><p><strong>' . __('The player.swf cannot be found at ' . LongTailFramework::getPlayerPath() . '.  The plugin will not work!') . '</strong></p></div>\';'));
-	return;
+	add_action('admin_notices', "jwplayer_install_notices");
 }
 
 // Add swfobject.js from Google CDN.  Needed for player embedding.
@@ -69,11 +68,25 @@ if (is_admin()) {
   add_action("admin_menu", "jwplayer_plugin_menu");
 }
 
+function jwplayer_install_notices() {
+  if ($_GET["page"] == "jwplayer-update") {
+    return;
+  } ?>
+  <div id="message" class="fade updated">
+    <form name="<?php echo LONGTAIL_KEY . "install"; ?>" method="post" action="admin.php?page=jwplayer-update">
+      <p>
+        <strong><?php echo "To complete installation of the JW Player Plugin for WordPress, please click install.  "; ?></strong>
+        <input class="button-secondary" type="submit" name="Install" value="Install Latest JW Player" />
+      </p>
+    </form>
+  </div>
+<?php }
+
 // Build the admin and menu.
 function jwplayer_plugin_menu() {
   $admin = add_menu_page("JW Player Title", "JW Player", "administrator", "jwplayer", "jwplayer_plugin_pages");
   add_submenu_page("jwplayer", "JW Player Plugin Licensing", "Licensing", "administrator", "jwplayer-license", "jwplayer_plugin_pages");
-  add_submenu_page("jwplayer", "JW Player Plugin Update", "Update", "administrator", "jwplayer-update", "jwplayer_plugin_pages");
+  add_submenu_page("jwplayer", "JW Player Plugin Update", "Install & Update", "administrator", "jwplayer-update", "jwplayer_plugin_pages");
   add_action("admin_print_scripts-$admin", "add_admin_js");
 }
 
