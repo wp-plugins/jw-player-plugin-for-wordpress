@@ -173,13 +173,14 @@ class PlayerState extends AdminState {
               <input name="<?php echo LONGTAIL_KEY . "ootb"; ?>" type="checkbox" value="1" <?php checked(true , get_option(LONGTAIL_KEY . "ootb")); ?> />
               <span style="vertical-align: middle;" class="description">Set the Out of the Box Player as the default.</span>
             </td>
+            <td align="right">
+              <input align="left" class="<?php echo LongTailFramework::configsAvailable() ? "button-primary" : "hidden"; ?>" type="submit" name="Update" value="Update" />
+              <input id="<?php echo LONGTAIL_KEY . "player"; ?>" type="hidden" name="<?php echo LONGTAIL_KEY . "config" ?>" value=""/>
+              <input type="hidden" name="<?php echo LONGTAIL_KEY . "state" ?>" value=<?php echo PlayerState::getID(); ?> />
+            </td>
           </tr>
         </table>
-        <p align="right" class="submit">
-          <input align="left" class="<?php echo LongTailFramework::configsAvailable() ? "button-primary" : "hidden"; ?>" type="submit" name="Update" value="Update" />
-          <input id="<?php echo LONGTAIL_KEY . "player"; ?>" type="hidden" name="<?php echo LONGTAIL_KEY . "config" ?>" value=""/>
-          <input type="hidden" name="<?php echo LONGTAIL_KEY . "state" ?>" value=<?php echo PlayerState::getID(); ?> />
-        </p>
+        <br/>
         <div id="poststuff">
           <div id="post-body">
             <div id="post-body-content">
