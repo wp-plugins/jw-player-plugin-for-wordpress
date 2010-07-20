@@ -40,7 +40,7 @@ class SWFObjectConfig {
       "height" => 280,
       "allowfullscreen" => "true",
       "allowscriptaccess" => "always",
-      "wmode" => "transparent",
+      "wmode" => "opaque",
       "version" => "9",
       "type" => "movie",
       "bgcolor" => "#FFFFFF",

@@ -68,11 +68,7 @@ class PlayerState extends AdminState {
    * @see AdminState::render()
    */
   public function render() {
-    $players = LongTailFramework::getConfigs();
-    if (isset($_POST["Verify"]) && isset($_POST["Version"])) {
-      update_option(LONGTAIL_KEY . "version", $_POST["Version"]);
-    }
-    ?>
+    $players = LongTailFramework::getConfigs(); ?>
     <div class="wrap">
 
       <script type="text/javascript">

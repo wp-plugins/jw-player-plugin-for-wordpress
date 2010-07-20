@@ -186,12 +186,20 @@ class LongTailFramework
     return LongTailFramework::$dir . "/player/player.swf";
   }
 
+  public static function getTempPlayerPath() {
+    return LongTailFramework::$dir . "/player/player_tmp.swf";
+  }
+
   /**
    * Get the complete URL for the Player swf.
    * @return string The complete URL.
    */
   public static function getPlayerURL() {
     return LongTailFramework::$url . "/player/player.swf";
+  }
+
+  public static function getTempPlayerURL() {
+    return LongTailFramework::$url . "/player/player_tmp.swf";
   }
 
   /**
@@ -295,6 +303,10 @@ class LongTailFramework
    */
   public static function generateSWFObject($flash_vars) {
     return new SWFObjectConfig(LongTailFramework::$div_id++, LongTailFramework::getPlayerURL(), LongTailFramework::getConfigURL(), LongTailFramework::getEmbedParameters(), $flash_vars);
+  }
+
+  public static function generateTempSWFObject($flash_vars) {
+    return new SWFObjectConfig(LongTailFramework::$div_id++, LongTailFramework::getTempPlayerURL(), LongTailFramework::getConfigURL(), LongTailFramework::getEmbedParameters(), $flash_vars);
   }
 
   private static function flattenAdditionalFlashVars($flashvars) {
