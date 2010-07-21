@@ -1,27 +1,13 @@
 <?php
 if(preg_match('#' . basename(__FILE__) . '#', $_SERVER['PHP_SELF'])) { die('You are not allowed to call this page directly.'); }
+
 ?>
 
 <div class="wrap">
   <h2><?php echo "JW Player Install & Update"; ?></h2>
-</div>
+  <p/>
 
 <?php
-
-if (isset($_POST["Version"]) && !empty($_POST["Version"])) {
-  if (!$_POST["Type"]) {
-    feedback_message("Player successfully uploaded.");
-    unlink(LongTailFramework::getPlayerPath());
-    rename(LongTailFramework::getTempPlayerPath(), LongTailFramework::getPlayerPath());
-    yt_download();
-  } else {
-    feedback_message("Player successfully downloaded.");
-  }
-  update_option(LONGTAIL_KEY . "version", $_POST["Version"]);
-} else if (isset($_POST["Version"]) && empty($_POST["Version"])) {
-  error_message("Uploaded file is not a valid JW Player.");
-  unlink(LongTailFramework::getTempPlayerPath());
-}
 
 if (isset($_POST["Non_commercial"])) {
   download_state();
@@ -77,12 +63,18 @@ function download_state() {
 
 function upload_state() {
   if (player_upload()) { ?>
+  <div id="info" class="fade updated" style="display: none;">
+    <p><strong><?php echo "JW Player detected."; ?></strong></p>
+  </div>
+  <div id="error" class="error fade" style="display: none;">
+    <p><strong><?php echo "JW Player was not detected."; ?></strong></p>
+  </div>
   <form name="<?php echo LONGTAIL_KEY . "form"; ?>" method="post" action="">
     <table class="form-table">
       <tr>
         <td colspan="2">
           <p>
-            <span class="description"><?php echo "Commercial JW Player upload complete.  Validating..."; ?></span>
+            <span id="upload_message" class="description"><?php echo "SWF Upload complete.  Checking for JW Player..."; ?></span>
           </p>
           <?php embed_demo_player(); ?>
         </td>
@@ -102,25 +94,44 @@ function embed_demo_player($download = false) {
   );
   $swf = $download ? LongTailFramework::generateSWFObject($atts) : LongTailFramework::generateTempSWFObject($atts); ?>
   <script type="text/javascript">
-    var player;
-    var t;
+    var player, t;
 
     jQuery(document).ready(function() {
       t = setTimeout(playerNotReady, 2000);
     });
 
     function playerNotReady() {
+      var data = {
+        action: "verify_player",
+        version: null,
+        type: <?php echo (int) $download; ?>
+      };
       document.getElementById("version").value = null;
       document.getElementById("type").value = <?php echo (int) $download; ?>;
-      document.<?php echo LONGTAIL_KEY . "form"; ?>.submit();
+      jQuery.post(ajaxurl, data, function(response) {
+        var download = <?php echo (int) $download; ?>;
+        if (!download) {
+          document.getElementById("error").style.display = "block";
+        }
+      });
     }
 
     function playerReady(object) {
-      clearTimeout(t);
       player = document.getElementById(object.id);
+      var data = {
+        action: "verify_player",
+        version: player.getConfig().version,
+        type: <?php echo (int) $download; ?>
+      };
+      clearTimeout(t);
       document.getElementById("version").value = player.getConfig().version;
       document.getElementById("type").value = <?php echo (int) $download; ?>;
-      document.<?php echo LONGTAIL_KEY . "form"; ?>.submit();
+      jQuery.post(ajaxurl, data, function(response) {
+        var download = <?php echo (int) $download; ?>;
+        if (!download) {
+            document.getElementById("info").style.display = "block";
+        }
+      });
     }
   </script>
   <?php echo $swf->generateEmbedScript(); ?>
@@ -128,59 +139,74 @@ function embed_demo_player($download = false) {
   <input id="version" class="hidden" type="text" name="Version" />
 <?php }
 
-function feedback_message ($message) { ?>
-  <div class="fade updated" id="message">
-    <p><strong><?php echo $message ?></strong></p>
-  </div>
-<?php }
-
-function error_message ($message) { ?>
-  <div class="error fade" id="message">
-    <p><strong><?php echo $message ?></strong></p>
-  </div>
-<?php }
-
 function upload_section() { ?>
   <form name="<?php echo LONGTAIL_KEY . "form"; ?>" method="post" action="" enctype="multipart/form-data" onsubmit="return fileValidation();">
-    <script type="text/javascript">
-      function fileValidation() {
-        var file = document.getElementById("file").value;
-        var extension = file.substring(file.length - 4, file.length);
-        return extension === ".swf";
-      }
-    </script>
-    <table class="form-table">
-      <tr>
-        <td colspan="2">
-          <p>
-            <span class="description"><?php echo "For commercial use purchase a license & upload your latest commercial player."; ?></span>
-          </p>
-          <p>
-            <label for="file"><?php echo "JW Player:"; ?></label>
-            <input id="file" type="file" name="file" />
-            <input class="button-secondary" type="submit" name="Commercial" value="Upload" />
-          </p>
-        </td>
-      </tr>
-    </table>
+    <div id="poststuff">
+      <div id="post-body">
+        <div id="post-body-content">
+          <div class="stuffbox">
+            <h3 class="hndle"><span><?php echo "Upload Commercial Player"; ?></span></h3>
+            <div class="inside" style="margin: 10px;">
+              <script type="text/javascript">
+                function fileValidation() {
+                  var file = document.getElementById("file").value;
+                  var extension = file.substring(file.length - 4, file.length);
+                  if (extension === ".swf") {
+                    return true;
+                  } else {
+                    alert("File must be a SWF.")
+                    return false;
+                  }
+                }
+              </script>
+              <table class="form-table">
+                <tr>
+                  <td colspan="2">
+                    <p>
+                      <span class="description"><?php echo "For commercial use purchase a license & upload your latest commercial player."; ?></span>
+                    </p>
+                    <p>
+                      <label for="file"><?php echo "JW Player:"; ?></label>
+                      <input id="file" type="file" name="file" />
+                      <input class="button-secondary" type="submit" name="Commercial" value="Upload" />
+                    </p>
+                  </td>
+                </tr>
+              </table>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
   </form>
 <?php }
 
 function download_section() { ?>
   <form name="<?php echo LONGTAIL_KEY . "form"; ?>" method="post" action="">
-    <table class="form-table">
-      <tr>
-        <td colspan="2">
-          <p>
-            <span class="description"><?php echo "For non-commercial, click here to check for and install the latest JW Player."; ?></span>
-          </p>
-          <p>
-            <input class="button-secondary" type="submit" name="Non_commercial" value="Install JW Player" />
-          </p>
-        </td>
-      </tr>
-    </table>
+    <div id="poststuff">
+      <div id="post-body">
+        <div id="post-body-content">
+          <div class="stuffbox">
+            <h3 class="hndle"><span><?php echo "Download Non-commercial Player"; ?></span></h3>
+            <div class="inside" style="margin: 10px;">
+              <table class="form-table">
+                <tr>
+                  <td colspan="2">
+                    <p>
+                      <span class="description"><?php echo "For non-commercial, click here to check for and install the latest JW Player."; ?></span>
+                    </p>
+                    <p>
+                      <input class="button-secondary" type="submit" name="Non_commercial" value="Install JW Player" />
+                    </p>
+                  </td>
+                </tr>
+              </table>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
   </form>
-<?php }
+<?php } ?>
 
-?>
+</div>

@@ -44,6 +44,7 @@ if (version_compare(phpversion(), "5.0", '<')) {
 
 //Include core plugin files.
 include_once (dirname (__FILE__) . "/framework/LongTailFramework.php");
+include_once (dirname (__FILE__) . "/admin/AdminFunctions.php");
 include_once (dirname (__FILE__) . "/admin/AdminContext.php");
 include_once (dirname (__FILE__) . "/media/JWMediaFunctions.php");
 include_once (dirname (__FILE__) . "/media/JWShortcode.php");
@@ -86,7 +87,7 @@ function jwplayer_install_notices() {
 function jwplayer_plugin_menu() {
   $admin = add_menu_page("JW Player Title", "JW Player", "administrator", "jwplayer", "jwplayer_plugin_pages");
   add_submenu_page("jwplayer", "JW Player Plugin Licensing", "Licensing", "administrator", "jwplayer-license", "jwplayer_plugin_pages");
-  add_submenu_page("jwplayer", "JW Player Plugin Update", "Install & Update", "administrator", "jwplayer-update", "jwplayer_plugin_pages");
+  $update = add_submenu_page("jwplayer", "JW Player Plugin Update", "Install & Update", "administrator", "jwplayer-update", "jwplayer_plugin_pages");
   add_action("admin_print_scripts-$admin", "add_admin_js");
 }
 
@@ -129,5 +130,23 @@ function jwplayer_parse_request($wp) {
 // Parse the $_GET vars for callbacks
 add_filter('query_vars', 'jwplayer_queryvars' );
 add_action('parse_request',  'jwplayer_parse_request', 9 );
+
+add_action("wp_ajax_verify_player", "verify_player");
+
+function verify_player() {
+  $response = false;
+  if ($_POST["version"] != "null") {
+    $response = true;
+    update_option(LONGTAIL_KEY . "version", $_POST["version"]);
+    if (!$_POST["type"]) {
+      unlink(LongTailFramework::getPlayerPath());
+      rename(LongTailFramework::getTempPlayerPath(), LongTailFramework::getPlayerPath());
+    } 
+  } else {
+    unlink(LongTailFramework::getTempPlayerPath());
+  }
+  echo (int) $response;
+  exit;
+}
 
 ?>
