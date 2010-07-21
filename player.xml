@@ -23,7 +23,7 @@
         <flashvar type="field">
             <name>skin</name>
             <default></default>
-            <description>The skin to be used by the player.  To see what each skin looks like please visit the <![CDATA[<a href="http://www.longtailvideo.com/addons/skins" target="_blank">JW Player Skins Page</a>]]>.</description>
+            <description>The skin to be used by the player.  To see what each skin looks like please visit the <![CDATA[<a href="http://www.longtailvideo.com/addons/skins/?utm_source=WordPress&utm_medium=Product&utm_campaign=WordPress" target="_blank">JW Player Skins Page</a>]]>.</description>
         </flashvar>
         <flashvar type="select">
             <name>dock</name>

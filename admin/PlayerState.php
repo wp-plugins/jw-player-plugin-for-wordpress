@@ -3,7 +3,7 @@
 define("JW_SETUP_DESC",
   "The JW Player&trade; is used to deliver video content through your WordPress website.  This " .
   "configuration page enables you to customize any number of players for use throughout your site.  " .
-  "For more information about the JW Player&trade; please visit <a href=http://www.longtailvideo.com/ target=_blank>LongTail Video</a>."
+  "For more information about the JW Player&trade; please visit <a href=http://www.longtailvideo.com/" . JW_PLAYER_GA_VARS . " target=_blank>LongTail Video</a>."
 );
 
 define("JW_SETUP_FIRST_PLAYER", "You have not created your own custom Player.  This means you are using the \"Out of the Box\" " .

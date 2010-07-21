@@ -25,6 +25,8 @@ Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 
 global $wp_version;
 
+define("JW_PLAYER_GA_VARS", "?utm_source=WordPress&utm_medium=Product&utm_campaign=WordPress");
+
 // Check for WP2.7 installation
 if (!defined ('IS_WP27')) {
 	define('IS_WP27', version_compare($wp_version, '2.7', '>=') );
