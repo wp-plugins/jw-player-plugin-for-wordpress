@@ -1,11 +1,10 @@
 <?php
-
-global $jw_query;
-global $p_items;
-
 /**
  * @file Definition of the JW Playlist Manager.
  */
+
+global $jw_query;
+global $p_items;
 
 /**
  * This file contains the necessary methods for rendering the Playlist Manager
@@ -36,17 +35,10 @@ function media_jwplayer_insert_form($errors) {
 	$post_id = intval($_REQUEST['post_id']);
 	$form_action_url = admin_url("media-upload.php?type=$type&tab=jwplayer&post_id=$post_id");
 	$form_action_url = apply_filters('media_upload_form_url', $form_action_url, $type);
+  $playlists = jwplayer_get_playlists();
 
   if (isset($_POST[LONGTAIL_KEY . "playlist_create"]) || isset($_POST["save"])) {
     $post_title = $_POST[LONGTAIL_KEY . "playlist_name"];
-    $playlist_items = array();
-    $attachments = $_POST["attachments"];
-    $playlist_attachments = $_POST["playlist_attachments"];
-    foreach ($attachments as $key => $attachment) {
-      if(isset($attachment["enabled"])) {
-        $playlist_items[] = $key;
-      }
-    }
     $new_playlist = array();
     $new_playlist["post_title"] = $post_title;
     $new_playlist["post_type"] = "jw_playlist";
@@ -57,20 +49,21 @@ function media_jwplayer_insert_form($errors) {
       $new_playlist_id = isset($_POST[LONGTAIL_KEY . "playlist_select"]) ? $_POST[LONGTAIL_KEY . "playlist_select"] : $playlists[0]->ID;
     } else {
       $new_playlist_id = wp_insert_post($new_playlist);
-      $current_playlist = $new_playlist_id;
     }
+    $current_playlist = $new_playlist_id;
   } else if (isset($_POST["delete"])) {
     wp_delete_post($_POST[LONGTAIL_KEY . "playlist_select"]);
   }
 
-  $playlists = jwplayer_get_playlists();
   if (!isset($current_playlist)) {
     $current_playlist = isset($_POST[LONGTAIL_KEY . "playlist_select"]) ? $_POST[LONGTAIL_KEY . "playlist_select"] : $playlists[0]->ID;
   }
   if (isset($_GET["p_items"])) {
     $p_items = json_decode(str_replace("\\", "", $_GET["p_items"]));
+  } else if (isset($_POST["playlist_items"]) && $_POST["old_playlist"] == $current_playlist) {
+    $p_items = json_decode(str_replace("\\", "", $_POST["playlist_items"]));
   } else {
-    $p_items = isset($_POST["playlist_items"]) ? json_decode(str_replace("\\", "", $_POST["playlist_items"])) : explode(",", get_post_meta($current_playlist, LONGTAIL_KEY. "playlist_items", true));
+    $p_items = explode(",", get_post_meta($current_playlist, LONGTAIL_KEY. "playlist_items", true));
   }
   update_post_meta($new_playlist_id, LONGTAIL_KEY . "playlist_items", implode(",", $p_items));
 
@@ -100,11 +93,18 @@ function media_jwplayer_insert_form($errors) {
 			handle: 'div.filename',
 			stop: function(e, ui) {
 				// When an update has occurred, adjust the order for each item
+        var item_list = document.getElementById("playlist_items");
+        var p_items = new Array();
+        var old_p_items =  eval('(' + item_list.value + ')');
+        if (old_p_items[0] == "") {old_p_items = new Array();}
 				var all = $('#playlist-items').sortable('toArray'), len = all.length;
 				$.each(all, function(i, id) {
 					var order = desc ? (len - i) : (1 + i);
 					$('#' + id + ' .menu_order input').val(order);
+          p_items.push(id.replace("playlist-item-", ""));
 				});
+        update_page_numbers(p_items, old_p_items);
+        document.getElementById("playlist_items").value = dump(p_items);
 			}
 		} );
   });
@@ -143,6 +143,9 @@ function media_jwplayer_insert_form($errors) {
   function updatePlaylist(object) {
     var item_list = document.getElementById("playlist_items");
     var p_items = eval('(' + item_list.value + ')');
+    if (p_items[0] == "") {p_items = new Array();}
+    var old_p_items =  eval('(' + item_list.value + ')');
+    if (old_p_items[0] == "") {old_p_items = new Array();}
     var playlist_check = object.id.indexOf("playlist_") > -1;
     var attachment_id = "";
     attachment_id = playlist_check ? object.id.replace("playlist_", "") : object.id;
@@ -160,23 +163,38 @@ function media_jwplayer_insert_form($errors) {
       update_checks(attachment_id, playlist_check, false);
       p_items.splice(i, 1);
     }
+    update_page_numbers(p_items, old_p_items);
+    item_list.value = dump(p_items);
+  }
+
+  function update_page_numbers(p_items, old_p_items) {
     var pages = jQuery(".page-numbers");
     var j = 0;
     for (j = 0; j < pages.length; j++) {
       var page = pages[j];
       if (page.href) {
-        page.href = page.href + "&p_items=" + dump(p_items);
+        page.href = page.href.replace(encodeURI("&p_items=" + dump(old_p_items)), "");
+        page.href = page.href + encodeURI("&p_items=" + dump(p_items));
       }
     }
-    item_list.value = dump(p_items);
   }
 
   function update_checks(attachment_id, playlist_check, new_state) {
     if (playlist_check) {
-      document.getElementById("attachments[" + attachment_id + "][enabled]").checked = new_state;
-    } else if (!new_state) {
-      var check_id = "playlist_attachments[" + attachment_id + "][enabled]";
-      document.getElementById(check_id).checked = new_state;
+      var targetBox = document.getElementById("attachments[" + attachment_id + "][enabled]");
+      if (targetBox != null) {
+        targetBox.checked = new_state;
+      }
+    }
+    if (new_state) {
+      var itemToAdd = jQuery("#media-item-" + attachment_id).clone();
+      itemToAdd[0].id = itemToAdd[0].id.replace("media", "playlist");
+      var input = itemToAdd.children(".menu_order").children(".menu_order_input")[0];
+      input.id = "playlist_" + input.id
+      input.name = "playlist_" + input.name;
+      itemToAdd.appendTo("#playlist-items");
+    } else {
+      jQuery("#playlist-item-" + attachment_id).empty().remove();
     }
   }
 </script>
@@ -217,6 +235,7 @@ function media_jwplayer_insert_form($errors) {
         <input type="hidden" name="type" value="<?php echo esc_attr( $GLOBALS['type'] ); ?>" />
         <input type="hidden" name="tab" value="<?php echo esc_attr( $GLOBALS['tab'] ); ?>" />
         <input type="hidden" id="playlist_items" name="playlist_items" value='<?php echo json_encode($p_items); ?>' />
+        <input type="hidden" id="old_playlist" name="old_playlist" value="<?php echo $current_playlist; ?>" />
       </div>
     </div>
   </div>
@@ -319,8 +338,6 @@ function get_playlist_items($post_id, $errors, $current_playlist) {
  * @param int $current_playlist The currently selected playlist.
  * @return string The HTML representing the playlist item.
  */
-
-
 function get_jw_playlist_item($attachment_id, $args, $current_playlist, $prefix = "") {
 	global $redir_tab, $p_items;
 

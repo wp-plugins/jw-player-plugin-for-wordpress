@@ -361,20 +361,20 @@ function dump (object, depth) {
   var type = typeOf(object);
 
   (depth == undefined) ? depth = 1 : depth++;
-  var indent = "";
-  for (var i = 0; i < depth; i++) { indent += "\t"; }
 
   var result = (type == "array") ? "[" : "{";
-  result += "\n"+indent;
 
+  var loopRan = false;
   for (var i in object) {
+    loopRan = true;
     if (type == "object") { result += "\""+i+"\": "};
-    result += dump(object[i], depth)+",\n"+indent;
+    result += dump(object[i], depth)+", ";
   }
 
-  result = result.substring(0, result.length-2-depth)+"\n";
+  if (loopRan) {
+    result = result.substring(0, result.length-1-depth);
+  }
 
-  result  += indent.substring(0, indent.length-1);
   result  += (type == "array") ? "]" : "}";
 
   return result;
