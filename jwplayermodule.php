@@ -46,7 +46,6 @@ if (version_compare(phpversion(), "5.0", '<')) {
 
 //Include core plugin files.
 include_once (dirname (__FILE__) . "/framework/LongTailFramework.php");
-include_once (dirname (__FILE__) . "/admin/AdminFunctions.php");
 include_once (dirname (__FILE__) . "/admin/AdminContext.php");
 include_once (dirname (__FILE__) . "/media/JWMediaFunctions.php");
 include_once (dirname (__FILE__) . "/media/JWShortcode.php");

@@ -1,7 +1,7 @@
 #media-upload #playlist-items {
-  border-bottom: none;
+  border-bottom: medium none;
   border-style: solid solid none;
-  border-width: 1px 1px initial;
+  border-width: 1px 1px medium;
 }
 
 #media-upload .playlist-item {
