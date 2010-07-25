@@ -25,7 +25,8 @@ function media_jwplayer_insert_form($errors) {
     'paged' => $_GET['paged'] ? $_GET['paged'] : 1,
     'post_status' => 'inherit',
     'post_type' => 'attachment',
-    'orderby' => 'menu_order ASC, ID', 'order' => 'DESC'
+    'orderby' => 'title ASC, ID',
+    'order' => 'DESC'
   );
   $jw_query = new WP_Query($args);
 
