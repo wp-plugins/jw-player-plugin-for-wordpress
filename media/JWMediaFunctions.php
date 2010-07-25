@@ -231,7 +231,7 @@ add_filter("media_upload_tabs", "jwplayer_tab");
  * @return array $_default_tabs with the new tabs added.
  */
 function jwplayer_tab($_default_tabs) {
-  $_default_tabs["jwplayer_url"] = "From URL";
+  $_default_tabs["jwplayer_url"] = "External Media";
   $_default_tabs["jwplayer"] = "Playlists";
   return $_default_tabs;
 }

@@ -411,7 +411,25 @@ function get_jw_playlist_item($attachment_id, $args, $current_playlist, $prefix 
 	$type_html
 	$toggle_links
 	$order
-	$display_title";
+	$display_title
+  <table class='slidetoggle describe startclosed'>
+		<thead class='media-item-info' id='media-head-$post->ID'>
+		<tr>
+			<td class='A1B1' id='thumbnail-head-$post->ID' rowspan='5'><img class='thumbnail' src='$thumb_url' alt='' /></td>
+			<td><strong>" . __('File name:') . "</strong> $filename</td>
+		</tr>
+		<tr><td><strong>" . __('File type:') . "</strong> $post->post_mime_type</td></tr>
+		<tr><td><strong>" . __('Upload date:') . "</strong> " . mysql2date( get_option('date_format'), $post->post_date ) . "</td></tr>\n";
+
+	if ( !empty($media_dims) )
+		$item .= "<tr><td><strong>" . __('Dimensions:') . "</strong> $media_dims</td></tr>\n";
+
+	$item .= "
+		<tr><td class='A1B1'>$image_edit_button</td></tr>
+		</thead>
+		<tbody>
+		<tr><td colspan='2' class='imgedit-response' id='imgedit-response-$post->ID'></td></tr>
+		<tr><td style='display:none' colspan='2' class='image-editor' id='image-editor-$post->ID'></td></tr>\n";
 
 	$defaults = array(
 		'input'      => 'text',
@@ -434,7 +452,62 @@ function get_jw_playlist_item($attachment_id, $args, $current_playlist, $prefix 
 
 	$hidden_fields = array();
 
-  $item .= "<img class='thumbnail hidden' src='$thumb_url' alt='' />";
+  foreach ( $form_fields as $id => $field ) {
+		if ( $id{0} == '_' )
+			continue;
+
+		if ( !empty($field['tr']) ) {
+			$item .= $field['tr'];
+			continue;
+		}
+
+		$field = array_merge($defaults, $field);
+		$name = "attachments[$attachment_id][$id]";
+
+		if ( $field['input'] == 'hidden' ) {
+			$hidden_fields[$name] = $field['value'];
+			continue;
+		}
+
+		$required = $field['required'] ? '<abbr title="required" class="required">*</abbr>' : '';
+		$aria_required = $field['required'] ? " aria-required='true' " : '';
+		$class  = $id;
+		$class .= $field['required'] ? ' form-required' : '';
+
+		$item .= "\t\t<tr class='$class'>\n\t\t\t<th valign='top' scope='row' class='label'><label for='$name'><span class='alignleft'>{$field['label']}</span><span class='alignright'>$required</span><br class='clear' /></label></th>\n\t\t\t<td class='field'>";
+		if ( !empty($field[$field['input']]) )
+			$item .= $field[$field['input']];
+		elseif ( $field['input'] == 'textarea' ) {
+			$item .= "<textarea type='text' id='$name' name='$name'" . $aria_required . ">" . esc_html( $field['value'] ) . "</textarea>";
+		} else {
+			$item .= "<input type='text' class='text' id='$name' name='$name' value='" . esc_attr( $field['value'] ) . "'" . $aria_required . "/>";
+		}
+		if ( !empty($field['helps']) )
+			$item .= "<p class='help'>" . join( "</p>\n<p class='help'>", array_unique((array) $field['helps']) ) . '</p>';
+		$item .= "</td>\n\t\t</tr>\n";
+
+		$extra_rows = array();
+
+		if ( !empty($field['errors']) )
+			foreach ( array_unique((array) $field['errors']) as $error )
+				$extra_rows['error'][] = $error;
+
+		if ( !empty($field['extra_rows']) )
+			foreach ( $field['extra_rows'] as $class => $rows )
+				foreach ( (array) $rows as $html )
+					$extra_rows[$class][] = $html;
+
+		foreach ( $extra_rows as $class => $rows )
+			foreach ( $rows as $html )
+				$item .= "\t\t<tr><td></td><td class='$class'>$html</td></tr>\n";
+	}
+
+	if ( !empty($form_fields['_final']) )
+		$item .= "\t\t<tr class='final'><td colspan='2'>{$form_fields['_final']}</td></tr>\n";
+	$item .= "\t</tbody>\n";
+	$item .= "\t</table>\n";
+
+//  $item .= "<img class='thumbnail hidden' src='$thumb_url' alt='' />";
 
 	foreach ( $hidden_fields as $name => $value )
 		$item .= "\t<input type='hidden' name='$name' id='$name' value='" . esc_attr( $value ) . "' />\n";
