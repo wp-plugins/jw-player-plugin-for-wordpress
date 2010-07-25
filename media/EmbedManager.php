@@ -189,6 +189,7 @@ function media_jwplayer_insert_form($errors) {
     if (new_state) {
       var itemToAdd = jQuery("#media-item-" + attachment_id).clone();
       itemToAdd[0].id = itemToAdd[0].id.replace("media", "playlist");
+      itemToAdd[0].className = itemToAdd[0].className.replace("media", "playlist");
       var input = itemToAdd.children(".menu_order").children(".menu_order_input")[0];
       input.id = "playlist_" + input.id
       input.name = "playlist_" + input.name;
