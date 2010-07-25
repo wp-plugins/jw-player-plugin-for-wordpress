@@ -126,14 +126,14 @@ function get_youtube_meta_data($video_id = "") {
   $youtube_meta = array();
   $youtube_url = "http://gdata.youtube.com/feeds/api/videos/" . $video_id;
   $youtube_xml = simplexml_load_file($youtube_url);
-  $youtube_meta["author"] = $youtube_xml->author->name;
+  $youtube_meta["author"] = (string) $youtube_xml->author->name;
   $youtube_media = $youtube_xml->children("http://search.yahoo.com/mrss/");
   $youtube_meta["title"] = $youtube_media->group->title;
   $youtube_meta["description"] = $youtube_media->group->description;
   $thumbnails = $youtube_xml->xpath("media:group/media:thumbnail");
   foreach ($thumbnails as $thumbnail) {
     if ($thumbnail["height"] == 240) {
-      $youtube_meta["thumbnail_url"] = $thumbnail["url"];
+      $youtube_meta["thumbnail_url"] = (string) $thumbnail["url"];
       break;
     }
   }
