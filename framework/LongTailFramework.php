@@ -183,7 +183,18 @@ class LongTailFramework
    * @return string The path to the player.swf.
    */
   public static function getPlayerPath() {
+    if (file_exists(LongTailFramework::getPrimaryPlayerPath())) {
+      return LongTailFramework::getPrimaryPlayerPath();
+    }
+    return LongTailFramework::getSecondaryPlayerPath();
+  }
+
+  public static function getPrimaryPlayerPath() {
     return LongTailFramework::$dir . "/player/player.swf";
+  }
+
+  public static function getSecondaryPlayerPath() {
+    return LongTailFramework::$dir . "/player.swf";
   }
 
   public static function getTempPlayerPath() {
@@ -195,7 +206,18 @@ class LongTailFramework
    * @return string The complete URL.
    */
   public static function getPlayerURL() {
+    if (file_exists(LongTailFramework::getPrimaryPlayerPath())) {
+      return LongTailFramework::getPrimaryPlayerURL();
+    }
+    return LongTailFramework::getSecondaryPlayerURL();
+  }
+
+  public static function getPrimaryPlayerURL() {
     return LongTailFramework::$url . "/player/player.swf";
+  }
+
+  public static function getSecondaryPlayerURL() {
+    return LongTailFramework::$url . "/player.swf";
   }
 
   public static function getTempPlayerURL() {

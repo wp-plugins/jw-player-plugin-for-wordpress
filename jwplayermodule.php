@@ -140,8 +140,8 @@ function verify_player() {
     $response = true;
     update_option(LONGTAIL_KEY . "version", $_POST["version"]);
     if (!$_POST["type"]) {
-      unlink(LongTailFramework::getPlayerPath());
-      rename(LongTailFramework::getTempPlayerPath(), LongTailFramework::getPlayerPath());
+      unlink(LongTailFramework::getPrimaryPlayerPath());
+      rename(LongTailFramework::getTempPlayerPath(), LongTailFramework::getPrimaryPlayerPath());
     } 
   } else {
     unlink(LongTailFramework::getTempPlayerPath());

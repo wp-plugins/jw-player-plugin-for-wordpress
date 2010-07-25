@@ -18,14 +18,14 @@ if (isset($_POST["Non_commercial"])) {
 }
 
 function yt_download() {
-  $yt_handle = fopen(str_replace("player.swf", "yt.swf", LongTailFramework::getPlayerPath()), "w");
+  $yt_handle = fopen(str_replace("player.swf", "yt.swf", LongTailFramework::getPrimaryPlayerPath()), "w");
   $yt = wp_remote_retrieve_body(wp_remote_get("http://player.longtailvideo.com/yt.swf"));
   fwrite($yt_handle, $yt);
   fclose($yt_handle);
 }
 
 function player_download() {
-  $player_handle = fopen(LongTailFramework::getPlayerPath(), "w");  
+  $player_handle = fopen(LongTailFramework::getPrimaryPlayerPath(), "w");
   $player = wp_remote_retrieve_body(wp_remote_get("http://player.longtailvideo.com/player.swf"));
   fwrite($player_handle, $player);
   fclose($player_handle);
