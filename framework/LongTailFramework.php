@@ -386,7 +386,11 @@ class LongTailFramework
       }
     }
     unset($config_values["plugins"]);
+    unset($config_values["ltas.cc"]);
     LongTailFramework::getPlugins($config_values);
+    if ($config_values) {
+      LongTailFramework::$loaded_additional_flash_vars = LongTailFramework::flattenAdditionalFlashVars($config_values);
+    }
     LongTailFramework::$loaded_flash_vars = $f_vars;
   }
 
@@ -425,7 +429,9 @@ class LongTailFramework
         //use the value in the config file and set the plugin as enabled.
         if ($config_found && $config_file->{$plugin_name . "." . $flash_var->name}) {
           $p_key = $plugin_name . "." . $flash_var->name;
-          unset($config_values[(string) $p_key]);
+          if ($config_values != null) {
+            unset($config_values[(string) $p_key]);
+          }
           $default = (string) $config_file->{$plugin_name . "." . $flash_var->name};
         }
         $values = (array) $flash_var->select;
@@ -438,9 +444,6 @@ class LongTailFramework
       $f_vars[$f_var_section] = $f_var;
     }
     $plugin = new Plugin($title, $version, $repository, $file_name, $enabled, $description, $f_vars, $href);
-    if ($config_values) {
-      LongTailFramework::$loaded_additional_flash_vars = LongTailFramework::flattenAdditionalFlashVars($config_values);
-    }
     return $plugin;
   }
 }

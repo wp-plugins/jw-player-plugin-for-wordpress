@@ -2,6 +2,7 @@
 if(preg_match('#' . basename(__FILE__) . '#', $_SERVER['PHP_SELF'])) { die('You are not allowed to call this page directly.'); }
 
 include_once("AdminState.php");
+include_once("WizardState.php");
 include_once("FlashVarState.php");
 include_once("PlayerState.php");
 include_once("BasicState.php");
@@ -23,7 +24,11 @@ class AdminContext {
    * Given the current wizard state, determines the next state.
    */
   public function processState() {
-    switch ($_POST[LONGTAIL_KEY . "state"]) {
+    $state = $_POST[LONGTAIL_KEY . "state"];
+    if (isset($_POST["breadcrumb"]) && !empty($_POST["breadcrumb"])) {
+      $state = $_POST["breadcrumb"];
+    }
+    switch ($state) {
       case BasicState::getID() :
         $state = new BasicState($_POST[LONGTAIL_KEY . "config"], $post_values);
         break;
@@ -94,6 +99,7 @@ class AdminContext {
         update_option(LONGTAIL_KEY . "default", $_POST[LONGTAIL_KEY . "default"]);
         update_option(LONGTAIL_KEY . "ootb", $_POST[LONGTAIL_KEY . "ootb"]);
       }
+      LongTailFramework::setConfig($_POST[LONGTAIL_KEY . "config"]);
       $state->render();
     }
   }

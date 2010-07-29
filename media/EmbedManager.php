@@ -50,6 +50,7 @@ function media_jwplayer_insert_form($errors) {
       $new_playlist_id = isset($_POST[LONGTAIL_KEY . "playlist_select"]) ? $_POST[LONGTAIL_KEY . "playlist_select"] : $playlists[0]->ID;
     } else {
       $new_playlist_id = wp_insert_post($new_playlist);
+      $playlists = jwplayer_get_playlists();
     }
     $current_playlist = $new_playlist_id;
   } else if (isset($_POST["delete"])) {

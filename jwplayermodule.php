@@ -50,6 +50,16 @@ include_once (dirname (__FILE__) . "/admin/AdminContext.php");
 include_once (dirname (__FILE__) . "/media/JWMediaFunctions.php");
 include_once (dirname (__FILE__) . "/media/JWShortcode.php");
 
+register_activation_hook(__FILE__, "jwplayer_activation");
+
+function jwplayer_activation() {
+  if (file_exists(LongTailFramework::getSecondaryPlayerPath())) {
+    rename(LongTailFramework::getSecondaryPlayerPath(), LongTailFramework::getPrimaryPlayerPath());
+    rename(str_replace("player.swf", "yt.swf", LongTailFramework::getSecondaryPlayerPath()),
+           str_replace("player.swf", "yt.swf", LongTailFramework::getPrimaryPlayerPath()));
+  }
+}
+
 //Define the plugin directory and url for file access.
 define("JWPLAYER_DIR", WP_PLUGIN_DIR . "/" . plugin_basename(dirname(__FILE__)));
 define("JWPLAYER_URL", WP_PLUGIN_URL . "/" . plugin_basename(dirname(__FILE__)));
@@ -68,6 +78,7 @@ add_filter("widget_text", "jwplayer_tag_callback", 11);
 if (is_admin()) {
   add_action( 'plugins_loaded', create_function( '', 'global $adminContext; $adminContext = new AdminContext();' ) );
   add_action("admin_menu", "jwplayer_plugin_menu");
+  wp_register_script('jquery-ui-jw', WP_PLUGIN_URL . '/' . plugin_basename(dirname(__FILE__)) . "/js/jquery.ui.jw.js");
 }
 
 function jwplayer_install_notices() {
@@ -88,14 +99,14 @@ function jwplayer_install_notices() {
 function jwplayer_plugin_menu() {
   $admin = add_menu_page("JW Player Title", "JW Player", "administrator", "jwplayer", "jwplayer_plugin_pages");
   add_submenu_page("jwplayer", "JW Player Plugin Licensing", "Licensing", "administrator", "jwplayer-license", "jwplayer_plugin_pages");
-  $update = add_submenu_page("jwplayer", "JW Player Plugin Update", "Install & Update", "administrator", "jwplayer-update", "jwplayer_plugin_pages");
+  $update = add_submenu_page("jwplayer", "JW Player Plugin Update", "Upgrade", "administrator", "jwplayer-update", "jwplayer_plugin_pages");
   add_action("admin_print_scripts-$admin", "add_admin_js");
 }
 
 // Add js for plugin tabs.
 function add_admin_js() {
-  wp_enqueue_script("jquery-ui-tabs");
-  echo '<link rel="stylesheet" href="'. WP_PLUGIN_URL . '/' . plugin_basename( dirname(__FILE__) ).'/' . 'css/smoothness/jquery.ui.tabs.css" type="text/css" media="print, projection, screen" />'."\n";
+  wp_enqueue_script("jquery-ui-jw");
+  echo '<link rel="stylesheet" href="'. WP_PLUGIN_URL . '/' . plugin_basename( dirname(__FILE__) ).'/' . 'css/smoothness/jquery.ui.jw.css" type="text/css" media="print, projection, screen" />'."\n";
 }
 
 // Entry point to the Player configuration wizard.

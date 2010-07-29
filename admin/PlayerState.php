@@ -1,17 +1,15 @@
 <?php
 
 define("JW_SETUP_DESC",
-  "The JW Player&trade; is used to deliver video content through your WordPress website.  This " .
-  "configuration page enables you to customize any number of players for use throughout your site.  " .
-  "For more information about the JW Player&trade; please visit <a href=http://www.longtailvideo.com/" . JW_PLAYER_GA_VARS . " target=_blank>LongTail Video</a>."
+  "The JW Player&trade; is used to deliver video content through your WordPress website.  " .
+  "For more information please visit <a href=http://www.longtailvideo.com/" . JW_PLAYER_GA_VARS . " target=_blank>LongTail Video</a>."
 );
 
 define("JW_SETUP_FIRST_PLAYER", "You have not created your own custom Player.  This means you are using the \"Out of the Box\" " .
   "Player.  Create your own custom Player now.");
 
 define("JW_SETUP_EDIT_PLAYERS", 
-  "This page allows you to customize your Players.  It is possible to customize the Player flashvars, enable the " .
-  "LongTail AdSolution and add plugins."
+  "This page allows you to customize multiple Players.  It is possible to configure flashvars, skins and plugins."
 );
 
 /**
@@ -96,10 +94,26 @@ class PlayerState extends AdminState {
       </script>
 
       <h2>JW Player Setup</h2>
+      <table class="form-table">
+        <tr>
+          <td colspan="2">
+            <span class="description"><?php echo JW_SETUP_DESC; ?></span>
+          </td>
+        </tr>
+        <tr>
+          <td>
       <?php if (file_exists(LongTailFramework::getPrimaryPlayerPath())) {?>
         <form name="<?php echo LONGTAIL_KEY . "upgrade_form" ?>" method="post" action="admin.php?page=jwplayer-update">
-          <span class="description"><?php echo "<strong>Current Player:</strong> JW Player " . get_option(LONGTAIL_KEY . "version"); ?></span>
-          <input class="button-secondary" type="submit" name="Update_Player" value="Click Here to Upgrade" />
+          <?php $version = get_option(LONGTAIL_KEY . "version"); ?>
+          <?php if (isset($version) && !empty($version)) { ?>
+            <span class="description"><?php echo "<strong>Current Player:</strong> JW Player " . $version; ?></span>
+            <input class="button-secondary" type="submit" name="Update_Player" value="Click Here to Upgrade" />
+            <p><span class="description"><?php echo JW_SETUP_EDIT_PLAYERS; ?></span></p>
+            <p class="<?php echo !LongTailFramework::configsAvailable() ? "" : "hidden"; ?>"><span class="description"><?php echo JW_SETUP_FIRST_PLAYER; ?></span></p>
+          <?php } else { ?>
+            <span class="description"><?php echo "<strong>Current Player:</strong> Version Unknown"; ?></span>
+            <input class="button-secondary" type="submit" name="Update_Player" value="Click Here to Reinstall" />
+          <?php } ?>
         </form>
       <?php } else if (file_exists(LongTailFramework::getSecondaryPlayerPath())) { ?>
         <form name="<?php echo LONGTAIL_KEY . "upgrade_form" ?>" method="post" action="admin.php?page=jwplayer-update">
@@ -107,20 +121,11 @@ class PlayerState extends AdminState {
           <input class="button-secondary" type="submit" name="Update_Player" value="Click Here to Reinstall" />
         </form>
       <?php } ?>
+          </td>
+        </tr>
+      </table>
       <form name="<?php echo LONGTAIL_KEY . "form" ?>" method="post" action="">
-        <table class="form-table">
-          <tr>
-            <td colspan="2">
-              <p><span class="description"><?php echo JW_SETUP_DESC; ?></span></p>
-              <p class="<?php echo !LongTailFramework::configsAvailable() ? "" : "hidden"; ?>"><span class="description"><?php echo JW_SETUP_FIRST_PLAYER; ?></span></p>
-              <p class="<?php echo LongTailFramework::configsAvailable() ? "" : "hidden"; ?>"><span class="description"><?php echo JW_SETUP_EDIT_PLAYERS; ?></span></p>
-            </td>
-          </tr>
-        </table>
-        <p align="center" class="<?php echo !LongTailFramework::configsAvailable() ? "submit" : "hidden"; ?>">
-          <input class="button-secondary action" type="submit" name="Next" value="Create Custom Player"/>
-        </p>
-        <table class="<?php echo LongTailFramework::configsAvailable() ? "widefat" : "hidden"; ?>" cellspacing="0">
+        <table class="widefat" cellspacing="0">
           <thead>
             <tr>
               <th class="manage-column column-name">Default</th>
@@ -161,9 +166,12 @@ class PlayerState extends AdminState {
             <?php } ?>
           </tbody>
         </table>
+        <p align="center" class="<?php echo !LongTailFramework::configsAvailable() ? "submit" : "hidden"; ?>">
+          <input class="button-secondary action" type="submit" name="Next" value="Create Custom Player"/>
+        </p>
         <table class="<?php echo LongTailFramework::configsAvailable() ? "form-table" : "hidden"; ?>">
           <tr>
-            <th>New Player:</th>
+            <th style="width: 80px;">New Player:</th>
             <td>
               <input id="<?php echo LONGTAIL_KEY . "new_player"; ?>" type="text" value="" name="<?php echo LONGTAIL_KEY . "new_player"; ?>" />
               <input class="button-secondary action" type="submit" name="Next" value="Create"/>

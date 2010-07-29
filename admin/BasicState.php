@@ -67,8 +67,8 @@ class BasicState extends FlashVarState {
   /**
    * @see FlashVarState::getTitle()
    */
-  protected function getTitle() {
-    return "Basic Settings";
+  public static function getTitle() {
+    return WizardState::BASIC_STATE;
   }
 
 }

@@ -1,9 +1,9 @@
 <?php
 
 define("JW_PLAYER_LTAS_DESC",
-  "The LongTail AdSolution (LTAS) is a service provided by LongTail Video which allows you to run pre-roll, post-roll and overlay ads.  " .
-  "This enables you to monetize your content.  In order to make use of LTAS you will need to purchase a commercial JW Player license and acquire a channel code.  " .
-  "For more information about LTAS please visit the <a href=http://www.longtailvideo.com/adsolution" . JW_PLAYER_GA_VARS . " target=_blank>LTAS product page</a>."
+  "The LongTail AdSolution (LTAS) is a service which allows you to monetize your content through pre-roll, post-roll and overlay ads from premium video advertisers.  " .
+  "To use this service you must have an account.  For more information visit <a href=http://www.longtailvideo.com/adsolution" . JW_PLAYER_GA_VARS . " target=_blank>http://www.longtailvideo.com/adsolution</a>." .
+  "<br/><br/><strong>To sign up for this service, <a href=https://dashboard.longtailvideo.com/signup.aspx" . JW_PLAYER_GA_VARS . " target=_blank>click here to create an account</a>.</strong>"
 );
 
 /**
@@ -11,7 +11,7 @@ define("JW_PLAYER_LTAS_DESC",
  * @file Class definition of LTASState
  * @see AdminState
  */
-class LTASState extends AdminState {
+class LTASState extends WizardState {
 
   /**
    * @see AdminState::__construct()
@@ -57,14 +57,18 @@ class LTASState extends AdminState {
     return new PlayerState("");
   }
 
+  public static function getTitle() {
+    return WizardState::LTAS_STATE;
+  }
+
   /**
    * @see AdminState::render()
    */
   public function render() {
     $ltas = LongTailFramework::getLTASConfig(); ?>
     <div class="wrap">
-      <h2> <?php echo "LTAS"; ?></h2>
       <form name="<?php echo LONGTAIL_KEY . "form" ?>" method="post" action="">
+        <?php parent::getBreadcrumbBar(); ?>
         <?php $this->selectedPlayer(); ?>
         <p/>
         <div id="poststuff">
@@ -90,7 +94,7 @@ class LTASState extends AdminState {
                       <th>ltas.cc</th>
                       <td>
                         <input type="text" value="<?php echo $value; ?>" name="jwplayermodule_plugin_ltas_cc" />
-                        <span class="description">Your LTAS channel code.</span>
+                        <span class="description"><?php echo "Your LTAS channel code.  Obtained from the <a href=https://dashboard.longtailvideo.com/" . JW_PLAYER_GA_VARS . " target=_blank>AdSolution Dashboard.</a>"; ?></span>
                       </td>
                     </tr>
                   </table>

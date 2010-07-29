@@ -4,7 +4,7 @@ if(preg_match('#' . basename(__FILE__) . '#', $_SERVER['PHP_SELF'])) { die('You 
 ?>
 
 <div class="wrap">
-  <h2><?php echo "JW Player Install & Update"; ?></h2>
+  <h2><?php echo "JW Player Upgrade"; ?></h2>
   <p/>
 
 <?php
@@ -18,18 +18,35 @@ if (isset($_POST["Non_commercial"])) {
 }
 
 function yt_download() {
-  $yt_handle = fopen(str_replace("player.swf", "yt.swf", LongTailFramework::getPrimaryPlayerPath()), "w");
-  $yt = wp_remote_retrieve_body(wp_remote_get("http://player.longtailvideo.com/yt.swf"));
-  fwrite($yt_handle, $yt);
-  fclose($yt_handle);
+  $yt_handle = @fopen(str_replace("player.swf", "yt.swf", LongTailFramework::getPrimaryPlayerPath()), "w");
+  if ($yt_handle) {
+    $yt = wp_remote_retrieve_body(wp_remote_get("http://player.longtailvideo.com/yt.swf"));
+    if ($yt == '') {
+      return false;
+    }
+    $result = @fwrite($yt_handle, $yt);
+    if ($result) {
+      fclose($yt_handle);
+      return true;
+    }
+  }
+  return false;
 }
 
 function player_download() {
   $player_handle = fopen(LongTailFramework::getPrimaryPlayerPath(), "w");
-  $player = wp_remote_retrieve_body(wp_remote_get("http://player.longtailvideo.com/player.swf"));
-  fwrite($player_handle, $player);
-  fclose($player_handle);
-  yt_download();
+  if ($player_handle) {
+    $player = wp_remote_retrieve_body(wp_remote_get("http://player.longtailvideo.com/player.swf"));
+    if ($player == '') {
+      return false;
+    }
+    $result = fwrite($player_handle, $player);
+    if ($result) {
+      fclose($player_handle);
+      return yt_download();
+    }
+  }
+  return false;
 }
 
 function player_upload() {
@@ -46,7 +63,7 @@ function default_state() {
 }
 
 function download_state() {
-  player_download(); ?>
+  if (player_download()) { ?>
   <form name="<?php echo LONGTAIL_KEY . "form"; ?>" method="post" action="">
     <table class="form-table">
       <tr>
@@ -59,7 +76,11 @@ function download_state() {
       </tr>
     </table>
   </form>
-<?php }
+  <?php } else {
+    error_message("Player unvailable or /jw-player-plugin-for-wordpress/players is write protected.  Please update your permissions or try uploading the player instead.");
+    default_state();
+  }
+}
 
 function upload_state() {
   if (player_upload()) { ?>
@@ -145,7 +166,7 @@ function upload_section() { ?>
       <div id="post-body">
         <div id="post-body-content">
           <div class="stuffbox">
-            <h3 class="hndle"><span><?php echo "Upload Commercial Player"; ?></span></h3>
+            <h3 class="hndle"><span><?php echo "Manually Upgrade"; ?></span></h3>
             <div class="inside" style="margin: 10px;">
               <script type="text/javascript">
                 function fileValidation() {
@@ -163,7 +184,7 @@ function upload_section() { ?>
                 <tr>
                   <td colspan="2">
                     <p>
-                      <span class="description"><?php echo "For commercial use purchase a license & upload your latest commercial player."; ?></span>
+                      <span class="description"><?php echo "Upload your own player.swf.  Useful for installing a specific version of the JW Player or to upgrade to the Commercial version.  Note: This is the only way to upgrade to the Commercial version of the JW Player."; ?></span>
                     </p>
                     <p>
                       <label for="file"><?php echo "JW Player:"; ?></label>
@@ -187,13 +208,13 @@ function download_section() { ?>
       <div id="post-body">
         <div id="post-body-content">
           <div class="stuffbox">
-            <h3 class="hndle"><span><?php echo "Download Non-commercial Player"; ?></span></h3>
+            <h3 class="hndle"><span><?php echo "Automatically Upgrade"; ?></span></h3>
             <div class="inside" style="margin: 10px;">
               <table class="form-table">
                 <tr>
                   <td colspan="2">
                     <p>
-                      <span class="description"><?php echo "For non-commercial, click here to check for and install the latest JW Player."; ?></span>
+                      <span class="description"><?php echo "Automatically download the latest Non-commercial version of the JW Player to your web server."; ?></span>
                     </p>
                     <p>
                       <input class="button-secondary" type="submit" name="Non_commercial" value="Install JW Player" />

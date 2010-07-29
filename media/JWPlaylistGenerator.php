@@ -47,7 +47,13 @@ if (is_array ($playlist_items)) {
     } else {
       echo "\n\t\t\t".'<location>' . esc_attr($playlist_item->guid) . '</location>';
     }
-		echo "\n\t\t\t".'<image>' . esc_attr($image) . '</image>';
+    if (substr($playlist_item->post_mime_type, 0, 5) == "image") {
+      $duration = get_post_meta($playlist_item_id, LONGTAIL_KEY . "duration", true);
+      echo "\n\t\t\t"."<jwplayer:duration>" . ($duration ? $duration : 10) . "</jwplayer:duration>";
+      echo "\n\t\t\t".'<image>' . esc_attr($playlist_item->guid) . '</image>';
+    } else {
+      echo "\n\t\t\t".'<image>' . esc_attr($image) . '</image>';
+    }
 		echo "\n\t\t\t".'<annotation>' . esc_attr( stripslashes($playlist_item->post_content) ) .  '</annotation>';
     echo "\n\t\t\t".'<jwplayer:mediaid>' . $playlist_item_id . '</jwplayer:mediaid>';
 		echo "\n\t\t\t".'<id>' . $playlist_item_id . '</id>';

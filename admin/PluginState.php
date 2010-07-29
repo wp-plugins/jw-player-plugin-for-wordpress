@@ -4,7 +4,7 @@
  * @file Class definition of PluginState
  * @see AdminState
  */
-class PluginState extends AdminState {
+class PluginState extends WizardState {
 
   /**
    * @see AdminState::__construct()
@@ -49,6 +49,10 @@ class PluginState extends AdminState {
     return new PlayerState("");
   }
 
+  public static function getTitle() {
+    return WizardState::PLUGIN_STATE;
+  }
+
   /**
    * @see AdminState::render()
    */
@@ -56,7 +60,6 @@ class PluginState extends AdminState {
     $plugins = LongTailFramework::getPlugins(); ?>
     <div class="wrap">
 
-      <h2> <?php echo "Plugins"; ?></h2>
       <script type="text/javascript">
         jQuery(function () {
           jQuery('#tabs').tabs();
@@ -87,6 +90,7 @@ class PluginState extends AdminState {
       </script>
 
       <form name="<?php echo LONGTAIL_KEY . "form" ?>" method="post" action="">
+        <?php parent::getBreadcrumbBar(); ?>
         <?php $this->selectedPlayer(); ?>
         <p/>
         <div id="tabs">

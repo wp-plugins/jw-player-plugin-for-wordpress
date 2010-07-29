@@ -4,7 +4,7 @@
  * @file Contains the class definition for FlashVarState
  * @see AdminState
  */
-class FlashVarState extends AdminState {
+class FlashVarState extends WizardState {
 
   /**
    * @see AdminState::__construct()
@@ -55,8 +55,8 @@ class FlashVarState extends AdminState {
   public function render() {
     $flash_vars = LongTailFramework::getPlayerFlashVars($this->flashVarCat()); ?>
     <div class="wrap">
-      <h2> <?php echo $this->getTitle(); ?></h2>
       <form name="<?php echo LONGTAIL_KEY . "form" ?>" method="post" action="">
+        <?php parent::getBreadcrumbBar(); ?>
         <?php $this->selectedPlayer(); ?>
         <p/>
         <div id="poststuff">
@@ -126,7 +126,7 @@ class FlashVarState extends AdminState {
    * Returns the title of the page.
    * @return string The title of the page.
    */
-  protected function getTitle() {
+  public static function getTitle() {
     return "Player Settings";
   }
 

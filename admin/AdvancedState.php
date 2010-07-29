@@ -67,8 +67,8 @@ class AdvancedState extends FlashVarState {
   /**
    * @see FlashVarState::getTitle()
    */
-  protected function getTitle() {
-    return "Advanced Settings";
+  public static function getTitle() {
+    return WizardState::ADVANCED_STATE;
   }
 
   protected function getFooter() { ?>
