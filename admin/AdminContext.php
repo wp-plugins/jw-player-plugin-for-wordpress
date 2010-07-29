@@ -85,7 +85,7 @@ class AdminContext {
     } else if (isset($_POST["Save"])) {
       $config = $_POST[LONGTAIL_KEY . "config"];
       LongTailFramework::setConfig($config);
-      $save_values = $this->mergeValues(LongTailFramework::getConfigValues(), $this->processSubmit());
+      $save_values = $this->processSubmit();
       LongTailFramework::saveConfig($this->convertToXML($save_values), esc_html($_POST[LONGTAIL_KEY . "new_player"]));
       if (count(LongTailFramework::getConfigs()) == 2) {
         update_option(LONGTAIL_KEY . "default", $_POST[LONGTAIL_KEY . "config"] ? $_POST[LONGTAIL_KEY . "config"] : $_POST[LONGTAIL_KEY . "new_player"]);
@@ -110,7 +110,7 @@ class AdminContext {
    * @return Array The array of configuration options to be saved.
    */
   private function processSubmit() {
-    $data = array();
+    $data = LongTailFramework::getConfigValues();
     $plugins = array();
     foreach ($_POST as $name => $value) {
       if (strstr($name, LONGTAIL_KEY . "player_") && $value != null) {
@@ -124,7 +124,7 @@ class AdminContext {
             $data[$new_name] = $new_val;
           }
         } else if ($new_name == "flashvars") {
-            $this->parseFlashvarString($new_val, $data);
+          $this->parseFlashvarString($new_val, $data);
         } else {
           $data[$new_name] = $new_val;
         }
@@ -132,12 +132,18 @@ class AdminContext {
         $plugins[str_replace("_enable", "", str_replace(LONGTAIL_KEY . "plugin_", "", $name))] = esc_html($value);
       //Process the plugin flashvars.
       } else if(strstr($name, LONGTAIL_KEY . "plugin_") && $value != null) {
-        $plugin_key = str_replace("_", ".", str_replace(LONGTAIL_KEY . "plugin_", "", $name));
+        $plugin_key = preg_replace("/_/", ".", str_replace(LONGTAIL_KEY . "plugin_", "", $name), 1);
+        $found = false;
         foreach(array_keys($plugins) as $repo) {
           $key = explode(".", $plugin_key);
           if (strstr($repo, $key[0]) && $plugins[$repo]) {
             $data[$plugin_key] = esc_html($value);
+            $found = true;
+            break;
           }
+        }
+        if (!$found) {
+          unset($data[$plugin_key]);
         }
       }
     }
@@ -151,6 +157,8 @@ class AdminContext {
     $plugin_string = implode(",", $active_plugins);
     if ($plugin_string != "") {
       $data["plugins"] = $plugin_string;
+    } else {
+      unset($data["plugins"]);
     }
     return $data;
   }
@@ -188,26 +196,6 @@ class AdminContext {
       </div>
 <?php
 	}
-
-  /**
-   * Merges previously saved config values with the new form submitted values.
-   * @param Array $original The previously saved values.
-   * @param Array $submitted The new values to be saved.
-   * @return Array The merged values from $original and $submitted.
-   */
-  private function mergeValues($original, $submitted) {
-    foreach ($submitted as $key => $value) {
-      if (isset($submitted[$key])) {
-        $original[$key] = $submitted[$key];
-      } else if (isset($submitted[$key . "_hidden"])) {
-        $original[$key] = $submitted[$key . "_hidden"];
-      }
-    }
-    if (!isset($submitted["skin"])) {
-      unset($original["skin"]);
-    }
-    return $original;
-  }
 
   /**
    * Removes this plugin's database entries.
