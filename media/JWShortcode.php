@@ -96,10 +96,8 @@ function jwplayer_handler($atts) {
     }
     return $out;
   }
-  LongTailFramework::setConfig($config);
-  $swf = LongTailFramework::generateSWFObject($atts);
 
-  return $swf->generateEmbedScript();
+  return generate_embed_code($config, $atts);
 }
 
 function resolve_media_id(&$atts) {
@@ -134,6 +132,26 @@ function resolve_media_id(&$atts) {
     $atts["file"] = get_post_meta($id, LONGTAIL_KEY . "file", true);
   } else {
     $atts["file"] = $post->guid;
+  }
+}
+
+function generate_embed_code($config, $atts) {
+  LongTailFramework::setConfig($config);
+  if (preg_match("/iP(od|hone|ad)/i", $_SERVER["HTTP_USER_AGENT"])) {
+    $youtube_pattern = "/youtube.com\/watch\?v=([0-9a-zA-Z_-]*)/i";
+    $loaded_config = LongTailFramework::getConfigValues();
+    $width = isset($atts["width"]) ? $atts["width"] : $loaded_config["width"];
+    $height = isset($atts["height"]) ? $atts["height"] : $loaded_config["height"];
+    $output = "";
+    if (preg_match($youtube_pattern, $atts["file"], $match)) {
+      $output = '<object width="' . $width . '" height="' . $height . '"><param name="movie" value="http://www.youtube.com/v/' . $match[1] . '&amp;hl=en_US&amp;fs=1"></param><param name="allowFullScreen" value="true"></param><param name="allowscriptaccess" value="always"></param><embed src="http://www.youtube.com/v/' . $match[1] . '&amp;hl=en_US&amp;fs=1" type="application/x-shockwave-flash" allowscriptaccess="always" allowfullscreen="true" width="' . $width . '" height="' . $height . '"></embed></object>';
+    } else {
+      $output = '<video src="' . $atts["file"] . '" width="' . $width . '" height="' . $height . '" controls="controls"></video>';
+    }
+    return $output;
+  } else {
+    $swf = LongTailFramework::generateSWFObject($atts);
+    return $swf->generateEmbedScript();
   }
 }
 
