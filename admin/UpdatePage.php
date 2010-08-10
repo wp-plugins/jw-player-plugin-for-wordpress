@@ -150,6 +150,7 @@ function embed_demo_player($download = false) {
       jQuery.post(ajaxurl, data, function(response) {
         var download = <?php echo (int) $download; ?>;
         if (!download) {
+            document.getElementById("error").style.display = "none";
             document.getElementById("info").style.display = "block";
         }
       });
