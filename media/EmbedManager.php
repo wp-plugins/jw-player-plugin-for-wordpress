@@ -74,7 +74,7 @@ function media_jwplayer_insert_form($errors) {
 ?>
 
 <script type="text/javascript">
-  <!--
+
   jQuery(function($){
     var desc = false;
     var preloaded = $(".media-item.preloaded");
@@ -110,7 +110,6 @@ function media_jwplayer_insert_form($errors) {
 			}
 		} );
   });
-  -->
 
   function insertPlaylist() {
     var s;
@@ -195,11 +194,13 @@ function media_jwplayer_insert_form($errors) {
       var input = itemToAdd.children(".menu_order").children(".menu_order_input")[0];
       input.id = "playlist_" + input.id
       input.name = "playlist_" + input.name;
+      input.checked = true;
       itemToAdd.appendTo("#playlist-items");
     } else {
       jQuery("#playlist-item-" + attachment_id).empty().remove();
     }
   }
+
 </script>
 
 <form enctype="multipart/form-data" method="post" action="<?php echo esc_attr($form_action_url); ?>" class="media-upload-form validate" id="playlist-form" style="width: 626px;">
@@ -389,7 +390,7 @@ function get_jw_playlist_item($attachment_id, $args, $current_playlist, $prefix 
 		if ( 'menu_order' == $key ) {
 			if ( true ) {
 				$order = '<div class="menu_order">';
-        $order .= '<input class="menu_order_input" type="checkbox" id="'. $prefix . 'attachments['.$attachment_id.'][enabled]" name="' . $prefix . 'attachments['.$attachment_id.'][enabled]" value="'.$val['value'].'"'.$checked.' onchange="updatePlaylist(this);" /></div>';
+        $order .= '<input class="menu_order_input" type="checkbox" id="'. $prefix . 'attachments['.$attachment_id.'][enabled]" name="' . $prefix . 'attachments['.$attachment_id.'][enabled]" value="'.$val['value'].'"'.$checked.' onclick="updatePlaylist(this);" /></div>';
       } else
 				$order = '<input type="hidden" name="' . $prefix . 'attachments['.$attachment_id.'][menu_order]" value="'.$val['value'].'" />';
 

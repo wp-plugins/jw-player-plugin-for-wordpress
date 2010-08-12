@@ -35,3 +35,11 @@
 	width: 300px;
 	display: block;
 }
+
+.menu_order_input {
+  border: none;
+  cursor: default;
+  font-size: 10px;
+  padding: 1px;
+  width: 23px;
+}
