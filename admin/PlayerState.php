@@ -5,11 +5,12 @@ define("JW_SETUP_DESC",
   "For more information please visit <a href=http://www.longtailvideo.com/" . JW_PLAYER_GA_VARS . " target=_blank>LongTail Video</a>."
 );
 
-define("JW_SETUP_FIRST_PLAYER", "You have not created your own custom Player.  This means you are using the \"Out of the Box\" " .
-  "Player.  Create your own custom Player now.");
-
 define("JW_SETUP_EDIT_PLAYERS", 
-  "This page allows you to customize multiple Players.  It is possible to configure flashvars, skins and plugins."
+  "<strong>Optional:</strong> This section allows you to create custom players. It is possible to configure flashvars, skins and plugins."
+);
+
+define("JW_LICENSED",
+  "To obtain a licensed player, please purchase a license from LongTail Video."
 );
 
 /**
@@ -71,13 +72,20 @@ class PlayerState extends AdminState {
 
       <script type="text/javascript">
 
+        function updateHandler(button) {
+          button.form.submit();
+        }
+
         function selectionHandler(button) {
           var field = document.getElementById("<?php echo LONGTAIL_KEY . "player" ?>");
+          field.setAttribute("value", button.id.replace("<?php echo LONGTAIL_KEY . "player_"; ?>", ""));
+          var field = document.getElementById("<?php echo LONGTAIL_KEY . "new_player"; ?>");
           field.setAttribute("value", button.id.replace("<?php echo LONGTAIL_KEY . "player_"; ?>", ""));
         }
 
         function copyHandler(button) {
-          selectionHandler(button);
+          var field = document.getElementById("<?php echo LONGTAIL_KEY . "player" ?>");
+          field.setAttribute("value", button.id.replace("<?php echo LONGTAIL_KEY . "player_"; ?>", ""));
           var field = document.getElementById("<?php echo LONGTAIL_KEY . "new_player"; ?>");
           field.setAttribute("value", button.id.replace("<?php echo LONGTAIL_KEY . "player_"; ?>", "") + "_copy");
         }
@@ -94,22 +102,35 @@ class PlayerState extends AdminState {
       </script>
 
       <h2>JW Player Setup</h2>
-      <table class="form-table">
-        <tr>
-          <td colspan="2">
-            <span><?php echo JW_SETUP_DESC; ?></span>
-          </td>
-        </tr>
-        <tr>
-          <td>
+      <p><span><?php echo JW_SETUP_DESC; ?></span><p>
       <?php if (file_exists(LongTailFramework::getPrimaryPlayerPath())) {?>
         <form name="<?php echo LONGTAIL_KEY . "upgrade_form" ?>" method="post" action="admin.php?page=jwplayer-update">
           <?php $version = get_option(LONGTAIL_KEY . "version"); ?>
           <?php if (isset($version) && !empty($version)) { ?>
-            <span><?php echo "<strong>Current Player:</strong> JW Player " . $version; ?></span>
-            <input class="button-secondary" type="submit" name="Update_Player" value="Click Here to Upgrade" />
-            <p><span><?php echo JW_SETUP_EDIT_PLAYERS; ?></span></p>
-            <p class="<?php echo !LongTailFramework::configsAvailable() ? "" : "hidden"; ?>"><span><?php echo JW_SETUP_FIRST_PLAYER; ?></span></p>
+            <div id="poststuff">
+              <div id="post-body">
+                <div id="post-body-content">
+                  <div class="stuffbox">
+                    <h3 class="hndle"><span>Player Version</span></h3>
+                    <div class="inside" style="margin: 15px;">
+                      <table>
+                        <tr valign="top">
+                          <td>
+                            <div>
+                              <p><span><?php echo "<strong>Current Player:</strong> JW Player " . $version; ?></span></p>
+                              <?php if (!strstr($version, "Licensed")) { ?>
+                                <p><span><?php echo JW_LICENSED; ?></span></p>
+                                <p><input class="button-secondary" type="submit" name="Update_Player" value="Click Here to Upgrade" /></p>
+                              <?php } ?>
+                            </div>
+                          </td>
+                        </tr>
+                      </table>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
           <?php } else { ?>
             <span><?php echo "<strong>Current Player:</strong> Version Unknown"; ?></span>
             <input class="button-secondary" type="submit" name="Update_Player" value="Click Here to Reinstall" />
@@ -121,80 +142,91 @@ class PlayerState extends AdminState {
           <input class="button-secondary" type="submit" name="Update_Player" value="Click Here to Reinstall" />
         </form>
       <?php } ?>
-          </td>
-        </tr>
-      </table>
       <form name="<?php echo LONGTAIL_KEY . "form" ?>" method="post" action="">
-        <table class="widefat" cellspacing="0">
-          <thead>
-            <tr>
-              <th class="manage-column column-name">Default</th>
-              <th class="manage-column column-name">Players</th>
-              <th class="manage-column column-name">Control Bar</th>
-              <th class="manage-column column-name">Skin</th>
-              <th class="manage-column column-name">Dock</th>
-              <th class="manage-column column-name">Autostart</th>
-              <th class="manage-column column-name">Height</th>
-              <th class="manage-column column-name">Width</th>
-              <th class="manage-column column-name">Actions</th>
-            </tr>
-          </thead>
-          <tbody>
-            <?php $alternate = false; ?>
-            <?php foreach ($players as $player) { ?>
-              <?php if ($player != "New Player") { ?>
-                <?php $alternate = !$alternate; ?>
-                <?php LongTailFramework::setConfig($player); ?>
-                <?php $details = LongTailFramework::getPlayerFlashVars(LongTailFramework::BASIC); ?>
-                <tr <?php if ($alternate) echo "class=\"alternate\""; ?> >
-                  <td style="vertical-align: middle;">
-                    <input type="radio" name="<?php echo LONGTAIL_KEY . "default"; ?>" value="<?php echo $player; ?>" <?php checked($player, get_option(LONGTAIL_KEY . "default")); ?>/>
-                  </td>
-                  <td style="vertical-align: middle;"><span><?php echo $player ?></span></td>
-                  <?php foreach (array_keys($details) as $detail) { ?>
-                    <?php foreach($details[$detail] as $fvar) { ?>
-                      <td style="vertical-align: middle;"><span><?php echo $fvar->getDefaultValue() ? $fvar->getDefaultValue() : "default"; ?></span></td>
-                    <?php } ?>
-                  <?php } ?>
-                  <td>
-                    <input class="button-secondary action" id="<?php echo LONGTAIL_KEY . "player_" . $player; ?>" type="submit" name="Next" value="Edit" onclick="selectionHandler(this)"/>
-                    <input class="button-secondary action" id="<?php echo LONGTAIL_KEY . "player_" . $player; ?>" type="submit" name="Next" value="Copy" onclick="copyHandler(this)"/>
-                    <input class="button-secondary action" id="<?php echo LONGTAIL_KEY . "player_" . $player; ?>" type="submit" name="Next" value="Delete" onclick="return deleteHandler(this)"/>
-                  </td>
-                </tr>
-              <?php } ?>
-            <?php } ?>
-          </tbody>
-        </table>
-        <p align="center" class="<?php echo !LongTailFramework::configsAvailable() ? "submit" : "hidden"; ?>">
-          <input class="button-secondary action" type="submit" name="Next" value="Create Custom Player"/>
-        </p>
-        <table class="<?php echo LongTailFramework::configsAvailable() ? "form-table" : "hidden"; ?>">
-          <tr>
-            <th style="width: 80px;">New Player:</th>
-            <td>
-              <input id="<?php echo LONGTAIL_KEY . "new_player"; ?>" type="text" value="" name="<?php echo LONGTAIL_KEY . "new_player"; ?>" />
-              <input class="button-secondary action" type="submit" name="Next" value="Create"/>
-            </td>
-          </tr>
-          <tr>
-            <td colspan="2">
-              <input name="<?php echo LONGTAIL_KEY . "ootb"; ?>" type="checkbox" value="1" <?php checked(true , get_option(LONGTAIL_KEY . "ootb")); ?> />
-              <span style="vertical-align: middle;" class="description">Set the Out of the Box Player as the default.</span>
-            </td>
-            <td align="right">
-              <input align="left" class="<?php echo LongTailFramework::configsAvailable() ? "button-primary" : "hidden"; ?>" type="submit" name="Update" value="Update" />
-              <input id="<?php echo LONGTAIL_KEY . "player"; ?>" type="hidden" name="<?php echo LONGTAIL_KEY . "config" ?>" value=""/>
-              <input type="hidden" name="<?php echo LONGTAIL_KEY . "state" ?>" value=<?php echo PlayerState::getID(); ?> />
-            </td>
-          </tr>
-        </table>
-        <br/>
+      <div id="poststuff">
+        <div id="post-body">
+          <div id="post-body-content">
+            <div class="stuffbox">
+              <h3 class="hndle"><span>Player Version</span></h3>
+              <div class="inside" style="margin: 15px;">
+                <table style="width: 100%;">
+                  <tr valign="top">
+                    <td>
+                      <div>
+                        <p><span><?php echo JW_SETUP_EDIT_PLAYERS; ?></span></p>
+                          <table class="widefat" cellspacing="0">
+                            <thead>
+                              <tr>
+                                <th class="manage-column column-name">Default</th>
+                                <th class="manage-column column-name">Players</th>
+                                <th class="manage-column column-name">Control Bar</th>
+                                <th class="manage-column column-name">Skin</th>
+                                <th class="manage-column column-name">Dock</th>
+                                <th class="manage-column column-name">Autostart</th>
+                                <th class="manage-column column-name">Height</th>
+                                <th class="manage-column column-name">Width</th>
+                                <th class="manage-column column-name">Actions</th>
+                              </tr>
+                            </thead>
+                            <tbody>
+                              <tr>
+                                <td style="vertical-align: middle">
+                                  <input onchange="updateHandler(this);" type="radio" id="<?php echo LONGTAIL_KEY . "default_Out-of-the-Box"; ?>" name="<?php echo LONGTAIL_KEY . "default"; ?>" value="Out-of-the-Box" <?php checked("Out-of-the-Box", get_option(LONGTAIL_KEY . "default")); ?>/>
+                                </td>
+                                <td style="vertical-align: middle;"><span><?php echo "Out-of-the-Box"; ?></span></td>
+                                <td style="vertical-align: middle;"><span><?php echo "bottom"; ?></span></td>
+                                <td style="vertical-align: middle;"><span><?php echo "default"; ?></span></td>
+                                <td style="vertical-align: middle;"><span><?php echo "false"; ?></span></td>
+                                <td style="vertical-align: middle;"><span><?php echo "false"; ?></span></td>
+                                <td style="vertical-align: middle;"><span><?php echo "280"; ?></span></td>
+                                <td style="vertical-align: middle;"><span><?php echo "400"; ?></span></td>
+                                <td style="vertical-align: middle;"><input class="button-secondary action" id="<?php echo LONGTAIL_KEY . "player_Out-of-the-Box"; ?>" type="submit" name="Next" value="Copy" onclick="copyHandler(this)"/></td>
+                              </tr>
+                              <?php $alternate = false; ?>
+                              <?php foreach ($players as $player) { ?>
+                                <?php if ($player != "New Player") { ?>
+                                  <?php $alternate = !$alternate; ?>
+                                  <?php LongTailFramework::setConfig($player); ?>
+                                  <?php $details = LongTailFramework::getPlayerFlashVars(LongTailFramework::BASIC); ?>
+                                  <tr <?php if ($alternate) echo "class=\"alternate\""; ?> >
+                                    <td style="vertical-align: middle;">
+                                      <input onchange="updateHandler(this);" type="radio" id="<?php echo LONGTAIL_KEY . "default_" . $player; ?>" name="<?php echo LONGTAIL_KEY . "default"; ?>" value="<?php echo $player; ?>" <?php checked($player, get_option(LONGTAIL_KEY . "default")); ?>/>
+                                    </td>
+                                    <td style="vertical-align: middle;"><span><?php echo $player ?></span></td>
+                                    <?php foreach (array_keys($details) as $detail) { ?>
+                                      <?php foreach($details[$detail] as $fvar) { ?>
+                                        <td style="vertical-align: middle;"><span><?php echo $fvar->getDefaultValue() ? $fvar->getDefaultValue() : "default"; ?></span></td>
+                                      <?php } ?>
+                                    <?php } ?>
+                                    <td>
+                                      <input class="button-secondary action" id="<?php echo LONGTAIL_KEY . "player_" . $player; ?>" type="submit" name="Next" value="Copy" onclick="copyHandler(this)"/>
+                                      <input class="button-secondary action" id="<?php echo LONGTAIL_KEY . "player_" . $player; ?>" type="submit" name="Next" value="Edit" onclick="selectionHandler(this)"/>
+                                      <input class="button-secondary action" id="<?php echo LONGTAIL_KEY . "player_" . $player; ?>" type="submit" name="Next" value="Delete" onclick="return deleteHandler(this)"/>
+                                    </td>
+                                  </tr>
+                                <?php } ?>
+                              <?php } ?>
+                            </tbody>
+                          </table>
+                          <br/>
+                          <input class="button-secondary action" type="submit" name="Next" value="Create Custom Player"/>
+                          <input id="<?php echo LONGTAIL_KEY . "new_player"; ?>" type="hidden" name="<?php echo LONGTAIL_KEY . "new_player"; ?>" value=""/>
+                          <input id="<?php echo LONGTAIL_KEY . "player"; ?>" type="hidden" name="<?php echo LONGTAIL_KEY . "config" ?>" value=""/>
+                          <input type="hidden" name="<?php echo LONGTAIL_KEY . "state" ?>" value=<?php echo PlayerState::getID(); ?> />
+                        </div>
+                      </td>
+                    </tr>
+                  </table>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
         <div id="poststuff">
           <div id="post-body">
             <div id="post-body-content">
               <div class="stuffbox">
-                <h3 class="hndle"><span>Plugin Management</span></h3>
+                <h3 class="hndle"><span>JW Player Plugin for WordPress Uninstall</span></h3>
                 <div class="inside" style="margin: 15px;">
                   <table>
                     <tr valign="top">

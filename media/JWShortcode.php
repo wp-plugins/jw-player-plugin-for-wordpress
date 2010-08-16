@@ -59,12 +59,9 @@ function jwplayer_handler($atts) {
   global $wpdb;
   $config = "";
   $default = get_option(LONGTAIL_KEY . "default");
-  $ootb = get_option(LONGTAIL_KEY . "ootb");
   $image = "";
   if (LongTailFramework::configExists($atts["config"])) {
     $config = $atts["config"];
-  } else if ($ootb) {
-    unset($atts["config"]);
   } else if (LongTailFramework::configExists($default)) {
     $config = $default;
   } else {

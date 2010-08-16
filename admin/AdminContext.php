@@ -66,7 +66,7 @@ class AdminContext {
         if (count($configs) >= 2 && $_POST[LONGTAIL_KEY . "config"] == get_option($_POST[LONGTAIL_KEY . "default"])) {
           update_option(LONGTAIL_KEY . "default", $configs[1]);
         } else if (count($configs) == 1) {
-          update_option(LONGTAIL_KEY . "default", "");
+          update_option(LONGTAIL_KEY . "default", "Out-of-the-Box");
         }
         $state = new PlayerState($_POST[LONGTAIL_KEY . "config"], $post_values);
         $del_player = $_POST[LONGTAIL_KEY . "config"];
@@ -95,9 +95,8 @@ class AdminContext {
       $this->feedback_message("The '$save_player' Player was successfully saved.");
       $state->getSaveState()->render();
     } else {
-      if (isset($_POST["Update"])) {
+      if (isset($_POST[LONGTAIL_KEY . "default"])) {
         update_option(LONGTAIL_KEY . "default", $_POST[LONGTAIL_KEY . "default"]);
-        update_option(LONGTAIL_KEY . "ootb", $_POST[LONGTAIL_KEY . "ootb"]);
       }
       LongTailFramework::setConfig($_POST[LONGTAIL_KEY . "config"]);
       $state->render();

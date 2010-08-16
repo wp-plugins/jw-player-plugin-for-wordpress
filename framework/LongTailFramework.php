@@ -82,7 +82,7 @@ class LongTailFramework
     if ($target == "") {
       $xml_file = LongTailFramework::getConfigPath();
     } else {
-      $xml_file = LongTailFramework::$dir . "/configs/" . $target . ".xml";
+      $xml_file = JWPLAYER_FILES_DIR . "/configs/" . $target . ".xml";
     }
     $xml_handle = fopen($xml_file, "w");
     fwrite($xml_handle, "<config>\n" . $xml_string . "</config>");

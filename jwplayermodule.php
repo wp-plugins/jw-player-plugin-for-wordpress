@@ -68,9 +68,11 @@ function jwplayer_activation() {
   if (!is_dir(JWPLAYER_FILES_DIR)) {
     if (!mkdir(JWPLAYER_FILES_DIR . "/player", 0700, true)) {
       add_action('admin_notices', create_function('', 'echo \'<div id="message" class="error fade"><p><strong>' . __('Error creating player directory.  Please ensure the WordPress uploads directory is writable.') . '</strong></p></div>\';'));
+      return;
     }
     if (!mkdir(JWPLAYER_FILES_DIR . "/configs", 0700, true)) {
       add_action('admin_notices', create_function('', 'echo \'<div id="message" class="error fade"><p><strong>' . __('Error creating player directory.  Please ensure the WordPress uploads directory is writable.') . '</strong></p></div>\';'));
+      return;
     }
     if (is_dir(JWPLAYER_PLUGIN_DIR . "/configs")) {
       rename(JWPLAYER_PLUGIN_DIR . "/configs", JWPLAYER_FILES_DIR . "/configs");

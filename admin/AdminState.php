@@ -27,13 +27,12 @@ abstract class AdminState {
       <tr>
         <th>Selected Player:</th>
         <td>
+          <?php $value = $this->current_player; ?>
           <?php $new_player = LONGTAIL_KEY . "new_player"; ?>
           <?php if (isset($_POST[$new_player]) && $_POST[$new_player] != "") { ?>
-            <input type="text" value="<?php echo $_POST[$new_player]; ?>" name="<?php echo $new_player; ?>" />
-            <?php unset($_POST[$new_player]); ?>
-          <?php } else { ?>
-            <?php echo $this->current_player; ?>
+            <?php $value = $_POST[$new_player]; ?>
           <?php } ?>
+          <input type="text" value="<?php echo $value; ?>" id="<?php echo $new_player; ?>" name="<?php echo $new_player; ?>" />
         </td>
       </tr>
     </table> <?php
@@ -51,13 +50,31 @@ abstract class AdminState {
   protected function buttonBar($id, $show_previous = true, $show_next = true, $show_save = true, $show_cancel = true) { ?>
     <p align="right" class="submit">
       <?php foreach ($_POST as $key => $val) { ?>
-        <?php if (strstr($key, LONGTAIL_KEY) && !strstr($key, "state") && !strstr($key, "config")) {?>
+        <?php if (strstr($key, LONGTAIL_KEY) && !strstr($key, "state") && !strstr($key, "config") && !strstr($key, "new_player")) {?>
           <input type="hidden" name="<?php echo $key; ?>" value="<?php echo $val; ?>" />
         <?php } ?>
       <?php } ?>
       <input type="hidden" name="<?php echo LONGTAIL_KEY . "state" ?>" value="<?php echo $id; ?>" />
-      <input type="hidden" name="<?php echo LONGTAIL_KEY . "config" ?>" value="<?php echo $this->current_player ?>" />
-      <?php if ($show_save) { ?><input align="left" class="button-primary" type="submit" name="Save" value="Save" /><?php } ?>
+      <input type="hidden" id="<?php echo LONGTAIL_KEY . "config" ?>" name="<?php echo LONGTAIL_KEY . "config" ?>" value="<?php echo $this->current_player ?>" />
+      <?php if ($show_save) { ?>
+        <script type="text/javascript">
+          function saveHandler(button) {
+            var configs = eval('(' + '<?php echo json_encode(LongTailFramework::getConfigs()); ?>' + ')');
+            var newVal = document.getElementById("<?php echo LONGTAIL_KEY . "new_player"; ?>");
+            var configVal = document.getElementById("<?php echo LONGTAIL_KEY . "config"; ?>");
+            if (configVal != null && newVal != null && configVal.value == newVal.value) {
+              return true;
+            }
+            for (var config in configs) {
+              if (newVal.value == configs[config]) {
+                return confirm("A player with this name already exists and will be overwritten.  Would you like to continue?");
+              }
+            }
+            return true;
+          }
+        </script>
+        <input align="left" class="button-primary" type="submit" name="Save" value="Save" onclick="return saveHandler(this);"/>
+      <?php } ?>
       <?php if ($show_previous) { ?><input type="submit" name="Previous" value="Previous" /><?php } ?>
       <?php if ($show_cancel) { ?><input align="right" type="submit" name="Cancel" value="Cancel" /><?php } ?>
       <?php if ($show_next) { ?><input align="right" type="submit" name="Next" value="Next" /><?php } ?>

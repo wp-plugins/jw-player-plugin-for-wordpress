@@ -8,7 +8,7 @@ abstract class WizardState extends AdminState {
 
   const BASIC_STATE = "Basic Settings";
   const ADVANCED_STATE = "Advanced Settings";
-  const LTAS_STATE = "LongTail AdSolution";
+  const LTAS_STATE = "Ad Serving";
   const PLUGIN_STATE = "Plugins";
 
   /**
