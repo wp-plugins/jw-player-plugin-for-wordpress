@@ -97,7 +97,7 @@ class PlayerState extends AdminState {
       <table class="form-table">
         <tr>
           <td colspan="2">
-            <span class="description"><?php echo JW_SETUP_DESC; ?></span>
+            <span><?php echo JW_SETUP_DESC; ?></span>
           </td>
         </tr>
         <tr>
@@ -106,18 +106,18 @@ class PlayerState extends AdminState {
         <form name="<?php echo LONGTAIL_KEY . "upgrade_form" ?>" method="post" action="admin.php?page=jwplayer-update">
           <?php $version = get_option(LONGTAIL_KEY . "version"); ?>
           <?php if (isset($version) && !empty($version)) { ?>
-            <span class="description"><?php echo "<strong>Current Player:</strong> JW Player " . $version; ?></span>
+            <span><?php echo "<strong>Current Player:</strong> JW Player " . $version; ?></span>
             <input class="button-secondary" type="submit" name="Update_Player" value="Click Here to Upgrade" />
-            <p><span class="description"><?php echo JW_SETUP_EDIT_PLAYERS; ?></span></p>
-            <p class="<?php echo !LongTailFramework::configsAvailable() ? "" : "hidden"; ?>"><span class="description"><?php echo JW_SETUP_FIRST_PLAYER; ?></span></p>
+            <p><span><?php echo JW_SETUP_EDIT_PLAYERS; ?></span></p>
+            <p class="<?php echo !LongTailFramework::configsAvailable() ? "" : "hidden"; ?>"><span><?php echo JW_SETUP_FIRST_PLAYER; ?></span></p>
           <?php } else { ?>
-            <span class="description"><?php echo "<strong>Current Player:</strong> Version Unknown"; ?></span>
+            <span><?php echo "<strong>Current Player:</strong> Version Unknown"; ?></span>
             <input class="button-secondary" type="submit" name="Update_Player" value="Click Here to Reinstall" />
           <?php } ?>
         </form>
       <?php } else if (file_exists(LongTailFramework::getSecondaryPlayerPath())) { ?>
         <form name="<?php echo LONGTAIL_KEY . "upgrade_form" ?>" method="post" action="admin.php?page=jwplayer-update">
-          <span class="description"><?php echo "<strong>Current Player:</strong> Version Unknown "; ?></span>
+          <span><?php echo "<strong>Current Player:</strong> Version Unknown "; ?></span>
           <input class="button-secondary" type="submit" name="Update_Player" value="Click Here to Reinstall" />
         </form>
       <?php } ?>

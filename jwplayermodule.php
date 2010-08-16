@@ -52,17 +52,34 @@ include_once (dirname (__FILE__) . "/media/JWShortcode.php");
 
 register_activation_hook(__FILE__, "jwplayer_activation");
 
-function jwplayer_activation() {
-  if (file_exists(LongTailFramework::getSecondaryPlayerPath())) {
-    rename(LongTailFramework::getSecondaryPlayerPath(), LongTailFramework::getPrimaryPlayerPath());
-    rename(str_replace("player.swf", "yt.swf", LongTailFramework::getSecondaryPlayerPath()),
-           str_replace("player.swf", "yt.swf", LongTailFramework::getPrimaryPlayerPath()));
-  }
+//Define the plugin directory and url for file access.
+$uploads = wp_upload_dir();
+if (isset($uploads["error"]) && !empty($uploads["error"])) {
+  add_action('admin_notices', create_function('', 'echo \'<div id="message" class="error fade"><p><strong>' . __('Sorry, the JWPlayer Plugin for WordPress requires that the WordPress uploads directory exists.') . '</strong></p></div>\';'));
+  return;
 }
 
-//Define the plugin directory and url for file access.
-define("JWPLAYER_DIR", WP_PLUGIN_DIR . "/" . plugin_basename(dirname(__FILE__)));
-define("JWPLAYER_URL", WP_PLUGIN_URL . "/" . plugin_basename(dirname(__FILE__)));
+define("JWPLAYER_PLUGIN_DIR", WP_PLUGIN_DIR . "/" . plugin_basename(dirname(__FILE__)));
+define("JWPLAYER_PLUGIN_URL", WP_PLUGIN_URL . "/" . plugin_basename(dirname(__FILE__)));
+define("JWPLAYER_FILES_DIR", $uploads["basedir"] . "/" . plugin_basename(dirname(__FILE__)));
+define("JWPLAYER_FILES_URL", $uploads["baseurl"] . "/" . plugin_basename(dirname(__FILE__)));
+
+function jwplayer_activation() {
+  if (!is_dir(JWPLAYER_FILES_DIR)) {
+    if (!mkdir(JWPLAYER_FILES_DIR . "/player", 0700, true)) {
+      add_action('admin_notices', create_function('', 'echo \'<div id="message" class="error fade"><p><strong>' . __('Error creating player directory.  Please ensure the WordPress uploads directory is writable.') . '</strong></p></div>\';'));
+    }
+    if (!mkdir(JWPLAYER_FILES_DIR . "/configs", 0700, true)) {
+      add_action('admin_notices', create_function('', 'echo \'<div id="message" class="error fade"><p><strong>' . __('Error creating player directory.  Please ensure the WordPress uploads directory is writable.') . '</strong></p></div>\';'));
+    }
+    if (is_dir(JWPLAYER_PLUGIN_DIR . "/configs")) {
+      rename(JWPLAYER_PLUGIN_DIR . "/configs", JWPLAYER_FILES_DIR . "/configs");
+      foreach (LongTailFramework::getConfigs() as $config) {
+        rename(JWPLAYER_PLUGIN_DIR . "/configs/$config.xml", JWPLAYER_FILES_DIR . "/configs/$config.xml");
+      }
+    }
+  }
+}
 
 // Error if the player doesn't exist
 if (!file_exists(LongTailFramework::getPlayerPath())) {

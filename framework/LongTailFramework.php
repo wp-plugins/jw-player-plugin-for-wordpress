@@ -18,8 +18,8 @@ class LongTailFramework
   const BASIC = "Basic Player Settings";
   const ADVANCED = "Advanced Player Settings";
 
-  private static $dir = JWPLAYER_DIR;
-  private static $url = JWPLAYER_URL;
+  private static $dir = JWPLAYER_PLUGIN_DIR;
+  private static $url = JWPLAYER_PLUGIN_URL;
   private static $current_config = "";
   private static $current_config_values;
   private static $div_id = 1;
@@ -132,7 +132,7 @@ class LongTailFramework
     if ($config == "") {
       return "";
     }
-    return LongTailFramework::$url . "/configs/" . $config . ".xml";
+    return JWPLAYER_FILES_URL . "/configs/" . $config . ".xml";
   }
 
   /**
@@ -146,7 +146,7 @@ class LongTailFramework
     if ($config == "") {
       return "";
     }
-    return LongTailFramework::$dir . "/configs/" . $config . ".xml";
+    return JWPLAYER_FILES_DIR . "/configs/" . $config . ".xml";
   }
 
   /**
@@ -155,7 +155,7 @@ class LongTailFramework
    */
   public static function getConfigs() {
     $results = array();
-    $handler = opendir(LongTailFramework::$dir . "/configs");
+    $handler = opendir(JWPLAYER_FILES_DIR . "/configs");
     $results[] = "New Player";
     while ($file = readdir($handler)) {
       if ($file != "." && $file != ".." && strstr($file, ".xml")) {
@@ -190,15 +190,15 @@ class LongTailFramework
   }
 
   public static function getPrimaryPlayerPath() {
-    return LongTailFramework::$dir . "/player/player.swf";
+    return JWPLAYER_FILES_DIR . "/player/player.swf";
   }
 
   public static function getSecondaryPlayerPath() {
-    return LongTailFramework::$dir . "/player.swf";
+    return JWPLAYER_FILES_DIR . "/player.swf";
   }
 
   public static function getTempPlayerPath() {
-    return LongTailFramework::$dir . "/player/player_tmp.swf";
+    return JWPLAYER_FILES_DIR . "/player/player_tmp.swf";
   }
 
   /**
@@ -213,15 +213,15 @@ class LongTailFramework
   }
 
   public static function getPrimaryPlayerURL() {
-    return LongTailFramework::$url . "/player/player.swf";
+    return JWPLAYER_FILES_URL . "/player/player.swf";
   }
 
   public static function getSecondaryPlayerURL() {
-    return LongTailFramework::$url . "/player.swf";
+    return JWPLAYER_FILES_URL . "/player.swf";
   }
 
   public static function getTempPlayerURL() {
-    return LongTailFramework::$url . "/player/player_tmp.swf";
+    return JWPLAYER_FILES_URL . "/player/player_tmp.swf";
   }
 
   /**
