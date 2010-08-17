@@ -1,23 +1,23 @@
 === JW Player Plugin for WordPress ===
 Contributors: LongTail Video Inc.
-Tags: JW Player, Video, Flash
+Tags: JW Player, Video, Flash, LongTail Video, RTMP, Playlists, Audio, Image, HTML5
 Requires at least: 2.8.6
-Tested up to: 2.9.2
-Stable tag: 1.1.2
+Tested up to: 3.0.1
+Stable tag: 1.2.0
 
 This module is provided by LongTail Video Inc.  It enables you to configure and embed the JW Player for Flash for use on your WordPress website.
 
 == Description ==
 
-The JW Player for Flash Plugin enables you to deliver video content through your WordPress website. This plugin has been developed by LongTail Video, the creator of the JW Player, and allows for easy customization and embedding of the Player in the body of your WordPress articles. It provides support for all of the player's configuration options, including skins, plugins and the LongTail Video AdSolution. 
+The JW Player Plugin for WordPress makes it extremely easy to deliver video through your WordPress website. This plugin has been developed by LongTail Video, the creator of the JW Player, and allows for easy customization and embedding of the JW Player in your WordPress posts. It provides support for all of the player's configuration options, including skins, plugins and the LongTail Video AdSolution.
 
-In addition, it supports a powerful tag system that allows for dynamic customization at embed time, and gives you the capability of referencing external video content.
+In addition, it supports a powerful tag system that allows for dynamic customization at embed time, and gives you the capability of referencing external video content.  Plus, if your users are viewing your site on an iDevice, it will embed the <video> tag instead.  Allowing your users to experience your video content from anywhere.
 
-This plugin also expands the built in WordPress Media Library.  You can now add media files from a URL (including full support for YouTube videos and the YouTube API).  You can also create and embed playlists on the fly using the new Playlist Manager.
+This plugin also expands the built in WordPress Media Library.  You can now add media files from a URL (including full support for YouTube videos and RTMP streams).  It is also really simple to create custom playlists using the built in Playlist Manager.
 
-For more information about the JW Player and the LongTail AdSolution please visit http://www.longtailvideo.com.
+For more information about the JW Player and the LongTail AdSolution please visit <a href='http://www.longtailvideo.com/?utm_source=WordPress&utm_medium=Product&utm_campaign=WordPress'>LongTail Video</a>.
 
-Note that to use the LongTail Ad Solution you will need to apply on the LongTail site.
+If you have any questions, comments, problems or suggestions please post on our forum at http://www.longtailvideo.com/support/forums.
 
 == Installation ==
 
@@ -48,6 +48,23 @@ Note that to use the LongTail Ad Solution you will need to apply on the LongTail
 
 == Changelog ==
 
+= 1.2.0 =
+* FEATURE: Installation of the JW Player is now handled entirely within the plugin.  Simply click a button to install the JW PLayer.  Additionally, upload of licensed players can be done through the plugin as well.
+* FEATURE: Content Aware Embed - when embedding audio without a thumbnail, only the controlbar will show
+* FEATURE: RTMP Media Library support - can add RTMP streams to the media library and specify streamer and file at the media level. (plugin will make best guess at streamer and file on import)
+* FEATURE: Should now be able to use the shortcode in widgets
+* FEATURE: Will use the video tag (for .mp4) or youtube embed (for youtube videos) when your blog is viewed on an iPod, iPhone or iPad.
+* ENHANCEMENT: Player and configs relocated to the WordPress uploads directly.  This should minimize file permission issues going forward.
+* ENHANCEMENT: Image Embedding now officially supported - Can specify the duration flashvar on image media.
+* ENHANCEMENT: Audio embedding now officially supported - Can specify the thumbnail flashvar on audio media
+* ENHANCEMENT: Arbitrary flashvar field added - useful when using custom plugins and you need to specify flashvars that aren't listed in the JW Player Setup
+* ENHANCEMENT: Plugin now uses .zip skins.  Number of available skins has been greatly expanded.
+* ENHANCEMENT: Top Nav Bar has been added to the JW Player Setup wizard interface - should make specific edits to your players much easier now
+* ENHANCEMENT: Significant redesign of the Playlist Manager - Improved usability and better handling of large media libraries.
+* BUG: spaces removed from plugin list - should address unexpected plugin behavior (eg. LTAS not working correctly).
+* BUG: Provider/Streamer flashvars have been added back to JW Player Setup
+* BUG: Image editing should no longer fail while the plugin is active
+
 = 1.1.2 =
 * reimplemented path generation and usage
 * Fixed links to longtailvideo.com
@@ -56,8 +73,8 @@ Note that to use the LongTail Ad Solution you will need to apply on the LongTail
 = 1.1.1 =
 * Improved path resolution.
 
-= 1.1 =
+= 1.1.0 =
 * Fixes path resolution of player.swf on the LAMP stack.
 
-= 1.0 =
+= 1.0.0 =
 * Initial release of the JW Player Plugin for WordPress

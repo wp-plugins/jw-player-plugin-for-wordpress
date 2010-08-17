@@ -75,14 +75,14 @@ class LTASState extends WizardState {
           <div id="post-body">
             <div id="post-body-content">
               <div class="stuffbox">
-                <h3 class="hndle"><span><?php echo "LTAS Settings"; ?></span></h3>
+                <h3 class="hndle"><span><?php echo "LongTail AdSolution Settings"; ?></span></h3>
                 <div class="inside" style="margin: 15px;">
                   <table class="form-table">
                     <tr>
                       <?php $value = $_POST["jwplayermodule_plugin_ltas_enable"] ? $_POST["jwplayermodule_plugin_ltas_enable"] : $ltas["enabled"]; ?>
                       <?php unset($_POST["jwplayermodule_plugin_ltas_enable"]); ?>
                       <td><input name="jwplayermodule_plugin_ltas_enable" type="checkbox" value="1" <?php checked(true , $value); ?> />
-                      <span>Enable LTAS</span>
+                      <span>Enable LongTail AdSolution</span>
                       </td>
                     </tr>
                     <tr>

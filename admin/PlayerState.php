@@ -111,7 +111,7 @@ class PlayerState extends AdminState {
               <div id="post-body">
                 <div id="post-body-content">
                   <div class="stuffbox">
-                    <h3 class="hndle"><span>Player Version</span></h3>
+                    <h3 class="hndle"><span>JW Player Version</span></h3>
                     <div class="inside" style="margin: 15px;">
                       <table>
                         <tr valign="top">
@@ -147,7 +147,7 @@ class PlayerState extends AdminState {
         <div id="post-body">
           <div id="post-body-content">
             <div class="stuffbox">
-              <h3 class="hndle"><span>Player Version</span></h3>
+              <h3 class="hndle"><span>Manage Players</span></h3>
               <div class="inside" style="margin: 15px;">
                 <table style="width: 100%;">
                   <tr valign="top">
@@ -232,11 +232,10 @@ class PlayerState extends AdminState {
                     <tr valign="top">
                       <td>
                         <div>
-                          <p><?php _e('If you wish to no longer use the JW Player Plugin for WordPress, please make sure to click the "Uninstall" button before deactivating the plugin.') ;?></p>
-                          <p><?php _e('Deactivating without uninstalling will not remove the data created by the plugin.') ;?>
+                          <p><?php _e('To fully remove the plugin, click the Uninstall button.  Deactivating without uninstalling will not remove the data created by the plugin.') ;?></p>
                         </div>
                         <p><font color="red"><strong><?php _e('WARNING:') ;?></strong><br />
-                        <?php _e('Once uninstalled, this cannot be undone. Since this will be deleting items from your database it is advised that you use a database backup plugin for WordPress to backup all the tables first.') ;?></font></p>
+                        <?php _e('This cannot be undone.  Since this is deleting data from your database, it is recommended that you create a backup.') ;?></font></p>
                         <div align="left">
                           <input type="submit" name="Uninstall" class="button-secondary delete" value="<?php _e('Uninstall plugin') ?>" onclick="return confirm('<?php _e('You are about to Uninstall this plugin from WordPress.\nThis action is not reversible.\n\nChoose [Cancel] to Stop, [OK] to Uninstall.\n'); ?>');"/>
                         </div>

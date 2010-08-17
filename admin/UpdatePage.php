@@ -19,36 +19,36 @@ if (isset($_POST["Non_commercial"]) || isset($_POST["Install"])) {
   default_state();
 }
 
-function yt_download() {
-  $yt_handle = @fopen(str_replace("player.swf", "yt.swf", LongTailFramework::getPrimaryPlayerPath()), "w");
-  if ($yt_handle) {
-    $yt = wp_remote_retrieve_body(wp_remote_get("http://player.longtailvideo.com/yt.swf"));
-    if ($yt == '') {
-      return DOWNLOAD_ERROR;
-    }
-    $result = @fwrite($yt_handle, $yt);
-    if ($result) {
-      fclose($yt_handle);
-      return SUCCESS;
-    }
-  }
-  return WRITE_ERROR;
-}
-
 function player_download() {
-  $player_handle = fopen(LongTailFramework::getPrimaryPlayerPath(), "w");
-  if ($player_handle) {
-    $player = wp_remote_retrieve_body(wp_remote_get("http://player.longtailvideo.com/player.swf"));
-    if ($player == '') {
-      return DOWNLOAD_ERROR;
-    }
-    $result = fwrite($player_handle, $player);
-    if ($result) {
-      fclose($player_handle);
-      return yt_download();
-    }
+  global $wp_filesystem;
+
+  WP_Filesystem();
+  
+  $player_package = download_url("http://www.longtailvideo.com/wp/jwplayer.zip");
+  if (is_wp_error($player_package)) {
+    return DOWNLOAD_ERROR;
   }
-  return WRITE_ERROR;
+
+  $working_dir = JWPLAYER_FILES_DIR . "/player";
+  $result = unzip_file($player_package, $working_dir);
+  if (is_wp_error($result)) {
+    return WRITE_ERROR;
+  }
+
+  $player_target = $working_dir . "/mediaplayer-5.2/player.swf";
+  $result = rename($player_target, LongTailFramework::getPrimaryPlayerPath());
+  if (!$result) {
+    return WRITE_ERROR;
+  }
+  $yt_target = $working_dir . "/mediaplayer-5.2/yt.swf";
+  $result = rename($yt_target, str_replace("player.swf", "yt.swf", LongTailFramework::getPrimaryPlayerPath()));
+  if (!$result) {
+    return WRITE_ERROR;
+  }
+
+  $wp_filesystem->delete($working_dir . "/mediaplayer-5.2", true);
+  unlink($player_package);
+  return SUCCESS;
 }
 
 function player_upload() {
