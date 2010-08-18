@@ -66,21 +66,21 @@ define("JWPLAYER_FILES_URL", $uploads["baseurl"] . "/" . plugin_basename(dirname
 
 function jwplayer_activation() {
   if (!is_dir(JWPLAYER_FILES_DIR)) {
-    if (!mkdir(JWPLAYER_FILES_DIR, 0755)) {
+    if (!mkdir(JWPLAYER_FILES_DIR, 0777)) {
       add_action('admin_notices', create_function('', 'echo \'<div id="message" class="error fade"><p><strong>' . __('Error creating player directory.  Please ensure the WordPress uploads directory is writable.') . '</strong></p></div>\';'));
       return;
     }
-    chmod(JWPLAYER_FILES_DIR, 0755);
-    if (!mkdir(JWPLAYER_FILES_DIR . "/player", 0755)) {
+    chmod(JWPLAYER_FILES_DIR, 0777);
+    if (!mkdir(JWPLAYER_FILES_DIR . "/player", 0777)) {
       add_action('admin_notices', create_function('', 'echo \'<div id="message" class="error fade"><p><strong>' . __('Error creating player directory.  Please ensure the WordPress uploads directory is writable.') . '</strong></p></div>\';'));
       return;
     }
-    chmod(JWPLAYER_FILES_DIR . "/player", 0755);
-    if (!mkdir(JWPLAYER_FILES_DIR . "/configs", 0755)) {
+    chmod(JWPLAYER_FILES_DIR . "/player", 0777);
+    if (!mkdir(JWPLAYER_FILES_DIR . "/configs", 0777)) {
       add_action('admin_notices', create_function('', 'echo \'<div id="message" class="error fade"><p><strong>' . __('Error creating player directory.  Please ensure the WordPress uploads directory is writable.') . '</strong></p></div>\';'));
       return;
     }
-    chmod(JWPLAYER_FILES_DIR . "/configs", 0755);
+    chmod(JWPLAYER_FILES_DIR . "/configs", 0777);
     if (is_dir(JWPLAYER_PLUGIN_DIR . "/configs")) {
       foreach (get_old_configs() as $config) {
         rename(JWPLAYER_PLUGIN_DIR . "/configs/$config.xml", JWPLAYER_FILES_DIR . "/configs/$config.xml");
