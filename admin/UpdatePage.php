@@ -20,33 +20,39 @@ if (isset($_POST["Non_commercial"]) || isset($_POST["Install"])) {
 }
 
 function player_download() {
-  global $wp_filesystem;
-
-  WP_Filesystem();
   
   $player_package = download_url("http://www.longtailvideo.com/wp/jwplayer.zip");
   if (is_wp_error($player_package)) {
     return DOWNLOAD_ERROR;
   }
 
-  $working_dir = JWPLAYER_FILES_DIR . "/player";
-  $result = unzip_file($player_package, $working_dir);
-  if (is_wp_error($result)) {
-    return WRITE_ERROR;
+  $zip = new ZipArchive();  
+  if ($zip->open($player_package)) {
+    $contents = "";
+    $fp = $zip->getStream("mediaplayer-5.2/player.swf");
+    if (!$fp) return WRITE_ERROR;
+    while(!feof($fp)) {
+      $contents .= fread($fp, 2);
+    }
+    fclose($fp);
+    $result = file_put_contents(LongTailFramework::getPrimaryPlayerPath(), $contents);
+    if (!$result) {
+      return WRITE_ERROR;
+    }
+    $contents = "";
+    $fp = $zip->getStream("mediaplayer-5.2/yt.swf");
+    if (!$fp) return WRITE_ERROR;
+    while (!feof($fp)) {
+      $contents .= fread($fp, 2);
+    }
+    fclose($fp);
+    $result = file_put_contents(str_replace("player.swf", "yt.swf", LongTailFramework::getPrimaryPlayerPath()), $contents);
+    if (!$result) {
+      return WRITE_ERROR;
+    }
+    $zip->close();
   }
 
-  $player_target = $working_dir . "/mediaplayer-5.2/player.swf";
-  $result = rename($player_target, LongTailFramework::getPrimaryPlayerPath());
-  if (!$result) {
-    return WRITE_ERROR;
-  }
-  $yt_target = $working_dir . "/mediaplayer-5.2/yt.swf";
-  $result = rename($yt_target, str_replace("player.swf", "yt.swf", LongTailFramework::getPrimaryPlayerPath()));
-  if (!$result) {
-    return WRITE_ERROR;
-  }
-
-  $wp_filesystem->delete($working_dir . "/mediaplayer-5.2", true);
   unlink($player_package);
   return SUCCESS;
 }
