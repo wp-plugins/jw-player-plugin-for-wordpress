@@ -75,8 +75,7 @@ function jwplayer_activation() {
       return;
     }
     if (is_dir(JWPLAYER_PLUGIN_DIR . "/configs")) {
-      rename(JWPLAYER_PLUGIN_DIR . "/configs", JWPLAYER_FILES_DIR . "/configs");
-      foreach (LongTailFramework::getConfigs() as $config) {
+      foreach (get_old_configs() as $config) {
         rename(JWPLAYER_PLUGIN_DIR . "/configs/$config.xml", JWPLAYER_FILES_DIR . "/configs/$config.xml");
       }
     }
@@ -178,6 +177,19 @@ function verify_player() {
   }
   echo (int) $response;
   exit;
+}
+
+function get_old_configs() {
+  $results = array();
+  $handler = opendir(JWPLAYER_PLUGIN_DIR . "/configs");
+  $results[] = "New Player";
+  while ($file = readdir($handler)) {
+    if ($file != "." && $file != ".." && strstr($file, ".xml")) {
+      $results[] = str_replace(".xml", "", $file);
+    }
+  }
+  closedir($handler);
+  return $results;
 }
 
 ?>
