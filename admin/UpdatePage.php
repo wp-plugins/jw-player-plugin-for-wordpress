@@ -3,6 +3,7 @@ if(preg_match('#' . basename(__FILE__) . '#', $_SERVER['PHP_SELF'])) { die('You 
 
 define(DOWNLOAD_ERROR, "Download failed.");
 define(WRITE_ERROR, "Write failed");
+define(ZIP_ERROR, "Zip classes missing");
 define(SUCCESS, "Success");
 
 ?>
@@ -24,6 +25,10 @@ function player_download() {
   $player_package = download_url("http://www.longtailvideo.com/wp/jwplayer.zip");
   if (is_wp_error($player_package)) {
     return DOWNLOAD_ERROR;
+  }
+
+  if (!class_exists("ZipArchive")) {
+    return ZIP_ERROR;
   }
 
   $zip = new ZipArchive();  
@@ -95,6 +100,8 @@ function download_state() { ?>
     error_message("Not able to download JW Player.  Please check your internet connection. <br/> If you already have the JW Player then you can install it using the <a href='admin.php?page=jwplayer-update'>upgrade page</a>.");
   } else if ($result == WRITE_ERROR) {
     error_message("Not able to install JW Player.  Please grant write access to the jw-player-plugin-for-wordpress/player directory and visit the <a href='admin.php?page=jwplayer-update'>upgrade page</a>.");
+  } else if ($result == ZIP_ERROR) {
+    error_message("The necessary zip classes are missing.  Please upload the player manually instead using the <a href='admin.php?page=jwplayer-update'>upgrade page</a>.");
   }
 }
 

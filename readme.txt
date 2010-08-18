@@ -3,7 +3,7 @@ Contributors: LongTail Video Inc.
 Tags: JW Player, Video, Flash, LongTail Video, RTMP, Playlists, Audio, Image, HTML5
 Requires at least: 2.8.6
 Tested up to: 3.0.1
-Stable tag: 1.2.0
+Stable tag: 1.2.1
 
 This module is provided by LongTail Video Inc.  It enables you to configure and embed the JW Player for Flash for use on your WordPress website.
 
@@ -11,7 +11,7 @@ This module is provided by LongTail Video Inc.  It enables you to configure and 
 
 The JW Player Plugin for WordPress makes it extremely easy to deliver video through your WordPress website. This plugin has been developed by LongTail Video, the creator of the JW Player, and allows for easy customization and embedding of the JW Player in your WordPress posts. It provides support for all of the player's configuration options, including skins, plugins and the LongTail Video AdSolution.
 
-In addition, it supports a powerful tag system that allows for dynamic customization at embed time, and gives you the capability of referencing external video content.  Plus, if your users are viewing your site on an iDevice, it will embed the <video> tag instead.  Allowing your users to experience your video content from anywhere.
+In addition, it supports a powerful tag system that allows for dynamic customization at embed time, and gives you the capability of referencing external video content.  Plus, if your users are viewing your site on an iDevice, it will embed the &lt;video&gt; tag instead.  Allowing your users to experience your video content from anywhere.
 
 This plugin also expands the built in WordPress Media Library.  You can now add media files from a URL (including full support for YouTube videos and RTMP streams).  It is also really simple to create custom playlists using the built in Playlist Manager.
 
@@ -22,11 +22,7 @@ If you have any questions, comments, problems or suggestions please post on our 
 == Installation ==
 
 1. Place the plugin folder in your plugin directory.
-1. Download the player from www.longtailvideo.com.
-1. Place player.swf and yt.swf into the JW Player Plugin for WordPress directory.
-1. Navigate to Site Admin > Plugins.
-1. Click the activate link to enable the plugin.
-1. Click on Save configuration.
+1. Visit the JW Player Upgrade page and download or upload your JW Player.
 
 == Requirements ==
 
@@ -47,6 +43,11 @@ If you have any questions, comments, problems or suggestions please post on our 
 1. For more advanced and detailed description of the module please refer to the provided manual.
 
 == Changelog ==
+
+= 1.2.1 =
+* BUG: File permission issues should now be fixed.
+* BUG: Problem where uploaded player was incorrectly marked as invalid should now be fixed.
+* BUG: Automated player download problem should now be fixed.
 
 = 1.2.0 =
 * FEATURE: Installation of the JW Player is now handled entirely within the plugin.  Simply click a button to install the JW PLayer.  Additionally, upload of licensed players can be done through the plugin as well.
