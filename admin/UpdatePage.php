@@ -132,7 +132,8 @@ function error_message($message) { ?>
 function embed_demo_player($download = false) {
   $atts = array(
     "file" => "http://content.longtailvideo.com/videos/bunny.flv",
-    "image" => "http://content.longtailvideo.com/videos/bunny.jpg"
+    "image" => "http://content.longtailvideo.com/videos/bunny.jpg",
+    "id" => "jwplayer-1"
   );
   $swf = $download ? LongTailFramework::generateSWFObject($atts) : LongTailFramework::generateTempSWFObject($atts); ?>
   <script type="text/javascript">
