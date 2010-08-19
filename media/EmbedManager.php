@@ -271,7 +271,7 @@ function media_jwplayer_insert_form($errors) {
         <?php } ?>
       <?php } ?>
     </select>
-    <input type="button" class="button-primary" style="display:none;" onmousedown="insertPlaylist();" name="insert-gallery" id="insert-gallery" value="<?php esc_attr_e( 'Insert Playlist' ); ?>" />
+    <input type="button" class="button-primary" onmousedown="insertPlaylist();" name="insert-gallery" id="insert-gallery" value="<?php esc_attr_e( 'Insert Playlist' ); ?>" />
     <input type="button" class="button" style="display:none;" onmousedown="insertPlaylist();" name="update-gallery" id="update-gallery" value="<?php esc_attr_e( 'Update gallery settings' ); ?>" />
   </p>
 </form>
