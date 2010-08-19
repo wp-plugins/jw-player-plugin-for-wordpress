@@ -154,9 +154,10 @@ class AdminContext {
       }
     }
     $plugin_string = implode(",", $active_plugins);
-    if ($plugin_string != "") {
+    if (!empty($plugins)) {
       $data["plugins"] = $plugin_string;
-    } else {
+    }
+    if ($data["plugins"] == "" || empty($data["plugins"])) {
       unset($data["plugins"]);
     }
     return $data;

@@ -44,6 +44,7 @@ function player_download() {
     if (!$result) {
       return WRITE_ERROR;
     }
+    chmod(LongTailFramework::getPrimaryPlayerPath(), 0777);
     $contents = "";
     $fp = $zip->getStream("mediaplayer-5.2/yt.swf");
     if (!$fp) return WRITE_ERROR;
@@ -55,6 +56,7 @@ function player_download() {
     if (!$result) {
       return WRITE_ERROR;
     }
+    chmod(str_replace("player.swf", "yt.swf", LongTailFramework::getPrimaryPlayerPath()), 0777);
     $zip->close();
   }
 

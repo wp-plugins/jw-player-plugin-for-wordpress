@@ -178,6 +178,7 @@ function verify_player() {
     if (!$_POST["type"]) {
       unlink(LongTailFramework::getPrimaryPlayerPath());
       rename(LongTailFramework::getTempPlayerPath(), LongTailFramework::getPrimaryPlayerPath());
+      chmod(LongTailFramework::getPrimaryPlayerPath(), 0777);
     } 
   } else {
     unlink(LongTailFramework::getTempPlayerPath());
