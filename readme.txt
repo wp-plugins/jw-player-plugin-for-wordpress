@@ -19,6 +19,8 @@ For more information about the JW Player and the LongTail AdSolution please visi
 
 If you have any questions, comments, problems or suggestions please post on our forum at http://www.longtailvideo.com/support/forums.
 
+<strong>NOTE: </strong> There have been issues for some users regarding file permissions.  The JW Player Plugin for WordPress writes some data to local files.  WordPress makes the wp-content folder available for this purpose.  Specifically the JW Player Plugin for WordPress stores the JW Player and your custom players in the wp-content/uploads folder.  For tips on how to make sure this folder is writable please refer to http://codex.wordpress.org/Changing_File_Permissions.
+
 == Installation ==
 
 Installing for the first time:
