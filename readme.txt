@@ -22,10 +22,12 @@ If you have any questions, comments, problems or suggestions please post on our 
 == Installation ==
 
 Installing for the first time:
+
 1. Place the plugin folder in your plugin directory.
 1. Visit the JW Player Upgrade page and download or upload your JW Player.
 
 Upgrading:
+
 It is recommended that you back up your custom players if you are upgrading.
 You can perform the automatic update, download the plugin and upload, or FTP the plugin to the plugins folder directly.
 
