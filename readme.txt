@@ -38,11 +38,17 @@ If you have any questions, comments, problems or suggestions please post on our 
 1. (Optional) Configure Advanced flashvars and add plugins.
 1. Save your Player.
 1. Create or edit a post.
-1. Insert the following tag: [jwplayer config="&lt;Player name&gt;" file="&lt;your video&gt;"] into the body.  &lt;your video&gt; is a url to your file.  The "config" attribute is only need when using a player other than the default.
+1. Click on one of the Upload/Insert buttons
+1. Using the Media Library tab, you should be able to edit your media.
+1. For a video you want to insert, click the Insert JW Player button.
+1. It should insert a tag that looks like the following: [jwplayer config="&lt;Player name&gt;" file="&lt;your video&gt;"] into the body.  &lt;your video&gt; is a url to your file.  The "config" attribute is only need when using a player other than the default.
 1. Save your posts.
-1. For more advanced and detailed description of the module please refer to the provided manual.
 
 == Changelog ==
+
+= 1.2.2 =
+* Additional adjustment to permissions.
+* Reduction of archive size to try and avoid zip errors.
 
 = 1.2.1 =
 * BUG: File permission issues should now be fixed.

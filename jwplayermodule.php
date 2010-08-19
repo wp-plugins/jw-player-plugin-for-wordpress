@@ -66,7 +66,7 @@ define("JWPLAYER_FILES_URL", $uploads["baseurl"] . "/" . plugin_basename(dirname
 
 function jwplayer_activation() {
   if (!is_dir(JWPLAYER_FILES_DIR)) {
-    if (!mkdir(JWPLAYER_FILES_DIR, 0777)) {
+    if (!mkdir(JWPLAYER_FILES_DIR, 0777, true)) {
       add_action('admin_notices', create_function('', 'echo \'<div id="message" class="error fade"><p><strong>' . __('Error creating player directory.  Please ensure the WordPress uploads directory is writable.') . '</strong></p></div>\';'));
       return;
     }
