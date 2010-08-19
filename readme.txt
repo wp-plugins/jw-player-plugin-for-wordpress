@@ -28,7 +28,7 @@ If you have any questions, comments, problems or suggestions please post on our 
 
 * WordPress 2.8.6 or higher
 * PHP 5.0 or higher
-* The "configs" directory contained in the plugin directory must be writable.
+* The wp-content/uploads directory needs to be writable by the plugin.  This is likely already the case as WordPress stores your media and various other uploads here.
 
 == Usage ==
 
