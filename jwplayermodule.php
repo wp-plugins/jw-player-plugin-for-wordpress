@@ -83,7 +83,7 @@ function jwplayer_activation() {
     chmod(JWPLAYER_FILES_DIR . "/configs", 0777);
     if (@is_dir(JWPLAYER_PLUGIN_DIR . "/configs")) {
       foreach (get_old_configs() as $config) {
-        rename(JWPLAYER_PLUGIN_DIR . "/configs/$config.xml", JWPLAYER_FILES_DIR . "/configs/$config.xml");
+        @rename(JWPLAYER_PLUGIN_DIR . "/configs/$config.xml", JWPLAYER_FILES_DIR . "/configs/$config.xml");
       }
     }
   }
@@ -189,14 +189,14 @@ function verify_player() {
 
 function get_old_configs() {
   $results = array();
-  $handler = opendir(JWPLAYER_PLUGIN_DIR . "/configs");
+  $handler = @opendir(JWPLAYER_PLUGIN_DIR . "/configs");
   $results[] = "New Player";
-  while ($file = readdir($handler)) {
+  while ($file = @readdir($handler)) {
     if ($file != "." && $file != ".." && strstr($file, ".xml")) {
       $results[] = str_replace(".xml", "", $file);
     }
   }
-  closedir($handler);
+  @closedir($handler);
   return $results;
 }
 
