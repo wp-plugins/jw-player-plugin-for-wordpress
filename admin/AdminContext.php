@@ -63,9 +63,9 @@ class AdminContext {
         LongTailFramework::setConfig($_POST[LONGTAIL_KEY . "config"]);
         LongTailFramework::deleteConfig();
         $configs = LongTailFramework::getConfigs();
-        if (count($configs) >= 2 && $_POST[LONGTAIL_KEY . "config"] == get_option($_POST[LONGTAIL_KEY . "default"])) {
+        if ($configs && count($configs) >= 2 && $_POST[LONGTAIL_KEY . "config"] == get_option($_POST[LONGTAIL_KEY . "default"])) {
           update_option(LONGTAIL_KEY . "default", $configs[1]);
-        } else if (count($configs) == 1) {
+        } else if (!$configs || count($configs) == 1) {
           update_option(LONGTAIL_KEY . "default", "Out-of-the-Box");
         }
         $state = new PlayerState($_POST[LONGTAIL_KEY . "config"], $post_values);
@@ -86,13 +86,18 @@ class AdminContext {
       $config = $_POST[LONGTAIL_KEY . "config"];
       LongTailFramework::setConfig($config);
       $save_values = $this->processSubmit();
-      LongTailFramework::saveConfig($this->convertToXML($save_values), esc_html($_POST[LONGTAIL_KEY . "new_player"]));
-      if (count(LongTailFramework::getConfigs()) == 2) {
+      $success = LongTailFramework::saveConfig($this->convertToXML($save_values), esc_html($_POST[LONGTAIL_KEY . "new_player"]));
+      $configs = LongTailFramework::getConfigs();
+      if ($configs && count($configs) == 2) {
         update_option(LONGTAIL_KEY . "default", $_POST[LONGTAIL_KEY . "config"] ? $_POST[LONGTAIL_KEY . "config"] : $_POST[LONGTAIL_KEY . "new_player"]);
         update_option(LONGTAIL_KEY . "ootb", false);
       }
       $save_player = $_POST[LONGTAIL_KEY . "new_player"] ? $_POST[LONGTAIL_KEY . "new_player"] : $config;
-      $this->feedback_message("The '$save_player' Player was successfully saved.");
+      if ($success) {
+        $this->feedback_message("The '$save_player' Player was successfully saved.");
+      } else {
+        $this->error_message("The '$save_player' failed to save.  Please make sure the /uploads/jw-player-plugin-for-wordpress/configs is writable");
+      }
       $state->getSaveState()->render();
     } else {
       if (isset($_POST[LONGTAIL_KEY . "default"])) {
@@ -191,11 +196,16 @@ class AdminContext {
    * @param int $timeout The duration the message should stay on screen.
    */
   private	function feedback_message ($message, $timeout = 0) { ?>
-      <div class="fade updated" id="message" onclick="this.parentNode.removeChild (this)">
-        <p><strong><?php echo $message ?></strong></p>
-      </div>
-<?php
+    <div class="fade updated" id="message" onclick="this.parentNode.removeChild (this)">
+      <p><strong><?php echo $message ?></strong></p>
+    </div> <?php
 	}
+
+  private function error_message ($message) { ?>
+    <div class="error fade" id="message">
+      <p><strong><?php echo $message ?></strong></p>
+    </div> <?php
+  }
 
   /**
    * Removes this plugin's database entries.

@@ -67,7 +67,8 @@ class PlayerState extends AdminState {
    * @see AdminState::render()
    */
   public function render() {
-    $players = LongTailFramework::getConfigs(); ?>
+    $players = LongTailFramework::getConfigs();
+    if (!$players) $this->errorMessage("Error reading the uploads/jw-player-plugin-for-wordpress/configs directory.  Please make sure the directory exists and is writable.")?>
     <div class="wrap">
 
       <script type="text/javascript">
@@ -183,27 +184,29 @@ class PlayerState extends AdminState {
                                 <td style="vertical-align: middle;"><input class="button-secondary action" id="<?php echo LONGTAIL_KEY . "player_Out-of-the-Box"; ?>" type="submit" name="Next" value="Copy" onclick="copyHandler(this)"/></td>
                               </tr>
                               <?php $alternate = false; ?>
-                              <?php foreach ($players as $player) { ?>
-                                <?php if ($player != "New Player") { ?>
-                                  <?php $alternate = !$alternate; ?>
-                                  <?php LongTailFramework::setConfig($player); ?>
-                                  <?php $details = LongTailFramework::getPlayerFlashVars(LongTailFramework::BASIC); ?>
-                                  <tr <?php if ($alternate) echo "class=\"alternate\""; ?> >
-                                    <td style="vertical-align: middle;">
-                                      <input onchange="updateHandler(this);" type="radio" id="<?php echo LONGTAIL_KEY . "default_" . $player; ?>" name="<?php echo LONGTAIL_KEY . "default"; ?>" value="<?php echo $player; ?>" <?php checked($player, get_option(LONGTAIL_KEY . "default")); ?>/>
-                                    </td>
-                                    <td style="vertical-align: middle;"><span><?php echo $player ?></span></td>
-                                    <?php foreach (array_keys($details) as $detail) { ?>
-                                      <?php foreach($details[$detail] as $fvar) { ?>
-                                        <td style="vertical-align: middle;"><span><?php echo $fvar->getDefaultValue() ? $fvar->getDefaultValue() : "default"; ?></span></td>
+                              <?php if ($players) { ?>
+                                <?php foreach ($players as $player) { ?>
+                                  <?php if ($player != "New Player") { ?>
+                                    <?php $alternate = !$alternate; ?>
+                                    <?php LongTailFramework::setConfig($player); ?>
+                                    <?php $details = LongTailFramework::getPlayerFlashVars(LongTailFramework::BASIC); ?>
+                                    <tr <?php if ($alternate) echo "class=\"alternate\""; ?> >
+                                      <td style="vertical-align: middle;">
+                                        <input onchange="updateHandler(this);" type="radio" id="<?php echo LONGTAIL_KEY . "default_" . $player; ?>" name="<?php echo LONGTAIL_KEY . "default"; ?>" value="<?php echo $player; ?>" <?php checked($player, get_option(LONGTAIL_KEY . "default")); ?>/>
+                                      </td>
+                                      <td style="vertical-align: middle;"><span><?php echo $player ?></span></td>
+                                      <?php foreach (array_keys($details) as $detail) { ?>
+                                        <?php foreach($details[$detail] as $fvar) { ?>
+                                          <td style="vertical-align: middle;"><span><?php echo $fvar->getDefaultValue() ? $fvar->getDefaultValue() : "default"; ?></span></td>
+                                        <?php } ?>
                                       <?php } ?>
-                                    <?php } ?>
-                                    <td>
-                                      <input class="button-secondary action" id="<?php echo LONGTAIL_KEY . "player_" . $player; ?>" type="submit" name="Next" value="Copy" onclick="copyHandler(this)"/>
-                                      <input class="button-secondary action" id="<?php echo LONGTAIL_KEY . "player_" . $player; ?>" type="submit" name="Next" value="Edit" onclick="selectionHandler(this)"/>
-                                      <input class="button-secondary action" id="<?php echo LONGTAIL_KEY . "player_" . $player; ?>" type="submit" name="Next" value="Delete" onclick="return deleteHandler(this)"/>
-                                    </td>
-                                  </tr>
+                                      <td>
+                                        <input class="button-secondary action" id="<?php echo LONGTAIL_KEY . "player_" . $player; ?>" type="submit" name="Next" value="Copy" onclick="copyHandler(this)"/>
+                                        <input class="button-secondary action" id="<?php echo LONGTAIL_KEY . "player_" . $player; ?>" type="submit" name="Next" value="Edit" onclick="selectionHandler(this)"/>
+                                        <input class="button-secondary action" id="<?php echo LONGTAIL_KEY . "player_" . $player; ?>" type="submit" name="Next" value="Delete" onclick="return deleteHandler(this)"/>
+                                      </td>
+                                    </tr>
+                                  <?php } ?>
                                 <?php } ?>
                               <?php } ?>
                             </tbody>

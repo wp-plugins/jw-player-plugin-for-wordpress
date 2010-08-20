@@ -84,7 +84,8 @@ class LongTailFramework
     } else {
       $xml_file = JWPLAYER_FILES_DIR . "/configs/" . $target . ".xml";
     }
-    $xml_handle = fopen($xml_file, "w");
+    $xml_handle = @fopen($xml_file, "w");
+    if (!$xml_handle) return false;
     fwrite($xml_handle, "<config>\n" . $xml_string . "</config>");
     fclose($xml_handle);
     return true;
@@ -156,7 +157,8 @@ class LongTailFramework
    */
   public static function getConfigs() {
     $results = array();
-    $handler = opendir(JWPLAYER_FILES_DIR . "/configs");
+    $handler = @opendir(JWPLAYER_FILES_DIR . "/configs");
+    if (!$handler) return false;
     $results[] = "New Player";
     while ($file = readdir($handler)) {
       if ($file != "." && $file != ".." && strstr($file, ".xml")) {
@@ -173,7 +175,7 @@ class LongTailFramework
    */
   public static function configsAvailable() {
     $configs = LongTailFramework::getConfigs();
-    if (count($configs) > 1) {
+    if ($configs && count($configs) > 1) {
       return true;
     }
     return false;

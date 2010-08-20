@@ -265,9 +265,11 @@ function media_jwplayer_insert_form($errors) {
     <select name="<?php echo LONGTAIL_KEY . "player_select"; ?>" id="<?php echo LONGTAIL_KEY . "player_select"; ?>">
       <option value="Default">Default</option>
       <?php $configs = LongTailFramework::getConfigs(); ?>
-      <?php foreach ($configs as $config) { ?>
-        <?php if ($config != "New Player") { ?>
-          <option value="<?php echo $config; ?>"><?php echo $config; ?></option>
+      <?php if ($configs) { ?>
+        <?php foreach ($configs as $config) { ?>
+          <?php if ($config != "New Player") { ?>
+            <option value="<?php echo $config; ?>"><?php echo $config; ?></option>
+          <?php } ?>
         <?php } ?>
       <?php } ?>
     </select>

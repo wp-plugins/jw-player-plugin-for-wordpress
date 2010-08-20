@@ -144,9 +144,11 @@ function generatePlayerSelectorHTML($id) {
   $player_select = "<select name='attachments[$id][" . LONGTAIL_KEY . "player_select]' id='" . LONGTAIL_KEY . "player_select_" . $id . "'>\n";
   $player_select .= "<option value='Default'>Default</option>\n";
   $configs = LongTailFramework::getConfigs();
-  foreach ($configs as $config) {
-    if ($config != "New Player") {
-      $player_select .= "<option value='" . $config . "'>" . $config . "</option>\n";
+  if ($configs) {
+    foreach ($configs as $config) {
+      if ($config != "New Player") {
+        $player_select .= "<option value='" . $config . "'>" . $config . "</option>\n";
+      }
     }
   }
   $player_select .= "</select>\n";

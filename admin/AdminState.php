@@ -18,6 +18,18 @@ abstract class AdminState {
     $this->current_post_values = $post_values;
   }
 
+  protected function errorMessage($message) { ?>
+    <div class="error fade" id="message">
+      <p><strong><?php echo $message ?></strong></p>
+    </div> <?php
+  }
+
+  protected function infoMessage($message) { ?>
+    <div class="fade updated" id="message" onclick="this.parentNode.removeChild (this)">
+      <p><strong><?php echo $message ?></strong></p>
+    </div> <?php
+  }
+
   /**
    * Renders the currently selected player name.  Displays a text field when
    * creating or copying a player.
