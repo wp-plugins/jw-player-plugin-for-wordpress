@@ -67,6 +67,7 @@ function player_download() {
 function player_upload() {
   if ($_FILES["file"]["type"] == "application/x-shockwave-flash") {
     move_uploaded_file($_FILES["file"]["tmp_name"], LongTailFramework::getTempPlayerPath());
+    chmod(LongTailFramework::getTempPlayerPath(), 0777);
     return true;
   }
   return false;
