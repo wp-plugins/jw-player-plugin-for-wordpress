@@ -125,9 +125,7 @@ class SWFObjectConfig {
     $params = $this->transcribe_array($swf_config["swfobject"]["files"][$id]["params"]);
     $attributes = $this->transcribe_array($swf_config["swfobject"]["files"][$id]["attributes"]);
     return $this->generateDiv() .
-             "<script type=\"text/javascript\">\n
-               swfobject.embedSWF(\"$url\", \"$id\", \"$width\", \"$height\", \"$version\", \"$express_redirect\", $flash_vars, $params, $attributes);\n
-              </script>";
+             "<script type=\"text/javascript\">swfobject.embedSWF(\"$url\", \"$id\", \"$width\", \"$height\", \"$version\", \"$express_redirect\", $flash_vars, $params, $attributes);</script>";
   }
 
   /**

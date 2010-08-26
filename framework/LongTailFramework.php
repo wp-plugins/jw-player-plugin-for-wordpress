@@ -88,6 +88,7 @@ class LongTailFramework
     if (!$xml_handle) return false;
     fwrite($xml_handle, "<config>\n" . $xml_string . "</config>");
     fclose($xml_handle);
+    chmod($xml_file, 0777);
     return true;
   }
 
