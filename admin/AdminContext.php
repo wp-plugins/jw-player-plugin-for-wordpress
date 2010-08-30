@@ -201,6 +201,10 @@ class AdminContext {
     </div> <?php
 	}
 
+  /**
+   * Displays an error message to the user.
+   * @param String $message  The message to be displayed.
+   */
   private function error_message ($message) { ?>
     <div class="error fade" id="message">
       <p><strong><?php echo $message ?></strong></p>

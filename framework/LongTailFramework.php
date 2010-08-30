@@ -67,6 +67,11 @@ class LongTailFramework
     return LongTailFramework::$loaded_flash_vars[$flash_var_cat];
   }
 
+  /**
+   * Returns the flashvars that are set in addition to those defined in the
+   * player.xml file.
+   * @return array Structured array containing the additional flashvars.
+   */
   public static function getPlayerAdditionalFlashVars() {
     return LongTailFramework::$loaded_additional_flash_vars;
   }
@@ -193,14 +198,27 @@ class LongTailFramework
     return LongTailFramework::getSecondaryPlayerPath();
   }
 
+  /**
+   * Get the complete path to the primary (and execpted) player location.
+   * @return string The path to the player.
+   */
   public static function getPrimaryPlayerPath() {
     return JWPLAYER_FILES_DIR . "/player/player.swf";
   }
 
+  /**
+   * Get the complete path to the secondary player location.  This
+   * is necessary to support older versions.
+   * @return string The path to the player.
+   */
   public static function getSecondaryPlayerPath() {
-    return JWPLAYER_FILES_DIR . "/player.swf";
+    return JWPLAYER_PLUGIN_DIR . "/player.swf";
   }
 
+  /**
+   * Get the complete path to the temporary uploaded player.
+   * @return string The path to the temporary player.
+   */
   public static function getTempPlayerPath() {
     return JWPLAYER_FILES_DIR . "/player/player_tmp.swf";
   }
@@ -216,14 +234,27 @@ class LongTailFramework
     return LongTailFramework::getSecondaryPlayerURL();
   }
 
+  /**
+   * Get the complete url to the primary (and execpted) player location.
+   * @return string The url to the player.
+   */
   public static function getPrimaryPlayerURL() {
     return JWPLAYER_FILES_URL . "/player/player.swf";
   }
 
+  /**
+   * Get the complete url to the secondary player location.  This
+   * is necessary to support older versions.
+   * @return string The url to the player.
+   */
   public static function getSecondaryPlayerURL() {
-    return JWPLAYER_FILES_URL . "/player.swf";
+    return JWPLAYER_PLUGIN_URL . "/player.swf";
   }
 
+  /**
+   * Get the complete url to the temporary uploaded player.
+   * @return string The url to the temporary player.
+   */
   public static function getTempPlayerURL() {
     return JWPLAYER_FILES_URL . "/player/player_tmp.swf";
   }
@@ -325,16 +356,27 @@ class LongTailFramework
   /**
    * Generates the SWFObjectConfig object which acts as a wrapper for the SWFObject javascript library.
    * @param array $flashVars The array of flashVars to be used in the embedding
-   * @return The configured SWFObjectConfig object to be used for embedding
+   * @return SWFObjectConfig The configured SWFObjectConfig object to be used for embedding
    */
   public static function generateSWFObject($flash_vars) {
     return new SWFObjectConfig(LongTailFramework::$div_id++, LongTailFramework::getPlayerURL(), LongTailFramework::getConfigURL(), LongTailFramework::getEmbedParameters(), $flash_vars);
   }
 
+  /**
+   * Generates teh SWFObjectConfig object which acts as a wrapper for the SWFObject javascript library.
+   * This will embed the temporary swf file uploaded by a plugin.
+   * @param array $flash_vars The array of flashvars to be used in the embedding
+   * @return SWFObjectConfig The configured SWFOjbectConfig object to be used for embedding
+   */
   public static function generateTempSWFObject($flash_vars) {
     return new SWFObjectConfig(LongTailFramework::$div_id++, LongTailFramework::getTempPlayerURL(), LongTailFramework::getConfigURL(), LongTailFramework::getEmbedParameters(), $flash_vars);
   }
 
+  /**
+   * Helper function to flatten the additional flashvars into a string representation.
+   * @param array The array of additional flashvars
+   * @return string The string represetnation of the additional flashvars
+   */
   private static function flattenAdditionalFlashVars($flashvars) {
     $output = "";
     $output_array = array();
@@ -401,6 +443,8 @@ class LongTailFramework
   /**
    * Creates a Plugin object which represents a given Player plugin.
    * @param file $file The xml file which represents the Plugin
+   * @param &$config_values The currently loaded config values.  Used to
+   * distinguish between standard flashvars and additional flashvars.
    * @return A new Plugin object
    */
   private static function processPlugin($file, &$config_values = null) {

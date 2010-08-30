@@ -18,12 +18,20 @@ abstract class AdminState {
     $this->current_post_values = $post_values;
   }
 
+  /**
+   * Display an error message at the top of the current page.
+   * @param String $message The message to be displayed.
+   */
   protected function errorMessage($message) { ?>
     <div class="error fade" id="message">
       <p><strong><?php echo $message ?></strong></p>
     </div> <?php
   }
 
+  /**
+   * Display an info message at the top of the current page.
+   * @param String $message The message to be displayed.
+   */
   protected function infoMessage($message) { ?>
     <div class="fade updated" id="message" onclick="this.parentNode.removeChild (this)">
       <p><strong><?php echo $message ?></strong></p>

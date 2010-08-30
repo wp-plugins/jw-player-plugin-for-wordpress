@@ -130,10 +130,18 @@ class FlashVarState extends WizardState {
     return "Player Settings";
   }
 
+  /**
+   *
+   * @return <type>
+   */
   protected function getHeader() {
     return "";
   }
 
+  /**
+   *
+   * @return <type>
+   */
   protected function getFooter() {
     return "";
   }

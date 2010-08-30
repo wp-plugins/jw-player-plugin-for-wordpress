@@ -55,11 +55,20 @@ function media_jwplayer_insert_form($errors) {
     $current_playlist = $new_playlist_id;
   } else if (isset($_POST["delete"])) {
     wp_delete_post($_POST[LONGTAIL_KEY . "playlist_select"]);
+    $playlists = jwplayer_get_playlists();
+    $current_playlist = $playlists[0]->ID;
   }
 
   if (!isset($current_playlist)) {
-    $current_playlist = isset($_POST[LONGTAIL_KEY . "playlist_select"]) ? $_POST[LONGTAIL_KEY . "playlist_select"] : $playlists[0]->ID;
+    if (isset($_POST[LONGTAIL_KEY . "playlist_select"])) {
+      $current_playlist = $_POST[LONGTAIL_KEY . "playlist_select"];
+    } else if (isset($_GET["playlist"])) {
+      $current_playlist = $_GET["playlist"];
+    } else {
+      $current_playlist = $playlists[0]->ID;
+    }
   }
+
   if (isset($_GET["p_items"])) {
     $p_items = json_decode(str_replace("\\", "", $_GET["p_items"]));
   } else if (isset($_POST["playlist_items"]) && $_POST["old_playlist"] == $current_playlist) {
@@ -67,6 +76,7 @@ function media_jwplayer_insert_form($errors) {
   } else {
     $p_items = explode(",", get_post_meta($current_playlist, LONGTAIL_KEY. "playlist_items", true));
   }
+
   update_post_meta($new_playlist_id, LONGTAIL_KEY . "playlist_items", implode(",", $p_items));
 
   echo '<link rel="stylesheet" href="'. WP_PLUGIN_URL . '/' . plugin_basename( dirname(dirname(__FILE__)) ).'/' . 'css/playlist.css" type="text/css" media="print, projection, screen" />'."\n";
@@ -214,7 +224,8 @@ function media_jwplayer_insert_form($errors) {
         'prev_text' => __('&laquo;'),
         'next_text' => __('&raquo;'),
         'total' => ceil($jw_query->found_posts / 10),
-        'current' => $_GET['paged'] ? $_GET['paged'] : 1
+        'current' => $_GET['paged'] ? $_GET['paged'] : 1,
+        'add_args' => array('playlist' => $current_playlist)
       ));
 
       if ( $page_links ) { ?>

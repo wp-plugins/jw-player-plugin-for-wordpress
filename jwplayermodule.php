@@ -170,6 +170,7 @@ add_action('parse_request',  'jwplayer_parse_request', 9 );
 
 add_action("wp_ajax_verify_player", "verify_player");
 
+// Handles Ajax call with submitted player version
 function verify_player() {
   $response = false;
   if ($_POST["version"] != "null") {
@@ -187,6 +188,7 @@ function verify_player() {
   exit;
 }
 
+// Grab existing configs for migration to new configs directory
 function get_old_configs() {
   $results = array();
   $handler = @opendir(JWPLAYER_PLUGIN_DIR . "/configs");

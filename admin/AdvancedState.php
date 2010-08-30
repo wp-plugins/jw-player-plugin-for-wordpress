@@ -71,6 +71,9 @@ class AdvancedState extends FlashVarState {
     return WizardState::ADVANCED_STATE;
   }
 
+  /**
+   * @see FlashVarState::getFooter()
+   */
   protected function getFooter() { ?>
     <div class="stuffbox">
       <h3 class="hndle"><span><?php echo "Additional Flashvars"; ?></span></h3>
