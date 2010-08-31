@@ -9,6 +9,8 @@ This module is provided by LongTail Video Inc.  It enables you to configure and 
 
 == Description ==
 
+<strong>NOTE: </strong> There have been issues for some users regarding file permissions.  The JW Player Plugin for WordPress writes some data to local files.  WordPress makes the wp-content folder available for this purpose.  Specifically the JW Player Plugin for WordPress stores the JW Player and your custom players in the wp-content/uploads folder.  For tips on how to make sure this folder is writable please refer to http://codex.wordpress.org/Changing_File_Permissions.
+
 The JW Player Plugin for WordPress makes it extremely easy to deliver video through your WordPress website. This plugin has been developed by LongTail Video, the creator of the JW Player, and allows for easy customization and embedding of the JW Player in your WordPress posts. It provides support for all of the player's configuration options, including skins, plugins and the LongTail Video AdSolution.
 
 In addition, it supports a powerful tag system that allows for dynamic customization at embed time, and gives you the capability of referencing external video content.  Plus, if your users are viewing your site on an iDevice, it will embed the &lt;video&gt; tag instead.  Allowing your users to experience your video content from anywhere.
@@ -18,8 +20,6 @@ This plugin also expands the built in WordPress Media Library.  You can now add 
 For more information about the JW Player and the LongTail AdSolution please visit <a href='http://www.longtailvideo.com/?utm_source=WordPress&utm_medium=Product&utm_campaign=WordPress'>LongTail Video</a>.
 
 If you have any questions, comments, problems or suggestions please post on our forum at http://www.longtailvideo.com/support/forums.
-
-<strong>NOTE: </strong> There have been issues for some users regarding file permissions.  The JW Player Plugin for WordPress writes some data to local files.  WordPress makes the wp-content folder available for this purpose.  Specifically the JW Player Plugin for WordPress stores the JW Player and your custom players in the wp-content/uploads folder.  For tips on how to make sure this folder is writable please refer to http://codex.wordpress.org/Changing_File_Permissions.
 
 == Installation ==
 

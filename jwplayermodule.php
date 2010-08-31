@@ -26,6 +26,7 @@ Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 global $wp_version;
 
 define("JW_PLAYER_GA_VARS", "?utm_source=WordPress&utm_medium=Product&utm_campaign=WordPress");
+define("JW_FILE_PERMISSIONS", 'For tips on how to make sure this folder is writable please refer to <a href="http://codex.wordpress.org/Changing_File_Permissions">http://codex.wordpress.org/Changing_File_Permissions</a>.');
 
 // Check for WP2.7 installation
 if (!defined ('IS_WP27')) {
@@ -55,7 +56,7 @@ register_activation_hook(__FILE__, "jwplayer_activation");
 //Define the plugin directory and url for file access.
 $uploads = wp_upload_dir();
 if (isset($uploads["error"]) && !empty($uploads["error"])) {
-  add_action('admin_notices', create_function('', 'echo \'<div id="message" class="error fade"><p><strong>' . __('Sorry, the JWPlayer Plugin for WordPress requires that the WordPress uploads directory exists.') . '</strong></p></div>\';'));
+  add_action('admin_notices', create_function('', 'echo \'<div id="message" class="fade updated"><p><strong>There was a problem completing activation of the JW Player Plugin for WordPress.  Please note that the JWPlayer Plugin for WordPress requires that the WordPress uploads directory exists and is writable.  ' . JW_FILE_PERMISSIONS . '</strong></p></div>\';'));
   return;
 }
 
@@ -64,20 +65,28 @@ define("JWPLAYER_PLUGIN_URL", WP_PLUGIN_URL . "/" . plugin_basename(dirname(__FI
 define("JWPLAYER_FILES_DIR", $uploads["basedir"] . "/" . plugin_basename(dirname(__FILE__)));
 define("JWPLAYER_FILES_URL", $uploads["baseurl"] . "/" . plugin_basename(dirname(__FILE__)));
 
+if (!@is_dir(JWPLAYER_FILES_DIR)) {
+  add_action('admin_notices', create_function('', 'echo \'<div id="message" class="fade updated"><p><strong>' . __('Activation of the JW Player Plugin for WordPress could not complete successfully.  The following directories could not be created automatically: </p><ul><li>- wp-content/uploads/jw-player-plugin-for-wordpress</li><li>- wp-content/uploads/jw-player-plugin-for-wordpress/configs</li><li>- wp-content/uploads/jw-player-plugin-for-wordpress/player</li></ul><p>Please ensure these directories are writable.  ' . JW_FILE_PERMISSIONS) . '</strong></p></div>\';'));
+} else if (!file_exists(LongTailFramework::getPlayerPath())) {
+  // Error if the player doesn't exist
+  add_action('admin_notices', "jwplayer_install_notices");
+}
+
 function jwplayer_activation() {
+  clearstatcache();
   if (!@is_dir(JWPLAYER_FILES_DIR)) {
     if (!@mkdir(JWPLAYER_FILES_DIR, 0777, true)) {
-      add_action('admin_notices', create_function('', 'echo \'<div id="message" class="error fade"><p><strong>' . __('Error creating player directory.  Please ensure the WordPress uploads directory is writable.') . '</strong></p></div>\';'));
+      add_action('admin_notices', create_function('', 'echo \'<div id="message" class="fade updated"><p><strong>' . __('There was a problem completing activation of the plugin.  The wp-content/uploads/jw-player-plugin-for-wordpress directory could not be created.  Please ensure the WordPress uploads directory is writable.  ' . JW_FILE_PERMISSIONS) . '</strong></p></div>\';'));
       return;
     }
     chmod(JWPLAYER_FILES_DIR, 0777);
     if (!@mkdir(JWPLAYER_FILES_DIR . "/player", 0777)) {
-      add_action('admin_notices', create_function('', 'echo \'<div id="message" class="error fade"><p><strong>' . __('Error creating player directory.  Please ensure the WordPress uploads directory is writable.') . '</strong></p></div>\';'));
+      add_action('admin_notices', create_function('', 'echo \'<div id="message" class="fade updated"><p><strong>' . __('There was a problem completing activation of the plugin.  The wp-content/uploads/jw-player-plugin-for-wordpress/player directory could not be created.  Please ensure the WordPress uploads directory is writable.  ' . JW_FILE_PERMISSIONS) . '</strong></p></div>\';'));
       return;
     }
     chmod(JWPLAYER_FILES_DIR . "/player", 0777);
     if (!@mkdir(JWPLAYER_FILES_DIR . "/configs", 0777)) {
-      add_action('admin_notices', create_function('', 'echo \'<div id="message" class="error fade"><p><strong>' . __('Error creating player directory.  Please ensure the WordPress uploads directory is writable.') . '</strong></p></div>\';'));
+      add_action('admin_notices', create_function('', 'echo \'<div id="message" class="fade updated"><p><strong>' . __('There was a problem completing activation of the plugin.  The wp-content/uploads/jw-player-plugin-for-wordpress/configs directory could not be created.  Please ensure the WordPress uploads directory is writable.  ' . JW_FILE_PERMISSIONS) . '</strong></p></div>\';'));
       return;
     }
     chmod(JWPLAYER_FILES_DIR . "/configs", 0777);
@@ -87,11 +96,6 @@ function jwplayer_activation() {
       }
     }
   }
-}
-
-// Error if the player doesn't exist
-if (!file_exists(LongTailFramework::getPlayerPath())) {
-	add_action('admin_notices', "jwplayer_install_notices");
 }
 
 // Add swfobject.js from Google CDN.  Needed for player embedding.

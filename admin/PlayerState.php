@@ -68,7 +68,7 @@ class PlayerState extends AdminState {
    */
   public function render() {
     $players = LongTailFramework::getConfigs();
-    if (!$players) $this->errorMessage("Error reading the uploads/jw-player-plugin-for-wordpress/configs directory.  Please make sure the directory exists and is writable.")?>
+    if (!$players) $this->infoMessage("If you wish to create custom players please make sure the uploads/jw-player-plugin-for-wordpress/configs directory exists and is writable.  This directory is necessary for creating custom players.  " . JW_FILE_PERMISSIONS)?>
     <div class="wrap">
 
       <script type="text/javascript">

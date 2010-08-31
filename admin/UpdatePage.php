@@ -40,7 +40,7 @@ function player_download() {
       $contents .= fread($fp, 2);
     }
     fclose($fp);
-    $result = file_put_contents(LongTailFramework::getPrimaryPlayerPath(), $contents);
+    $result = @file_put_contents(LongTailFramework::getPrimaryPlayerPath(), $contents);
     if (!$result) {
       return WRITE_ERROR;
     }
@@ -100,9 +100,9 @@ function download_state() { ?>
     </table>
   </form>
   <?php } else if ($result == DOWNLOAD_ERROR) {
-    error_message("Not able to download JW Player.  Please check your internet connection. <br/> If you already have the JW Player then you can install it using the <a href='admin.php?page=jwplayer-update'>upgrade page</a>.");
+    error_message("Not able to download JW Player.  Please check your internet connection. <br/> If you already have the JW Player then you can install it using the <a href='admin.php?page=jwplayer-update'>upgrade page</a>.  " . JW_FILE_PERMISSIONS);
   } else if ($result == WRITE_ERROR) {
-    error_message("Not able to install JW Player.  Please grant write access to the jw-player-plugin-for-wordpress/player directory and visit the <a href='admin.php?page=jwplayer-update'>upgrade page</a>.");
+    error_message("Not able to install JW Player.  Please make sure the uploads/jw-player-plugin-for-wordpress/player directory exists (and is writabe) and then visit the <a href='admin.php?page=jwplayer-update'>upgrade page</a>.  " . JW_FILE_PERMISSIONS);
   } else if ($result == ZIP_ERROR) {
     error_message("The necessary zip classes are missing.  Please upload the player manually instead using the <a href='admin.php?page=jwplayer-update'>upgrade page</a>.");
   }
