@@ -9,17 +9,23 @@ This module is provided by LongTail Video Inc.  It enables you to configure and 
 
 == Description ==
 
-<strong>NOTE: </strong> There have been issues for some users regarding file permissions.  The JW Player Plugin for WordPress writes some data to local files.  WordPress makes the wp-content folder available for this purpose.  Specifically, the JW Player Plugin for WordPress stores the JW Player and your custom players in the wp-content/uploads.  For tips on how to make sure this folder is writable please refer to http://codex.wordpress.org/Changing_File_Permissions.  <em>If you are still having issues with the plugin please contact us with the details so that we can help you</em>.
-
 The JW Player Plugin for WordPress makes it extremely easy to deliver video through your WordPress website. This plugin has been developed by LongTail Video, the creator of the JW Player, and allows for easy customization and embedding of the JW Player in your WordPress posts. It provides support for all of the player's configuration options, including skins, plugins and the LongTail Video AdSolution.
 
-In addition, it supports a powerful tag system that allows for dynamic customization at embed time, and gives you the capability of referencing external video content.  Plus, if your users are viewing your site on an iDevice, it will embed the &lt;video&gt; tag instead.  Allowing your users to experience your video content from anywhere.
+<strong>Key Features</strong>
 
-This plugin also expands the built in WordPress Media Library.  You can now add media files from a URL (including full support for YouTube videos and RTMP streams).  It is also really simple to create custom playlists using the built in Playlist Manager.
+* Manage multiple custom players.
+* Full skin and plugin support with easy to use plugin customization interface
+* Full integration into the WordPress media library.  Embed media with the JW Player as you write your posts.
+* Support for adding external media to your media library including Youtube and RTMP streams.
+* A full featured playlist manager - order your media by simply dragging the mouse.
+* Support for iPad, iPhone and iPod Touch when using YouTube or MP4 videos.
+* A powerful shortcode system for customizations at embed time.
 
-For more information about the JW Player and the LongTail AdSolution please visit <a href='http://www.longtailvideo.com/?utm_source=WordPress&utm_medium=Product&utm_campaign=WordPress'>LongTail Video</a>.
+<strong>Documentation</strong>
 
-If you have any questions, comments, problems or suggestions please post on our forum at http://www.longtailvideo.com/support/forums or contact us at support@longtailvideo.com.
+* Full documentation for installation, setup and use on our <a href='http://www.longtailvideo.com/support/addons/jw-player-plugin-for-wordpress' target='_blank'>Support Site</a>.
+* Important information about File Permissions:  http://codex.wordpress.org/Changing_File_Permissions
+* If you have any questions, comments, problems or suggests please post on our forum at: http://www.longtailvideo.com/support/forums
 
 == Installation ==
 
@@ -27,6 +33,7 @@ Installing for the first time:
 
 1. Place the plugin folder in your plugin directory.
 1. Visit the JW Player Upgrade page and download or upload your JW Player.
+1. For more detailed instructions please visit: <a href='http://www.longtailvideo.com/support/addons/jw-player-plugin-for-wordpress/11513/getting-started-with-the-wordpress-plugin-for-the-jw-pla' target='_blank'>Getting Started with the WordPress Plugin for the JW Player</a>
 
 Upgrading:
 
