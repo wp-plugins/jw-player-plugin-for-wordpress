@@ -25,7 +25,7 @@ The JW Player Plugin for WordPress makes it extremely easy to deliver video thro
 
 * Full documentation for installation, setup and use on our <a href='http://www.longtailvideo.com/support/addons/jw-player-plugin-for-wordpress' target='_blank'>Support Site</a>.
 * Important information about File Permissions:  http://codex.wordpress.org/Changing_File_Permissions
-* If you have any questions, comments, problems or suggests please post on our forum at: http://www.longtailvideo.com/support/forums
+* If you have any questions, comments, problems or suggestions please post on our forum at: http://www.longtailvideo.com/support/forums
 
 == Installation ==
 
