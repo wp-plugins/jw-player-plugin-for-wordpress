@@ -1,6 +1,6 @@
 === JW Player Plugin for WordPress ===
 Contributors: LongTail Video Inc.
-Tags: JW Player, Video, Flash, LongTail Video, RTMP, Playlists, Audio, Image, HTML5
+Tags: JW Player, Video, Flash, LongTail Video, RTMP, Playlists, Audio, Image, HTML5, iPad, iPhone, iPod
 Requires at least: 2.8.6
 Tested up to: 3.0.1
 Stable tag: 1.2.4
