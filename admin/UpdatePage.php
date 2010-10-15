@@ -34,7 +34,8 @@ function player_download() {
   $zip = new ZipArchive();  
   if ($zip->open($player_package)) {
     $contents = "";
-    $fp = $zip->getStream("mediaplayer-5.2/player.swf");
+    $dir = $zip->getNameIndex(0);
+    $fp = $zip->getStream($dir . "player.swf");
     if (!$fp) return WRITE_ERROR;
     while(!feof($fp)) {
       $contents .= fread($fp, 2);
@@ -46,7 +47,7 @@ function player_download() {
     }
     chmod(LongTailFramework::getPrimaryPlayerPath(), 0777);
     $contents = "";
-    $fp = $zip->getStream("mediaplayer-5.2/yt.swf");
+    $fp = $zip->getStream($dir . "yt.swf");
     if (!$fp) return WRITE_ERROR;
     while (!feof($fp)) {
       $contents .= fread($fp, 2);
