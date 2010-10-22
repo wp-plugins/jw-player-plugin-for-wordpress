@@ -1,6 +1,7 @@
 <?php
 
 include "SWFObjectConfig.php";
+include "JWEmbedderConfig.php";
 include "FlashVar.php";
 include "Plugin.php";
 
@@ -199,6 +200,14 @@ class LongTailFramework
   }
 
   /**
+   * Get the complete path to the JW Embbeder javascript file.
+   * @return string The path to the JW Embedder.
+   */
+  public static function getEmbedderPath() {
+    return JWPLAYER_FILES_DIR . "/player/jwplayer.js";
+  }
+
+  /**
    * Get the complete path to the primary (and execpted) player location.
    * @return string The path to the player.
    */
@@ -232,6 +241,14 @@ class LongTailFramework
       return LongTailFramework::getPrimaryPlayerURL();
     }
     return LongTailFramework::getSecondaryPlayerURL();
+  }
+
+  /**
+   * Get the complete URL for the JW Embedder javascript file.
+   * @return string The complete URL to the JW Embedder.
+   */
+  public static function getEmbedderURL() {
+    return JWPLAYER_FILES_URL . "/player/jwplayer.js";
   }
 
   /**
@@ -358,12 +375,15 @@ class LongTailFramework
    * @param array $flashVars The array of flashVars to be used in the embedding
    * @return SWFObjectConfig The configured SWFObjectConfig object to be used for embedding
    */
-  public static function generateSWFObject($flash_vars) {
+  public static function generateSWFObject($flash_vars, $useJWEmbedder = false) {
+    if ($useJWEmbedder) {
+      return new JWEmbedderConfig(LongTailFramework::$div_id++, LongTailFramework::getPlayerURL(), LongTailFramework::getConfigURL(), $flash_vars);
+    }
     return new SWFObjectConfig(LongTailFramework::$div_id++, LongTailFramework::getPlayerURL(), LongTailFramework::getConfigURL(), LongTailFramework::getEmbedParameters(), $flash_vars);
   }
 
   /**
-   * Generates teh SWFObjectConfig object which acts as a wrapper for the SWFObject javascript library.
+   * Generates the SWFObjectConfig object which acts as a wrapper for the SWFObject javascript library.
    * This will embed the temporary swf file uploaded by a plugin.
    * @param array $flash_vars The array of flashvars to be used in the embedding
    * @return SWFObjectConfig The configured SWFOjbectConfig object to be used for embedding

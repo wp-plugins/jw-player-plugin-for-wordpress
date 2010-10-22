@@ -54,6 +54,14 @@ function player_download() {
     }
     fclose($fp);
     $result = file_put_contents(str_replace("player.swf", "yt.swf", LongTailFramework::getPrimaryPlayerPath()), $contents);
+    $contents = "";
+    $fp = $zip->getStream($dir . "jwplayer.js");
+    if (!$fp) return WRITE_ERROR;
+    while (!feof($fp)) {
+      $contents .= fread($fp, 2);
+    }
+    fclose($fp);
+    $result = @file_put_contents(LongTailFramework::getEmbedderPath(), $contents);
     if (!$result) {
       return WRITE_ERROR;
     }
@@ -146,7 +154,7 @@ function embed_demo_player($download = false) {
     "image" => "http://content.longtailvideo.com/videos/bunny.jpg",
     "id" => "jwplayer-1"
   );
-  $swf = $download ? LongTailFramework::generateSWFObject($atts) : LongTailFramework::generateTempSWFObject($atts); ?>
+  $swf = $download ? LongTailFramework::generateSWFObject($atts, false) : LongTailFramework::generateTempSWFObject($atts); ?>
   <script type="text/javascript">
     var player, t;
 

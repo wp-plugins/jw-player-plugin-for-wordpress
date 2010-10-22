@@ -30,13 +30,13 @@ define("JW_FILE_PERMISSIONS", 'For tips on how to make sure this folder is writa
 
 // Check for WP2.7 installation
 if (!defined ('IS_WP27')) {
-	define('IS_WP27', version_compare($wp_version, '2.7', '>=') );
+  define('IS_WP27', version_compare($wp_version, '2.7', '>=') );
 }
 
 // This works only in WP2.7 or higher
 if (IS_WP27 == FALSE) {
-	add_action('admin_notices', create_function('', 'echo \'<div id="message" class="error fade"><p><strong>' . __('Sorry, the JWPlayer Plugin for WordPress works only under WordPress 2.7 or higher.') . '</strong></p></div>\';'));
-	return;
+  add_action('admin_notices', create_function('', 'echo \'<div id="message" class="error fade"><p><strong>' . __('Sorry, the JWPlayer Plugin for WordPress works only under WordPress 2.7 or higher.') . '</strong></p></div>\';'));
+  return;
 }
 
 // The plugin is only compatible with PHP 5.0 or higher
@@ -98,8 +98,12 @@ function jwplayer_activation() {
   }
 }
 
-// Add swfobject.js from Google CDN.  Needed for player embedding.
+// Add JW Embedder for 5.3 players or higher.  Otherwise add swfobject.js from Google CDN.
+if (version_compare(get_option(LONGTAIL_KEY . "version"), "5.3", ">=")) {
+  wp_enqueue_script("jw-embedder", LongTailFramework::getEmbedderURL());
+}
 wp_enqueue_script("google-swfobject", "http://ajax.googleapis.com/ajax/libs/swfobject/2.2/swfobject.js");
+
 add_filter("the_content", "jwplayer_tag_callback", 11);
 add_filter("widget_text", "jwplayer_tag_callback", 11);
 

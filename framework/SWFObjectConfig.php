@@ -1,11 +1,13 @@
 <?php
 
+require_once("EmbedConfigInterface.php");
+
 /**
  * A config object which functions as a represenation of a unique SWFObject.
  * It handles configuration and generation of the div used in embedding.
  * @file Class definition of SWFObjectConfig
  */
-class SWFObjectConfig {
+class SWFObjectConfig implements EmbedConfigInterface {
 
   private $id;
   private $path;
@@ -21,7 +23,7 @@ class SWFObjectConfig {
    * @param array $params The list of SWFObject params
    * @param array $flashVars The list of additional flashvars to be used in the embed
    */
-  function __construct($divId, $player_path, $config, $params = array(), $flash_vars) {
+  function __construct($divId, $player_path, $config, $params = array(), $flash_vars = array()) {
     $this->id = "jwplayer-" . $divId;
     $this->path = $player_path;
     $this->conf = $config;
@@ -124,8 +126,7 @@ class SWFObjectConfig {
     $flash_vars = $this->transcribe_array($swf_config["swfobject"]["files"][$id]["flashVars"]);
     $params = $this->transcribe_array($swf_config["swfobject"]["files"][$id]["params"]);
     $attributes = $this->transcribe_array($swf_config["swfobject"]["files"][$id]["attributes"]);
-    return $this->generateDiv() .
-             "<script type=\"text/javascript\">swfobject.embedSWF(\"$url\", \"$id\", \"$width\", \"$height\", \"$version\", \"$express_redirect\", $flash_vars, $params, $attributes);</script>";
+    return $this->generateDiv() . "<script type=\"text/javascript\">swfobject.embedSWF(\"$url\", \"$id\", \"$width\", \"$height\", \"$version\", \"$express_redirect\", $flash_vars, $params, $attributes);</script>";
   }
 
   /**
