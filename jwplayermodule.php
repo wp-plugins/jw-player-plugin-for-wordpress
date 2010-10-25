@@ -184,13 +184,6 @@ function verify_player() {
   if ($_POST["version"] != "null") {
     $response = true;
     update_option(LONGTAIL_KEY . "version", $_POST["version"]);
-    if (!$_POST["type"]) {
-      unlink(LongTailFramework::getPrimaryPlayerPath());
-      rename(LongTailFramework::getTempPlayerPath(), LongTailFramework::getPrimaryPlayerPath());
-      chmod(LongTailFramework::getPrimaryPlayerPath(), 0777);
-    } 
-  } else {
-    unlink(LongTailFramework::getTempPlayerPath());
   }
   echo (int) $response;
   exit;

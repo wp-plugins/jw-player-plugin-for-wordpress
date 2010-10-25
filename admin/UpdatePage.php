@@ -20,18 +20,13 @@ if (isset($_POST["Non_commercial"]) || isset($_POST["Install"])) {
   default_state();
 }
 
-function player_download() {
-  
-  $player_package = download_url("http://www.longtailvideo.com/wp/jwplayer.zip");
-  if (is_wp_error($player_package)) {
-    return DOWNLOAD_ERROR;
-  }
+function unpack_player_archive($player_package) {
 
   if (!class_exists("ZipArchive")) {
-    return ZIP_ERROR;
+    return zip_fallback($player_package);;
   }
 
-  $zip = new ZipArchive();  
+  $zip = new ZipArchive();
   if ($zip->open($player_package)) {
     $contents = "";
     $dir = $zip->getNameIndex(0);
@@ -53,19 +48,21 @@ function player_download() {
       $contents .= fread($fp, 2);
     }
     fclose($fp);
-    $result = file_put_contents(str_replace("player.swf", "yt.swf", LongTailFramework::getPrimaryPlayerPath()), $contents);
-    $contents = "";
+    $result = @file_put_contents(str_replace("player.swf", "yt.swf", LongTailFramework::getPrimaryPlayerPath()), $contents);
+    chmod(str_replace("player.swf", "yt.swf", LongTailFramework::getPrimaryPlayerPath()), 0777);
     $fp = $zip->getStream($dir . "jwplayer.js");
-    if (!$fp) return WRITE_ERROR;
-    while (!feof($fp)) {
-      $contents .= fread($fp, 2);
+    if ($fp) {
+      $contents = "";
+      while (!feof($fp)) {
+        $contents .= fread($fp, 2);
+      }
+      fclose($fp);
+      $result = @file_put_contents(LongTailFramework::getEmbedderPath(), $contents);
+      chmod(LongTailFramework::getEmbedderPath(), 0777);
     }
-    fclose($fp);
-    $result = @file_put_contents(LongTailFramework::getEmbedderPath(), $contents);
     if (!$result) {
       return WRITE_ERROR;
     }
-    chmod(str_replace("player.swf", "yt.swf", LongTailFramework::getPrimaryPlayerPath()), 0777);
     $zip->close();
   }
 
@@ -73,11 +70,51 @@ function player_download() {
   return SUCCESS;
 }
 
+function zip_fallback($player_package) {
+  $player_found = false;
+  require_once(ABSPATH . 'wp-admin/includes/class-pclzip.php');
+  $zip = new PclZip($player_package);
+  $archive_files = $zip->extract(PCLZIP_OPT_EXTRACT_AS_STRING);
+  $dir = $archive_files[0]["filename"];
+  foreach($archive_files as $file) {
+    $result = true;
+    if ($file["filename"] == $dir . "player.swf") {
+      $result = @file_put_contents(LongTailFramework::getPrimaryPlayerPath(), $file["content"]);
+      if (!$result) {
+        return WRITE_ERROR;
+      }
+      $player_found = true;
+    } else if ($file["filename"] == $dir . "yt.swf") {
+      $result = @file_put_contents(str_replace("player.swf", "yt.swf", LongTailFramework::getPrimaryPlayerPath()), $file["content"]);
+      if (!$result) {
+        return WRITE_ERROR;
+      }
+    } else if ($file["filename"] == $dir . "jwplayer.js") {
+      $result = @file_put_contents(LongTailFramework::getEmbedderPath(), $file["content"]);
+      if (!$result) {
+         return WRITE_ERROR;
+      }
+    }
+  }
+  if ($player_found) {
+    return SUCCESS;
+  }
+  return ZIP_ERROR;
+}
+
+function player_download() {
+  
+  $player_package = download_url("http://www.longtailvideo.com/wp/jwplayer.zip");
+  if (is_wp_error($player_package)) {
+    return DOWNLOAD_ERROR;
+  }
+
+  return unpack_player_archive($player_package);
+}
+
 function player_upload() {
-  if ($_FILES["file"]["type"] == "application/x-shockwave-flash") {
-    move_uploaded_file($_FILES["file"]["tmp_name"], LongTailFramework::getTempPlayerPath());
-    chmod(LongTailFramework::getTempPlayerPath(), 0777);
-    return true;
+  if ($_FILES["file"]["type"] == "application/x-zip-compressed") {
+    return unpack_player_archive($_FILES["file"]["tmp_name"]);
   }
   return false;
 }
@@ -120,7 +157,7 @@ function download_state() { ?>
 function upload_state() { ?>
   <h2><?php echo "JW Player Install"; ?></h2>
   <p/>
-  <?php if (player_upload()) { ?>
+  <?php if (player_upload() == SUCCESS) { ?>
   <div id="info" class="fade updated" style="display: none;">
     <p><strong><span id="player_version"><?php echo "Successfully installed your player, JW Player "; ?></span></strong></p>
   </div>
@@ -136,7 +173,13 @@ function upload_state() { ?>
       </tr>
     </table>
   </form>
-  <?php } else {
+  <?php } else if ($result == WRITE_ERROR) {
+    error_message("Not able to install JW Player.  Please make sure the uploads/jw-player-plugin-for-wordpress/player directory exists (and is writabe) and then visit the <a href='admin.php?page=jwplayer-update'>upgrade page</a>.  " . JW_FILE_PERMISSIONS);
+    default_state();
+  } else if ($result == ZIP_ERROR) {
+    error_message("The necessary zip classes are missing.  Please upload the player manually instead using the <a href='admin.php?page=jwplayer-update'>upgrade page</a>.");
+    default_state();
+  } else {
     error_message("Not able to install JWPlayer.  Please grant write access to the jw-player-plugin-for-wordpress/player directory.");
     default_state();
   }
@@ -154,7 +197,7 @@ function embed_demo_player($download = false) {
     "image" => "http://content.longtailvideo.com/videos/bunny.jpg",
     "id" => "jwplayer-1"
   );
-  $swf = $download ? LongTailFramework::generateSWFObject($atts, false) : LongTailFramework::generateTempSWFObject($atts); ?>
+  $swf = LongTailFramework::generateSWFObject($atts, false); ?>
   <script type="text/javascript">
     var player, t;
 
@@ -215,10 +258,10 @@ function upload_section() { ?>
                 function fileValidation() {
                   var file = document.getElementById("file").value;
                   var extension = file.substring(file.length - 4, file.length);
-                  if (extension === ".swf") {
+                  if (extension === ".zip") {
                     return true;
                   } else {
-                    alert("File must be a SWF.")
+                    alert("File must be a Zip.")
                     return false;
                   }
                 }
@@ -227,7 +270,7 @@ function upload_section() { ?>
                 <tr>
                   <td colspan="2">
                     <p>
-                      <span><?php echo "Upload your own player.swf. Use this to upgrade to the licensed version or to install a specific version of the player.  To obtain a licensed player, please purchase a license from <a href=\"https://www.longtailvideo.com/order/" . JW_PLAYER_GA_VARS . "\" target=_blank>LongTail Video</a>."; ?></span>
+                      <span><?php echo "Upload your own zip package. Use this to upgrade to the licensed version or to install a specific version of the player.  To obtain a licensed player, please purchase a license from <a href=\"https://www.longtailvideo.com/order/" . JW_PLAYER_GA_VARS . "\" target=_blank>LongTail Video</a>."; ?></span>
                     </p>
                     <p>
                       <label for="file"><?php echo "Install JW Player:"; ?></label>

@@ -233,6 +233,14 @@ class LongTailFramework
   }
 
   /**
+   * Get the complete path to the temporary uploaded player.
+   * @return string The path to the temporary player.
+   */
+  public static function getTempPlayerJSPath() {
+    return JWPLAYER_FILES_DIR . "/player/jwplayer_tmp.js";
+  }
+
+  /**
    * Get the complete URL for the Player swf.
    * @return string The complete URL.
    */
