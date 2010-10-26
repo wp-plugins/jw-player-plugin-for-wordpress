@@ -135,7 +135,8 @@ function resolve_media_id(&$atts) {
 function generate_embed_code($config, $atts) {
   LongTailFramework::setConfig($config);
   $version = version_compare(get_option(LONGTAIL_KEY . "version"), "5.3", ">=");
-  if (!$version && preg_match("/iP(od|hone|ad)/i", $_SERVER["HTTP_USER_AGENT"])) {
+  $embedder = file_exists(LongTailFramework::getEmbedderPath());
+  if (!$embedder && !$version && preg_match("/iP(od|hone|ad)/i", $_SERVER["HTTP_USER_AGENT"])) {
     $youtube_pattern = "/youtube.com\/watch\?v=([0-9a-zA-Z_-]*)/i";
     $loaded_config = LongTailFramework::getConfigValues();
     $width = isset($atts["width"]) ? $atts["width"] : $loaded_config["width"];
@@ -148,7 +149,7 @@ function generate_embed_code($config, $atts) {
     }
     return $output;
   } else {
-    $swf = LongTailFramework::generateSWFObject($atts, $version);
+    $swf = LongTailFramework::generateSWFObject($atts, $version && $embedder);
     return $swf->generateEmbedScript();
   }
 }

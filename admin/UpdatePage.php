@@ -78,7 +78,7 @@ function zip_fallback($player_package) {
   $dir = $archive_files[0]["filename"];
   foreach($archive_files as $file) {
     $result = true;
-    if ($file["filename"] == $dir . "player.swf") {
+    if ($file["filename"] == $dir . "player.swf" || $file["filename"] == $dir . "player-licensed.swf") {
       $result = @file_put_contents(LongTailFramework::getPrimaryPlayerPath(), $file["content"]);
       if (!$result) {
         return WRITE_ERROR;
