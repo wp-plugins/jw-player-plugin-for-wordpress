@@ -3,6 +3,7 @@ if(preg_match('#' . basename(__FILE__) . '#', $_SERVER['PHP_SELF'])) { die('You 
 
 define(DOWNLOAD_ERROR, "Download failed.");
 define(WRITE_ERROR, "Write failed");
+define(READ_ERROR, "Read failed");
 define(ZIP_ERROR, "Zip classes missing");
 define(SUCCESS, "Success");
 
@@ -31,7 +32,7 @@ function unpack_player_archive($player_package) {
     $contents = "";
     $dir = $zip->getNameIndex(0);
     $fp = $zip->getStream($dir . "player.swf");
-    if (!$fp) return WRITE_ERROR;
+    if (!$fp) return READ_ERROR;
     while(!feof($fp)) {
       $contents .= fread($fp, 2);
     }
@@ -43,12 +44,15 @@ function unpack_player_archive($player_package) {
     chmod(LongTailFramework::getPrimaryPlayerPath(), 0777);
     $contents = "";
     $fp = $zip->getStream($dir . "yt.swf");
-    if (!$fp) return WRITE_ERROR;
+    if (!$fp) return READ_ERROR;
     while (!feof($fp)) {
       $contents .= fread($fp, 2);
     }
     fclose($fp);
     $result = @file_put_contents(str_replace("player.swf", "yt.swf", LongTailFramework::getPrimaryPlayerPath()), $contents);
+    if (!$result) {
+      return WRITE_ERROR;
+    }
     chmod(str_replace("player.swf", "yt.swf", LongTailFramework::getPrimaryPlayerPath()), 0777);
     $fp = $zip->getStream($dir . "jwplayer.js");
     if ($fp) {
@@ -58,10 +62,10 @@ function unpack_player_archive($player_package) {
       }
       fclose($fp);
       $result = @file_put_contents(LongTailFramework::getEmbedderPath(), $contents);
+      if (!$result) {
+        return WRITE_ERROR;
+      }
       chmod(LongTailFramework::getEmbedderPath(), 0777);
-    }
-    if (!$result) {
-      return WRITE_ERROR;
     }
     $zip->close();
   }
@@ -97,23 +101,24 @@ function zip_fallback($player_package) {
     }
   }
   if ($player_found) {
+    unlink($player_package);
     return SUCCESS;
   }
   return ZIP_ERROR;
 }
 
-function player_download() {
-  
+function player_download() {  
   $player_package = download_url("http://www.longtailvideo.com/wp/jwplayer.zip");
   if (is_wp_error($player_package)) {
     return DOWNLOAD_ERROR;
   }
-
   return unpack_player_archive($player_package);
 }
 
 function player_upload() {
-  if ($_FILES["file"]["type"] == "application/x-zip-compressed") {
+  $type = $_FILES["file"]["type"];
+  if ($type == "application/x-zip-compressed" || $type == "application/zip"
+      || $type == "application/x-zip" || $type == "application/octet-stream") {
     return unpack_player_archive($_FILES["file"]["tmp_name"]);
   }
   return false;
@@ -151,6 +156,8 @@ function download_state() { ?>
     error_message("Not able to install JW Player.  Please make sure the uploads/jw-player-plugin-for-wordpress/player directory exists (and is writabe) and then visit the <a href='admin.php?page=jwplayer-update'>upgrade page</a>.  " . JW_FILE_PERMISSIONS);
   } else if ($result == ZIP_ERROR) {
     error_message("The necessary zip classes are missing.  Please upload the player manually instead using the <a href='admin.php?page=jwplayer-update'>upgrade page</a>.");
+  } else if ($result == READ_ERROR) {
+    error_message("Could not find player.swf or yt.swf.  Either they are not present or the archive is invalid.");
   }
 }
 
@@ -179,8 +186,11 @@ function upload_state() { ?>
   } else if ($result == ZIP_ERROR) {
     error_message("The necessary zip classes are missing.  Please upload the player manually instead using the <a href='admin.php?page=jwplayer-update'>upgrade page</a>.");
     default_state();
+  } else if ($result == READ_ERROR) {
+    error_message("Could not find player.swf or yt.swf.  Either they are not present or the archive is invalid.");
+    default_state();
   } else {
-    error_message("Not able to install JWPlayer.  Please grant write access to the jw-player-plugin-for-wordpress/player directory.");
+    error_message("Not a valid zip archive.");
     default_state();
   }
 }

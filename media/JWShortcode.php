@@ -79,7 +79,7 @@ function jwplayer_handler($atts) {
       $playlist = get_post($id);
     }
     if (($playlist)) {
-      $atts["file"] = urlencode (get_option ('siteurl') . '/' . 'index.php?xspf=true&id=' . $id );
+      $atts["file"] = get_option ('siteurl') . '/' . 'index.php?xspf=true&id=' . $id;
     } else {
       return __("[PLAYLIST not found]");
     }
