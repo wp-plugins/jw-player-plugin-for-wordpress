@@ -11,11 +11,13 @@ class JWEmbedderConfig implements EmbedConfigInterface {
   private $path;
   private $conf;
   private $fvars;
+  private $dim;
 
-  function  __construct($divId, $player_path, $config, $flash_vars = array()) {
+  function  __construct($divId, $player_path, $config, $params = array(), $flash_vars = array()) {
     $this->id = "jwplayer-" . $divId;
     $this->path = $player_path;
     $this->conf = $config;
+    $this->dim = $params;
     $this->fvars = $flash_vars;
   }
 
@@ -28,13 +30,15 @@ class JWEmbedderConfig implements EmbedConfigInterface {
 
   public function generateEmbedScript() {
     $script = $this->generateDiv();
-    $script .= "<script type=\"text/javascript\">\n";
-    $script .= "jwplayer(\"" . $this->id . "\").setup({\n";
-    $script .= "flashplayer: \"" . $this->path . "\", \n";
+    $script .= "<script type=\"text/javascript\">";
+    $script .= "jwplayer(\"" . $this->id . "\").setup({";
+    $script .= "flashplayer: \"" . $this->path . "\", ";
+    $script .= "width: \"" . $this->dim["width"] . "\", ";
+    $script .= "height: \"" . $this->dim["height"] . "\", ";
     foreach ($this->fvars as $key => $value) {
-      $script .= "\"" . $key . "\"" . ": \"" . $value . "\", \n";
+      $script .= "\"" . $key . "\"" . ": \"" . $value . "\", ";
     }
-    $script .= "config: \"" . $this->conf . "\"\n";
+    $script .= "config: \"" . $this->conf . "\"";
     $script .= "});</script>";
     return $script;
   }

@@ -179,7 +179,7 @@ class PlayerState extends AdminState {
                                 <td style="vertical-align: middle;"><span><?php echo "default"; ?></span></td>
                                 <td style="vertical-align: middle;"><span><?php echo "false"; ?></span></td>
                                 <td style="vertical-align: middle;"><span><?php echo "false"; ?></span></td>
-                                <td style="vertical-align: middle;"><span><?php echo "280"; ?></span></td>
+                                <td style="vertical-align: middle;"><span><?php echo "300"; ?></span></td>
                                 <td style="vertical-align: middle;"><span><?php echo "400"; ?></span></td>
                                 <td style="vertical-align: middle;"><input class="button-secondary action" id="<?php echo LONGTAIL_KEY . "player_Out-of-the-Box"; ?>" type="submit" name="Next" value="Copy" onclick="copyHandler(this)"/></td>
                               </tr>
