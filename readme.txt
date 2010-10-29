@@ -13,12 +13,12 @@ The JW Player Plugin for WordPress makes it extremely easy to deliver video thro
 
 <strong>Key Features</strong>
 
+* Full support for JW Player for HTML5.
 * Manage multiple custom players.
-* Full skin and plugin support with easy to use plugin customization interface
+* Full skin and plugin support with easy to use plugin customization interface.
 * Full integration into the WordPress media library.  Embed media with the JW Player as you write your posts.
 * Support for adding external media to your media library including Youtube and RTMP streams.
 * A full featured playlist manager - order your media by simply dragging the mouse.
-* Support for iPad, iPhone and iPod Touch when using YouTube or MP4 videos.
 * A powerful shortcode system for customizations at embed time.
 
 <strong>Documentation</strong>
