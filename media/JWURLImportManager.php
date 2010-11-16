@@ -15,13 +15,13 @@
 function media_jwplayer_url_insert_form($errors) {
   global $redir_tab, $type;
 
-	$redir_tab = 'jwplayer_url';
+  $redir_tab = 'jwplayer_url';
   media_upload_header();
 
   $post_id = intval($_REQUEST['post_id']);
 
-	$form_action_url = admin_url("media-upload.php?type=$type&tab=$redir_tab&post_id=$post_id");
-	$form_action_url = apply_filters('media_upload_form_url', $form_action_url, $type);
+  $form_action_url = admin_url("media-upload.php?type=$type&tab=$redir_tab&post_id=$post_id");
+  $form_action_url = apply_filters('media_upload_form_url', $form_action_url, $type);
 
   if (isset($_POST["insertonlybutton"])) {
     $youtube_pattern = "/youtube.com\/watch\?v=([0-9a-zA-Z_-]*)/i";

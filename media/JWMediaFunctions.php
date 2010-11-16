@@ -110,9 +110,10 @@ function jwplayer_attachment_fields($form_fields, $post) {
  */
 function generateImageSelectorHTML($id) {
   $output = "";
+  $sel = false;
   $args = array(
     "post_type" => "attachment",
-    "numberposts" => -1,
+    "numberposts" => 100,
     "post_status" => null,
     "post_parent" => null
   );
@@ -126,9 +127,18 @@ function generateImageSelectorHTML($id) {
     $image_id = get_post_meta($id, LONGTAIL_KEY . "thumbnail", true);
     foreach($attachments as $post) {
       if (substr($post->post_mime_type, 0, 5) == "image") {
-        $selected = $post->ID == $image_id ? "selected='selected'" : "";
+        if ($post->ID == $image_id) {
+          $selected = "selected='selected'";
+          $sel = true;
+        } else {
+          $selected = "";
+        }
         $output .= "<option value='" . $post->ID . "' title='" . $post->guid . "' " . $selected . ">" . $post->post_title . "</option>\n";
       }
+    }
+    if (!$sel && $image_id != -1) {
+      $image_post = get_post($image_id);
+      $output .= "<option value='" . $image_post->ID . "' title='" . $image_post->guid . "' selected=selected >" . $image_post->post_title . "</option>\n";
     }
     $output .= "</select>\n";
   }

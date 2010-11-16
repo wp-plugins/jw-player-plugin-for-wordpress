@@ -55,6 +55,8 @@ function jwplayer_tag_parser($matches) {
  * @return string The script to replace the tag.
  */
 function jwplayer_handler($atts) {
+  $version = version_compare(get_option(LONGTAIL_KEY . "version"), "5.3", ">=");
+  $embedder = file_exists(LongTailFramework::getEmbedderPath());
   $test = $atts;
   global $wpdb;
   $config = "";
@@ -79,13 +81,17 @@ function jwplayer_handler($atts) {
       $playlist = get_post($id);
     }
     if (($playlist)) {
-      $atts["file"] = get_option ('siteurl') . '/' . 'index.php?xspf=true&id=' . $id;
+      if ($version && $embedder) {
+        $atts["file"] = get_option ('siteurl') . '/' . 'index.php?xspf=true&id=' . $id;
+      } else {
+        $atts["file"] = urlencode (get_option ('siteurl') . '/' . 'index.php?xspf=true&id=' . $id);
+      }
     } else {
       return __("[PLAYLIST not found]");
     }
     unset($atts["playlistid"]);
   }
-  if ( is_feed() ) {
+  if ( is_feed() || is_archive() || is_search()) {
     $out = '';
     // remove media file from RSS feed
     if ( !empty($image) ) {
