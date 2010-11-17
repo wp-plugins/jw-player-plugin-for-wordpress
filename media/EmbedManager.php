@@ -17,7 +17,7 @@ global $p_items;
  * @param undefined $errors List of any errors encountered.
  */
 function media_jwplayer_insert_form($errors) {
-	global $redir_tab, $type, $jw_query, $p_items;
+  global $redir_tab, $type, $jw_query, $p_items;
 
   $args = array(
     'post_parent' => null,
@@ -30,12 +30,12 @@ function media_jwplayer_insert_form($errors) {
   );
   $jw_query = new WP_Query($args);
 
-	$redir_tab = 'jwplayer';
-	media_upload_header();
+  $redir_tab = 'jwplayer';
+  media_upload_header();
 
-	$post_id = intval($_REQUEST['post_id']);
-	$form_action_url = admin_url("media-upload.php?type=$type&tab=jwplayer&post_id=$post_id");
-	$form_action_url = apply_filters('media_upload_form_url', $form_action_url, $type);
+  $post_id = intval($_REQUEST['post_id']);
+  $form_action_url = admin_url("media-upload.php?type=$type&tab=jwplayer&post_id=$post_id");
+  $form_action_url = apply_filters('media_upload_form_url', $form_action_url, $type);
   $playlists = jwplayer_get_playlists();
 
   if (isset($_POST[LONGTAIL_KEY . "playlist_create"]) || isset($_POST["save"])) {
@@ -161,7 +161,7 @@ function media_jwplayer_insert_form($errors) {
     var attachment_id = "";
     attachment_id = playlist_check ? object.id.replace("playlist_", "") : object.id;
     attachment_id = attachment_id.replace("attachments[", "").replace("][enabled]", "");
-    if (object.checked === true) {
+    if (object != null && object.checked === true) {
       p_items.push(attachment_id);
       update_checks(attachment_id, playlist_check, true);
     } else {
@@ -204,7 +204,7 @@ function media_jwplayer_insert_form($errors) {
       var input = itemToAdd.children(".menu_order").children(".menu_order_input")[0];
       input.id = "playlist_" + input.id
       input.name = "playlist_" + input.name;
-      input.checked = true;
+      if (input != null) input.checked = true;
       itemToAdd.appendTo("#playlist-items");
     } else {
       jQuery("#playlist-item-" + attachment_id).empty().remove();
@@ -244,8 +244,8 @@ function media_jwplayer_insert_form($errors) {
             </option>
           <?php } ?>
         </select>
-        <input type="submit" class="button savebutton" style="display:none;" name="save" id="save-all" value="<?php esc_attr_e( 'Save' ); ?>" />
-        <input type="submit" class="button savebutton" style="display:none;" name="delete" id="delete-all" value="<?php esc_attr_e( 'Delete' ); ?>" onclick="return deletePlaylistHandler()" />
+        <input type="submit" class="button savebutton" name="save" id="save-all" value="<?php esc_attr_e( 'Save' ); ?>" />
+        <input type="submit" class="button savebutton" name="delete" id="delete-all" value="<?php esc_attr_e( 'Delete' ); ?>" onclick="return deletePlaylistHandler()" />
         <input type="hidden" name="post_id" id="post_id" value="<?php echo (int) $post_id; ?>" />
         <input type="hidden" name="type" value="<?php echo esc_attr( $GLOBALS['type'] ); ?>" />
         <input type="hidden" name="tab" value="<?php echo esc_attr( $GLOBALS['tab'] ); ?>" />
@@ -285,7 +285,6 @@ function media_jwplayer_insert_form($errors) {
       <?php } ?>
     </select>
     <input type="button" class="button-primary" onmousedown="insertPlaylist();" name="insert-gallery" id="insert-gallery" value="<?php esc_attr_e( 'Insert Playlist' ); ?>" />
-    <input type="button" class="button" style="display:none;" onmousedown="insertPlaylist();" name="update-gallery" id="update-gallery" value="<?php esc_attr_e( 'Update gallery settings' ); ?>" />
   </p>
 </form>
 <?php
