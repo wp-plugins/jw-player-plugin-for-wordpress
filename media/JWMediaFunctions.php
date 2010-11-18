@@ -115,6 +115,7 @@ function generateImageSelectorHTML($id) {
     "post_type" => "attachment",
     "numberposts" => 100,
     "post_status" => null,
+    "post_mime_type" => "image",
     "post_parent" => null
   );
   $attachments = get_posts($args);
@@ -125,6 +126,7 @@ function generateImageSelectorHTML($id) {
     $output .= "<select name='attachments[$id][" . LONGTAIL_KEY . "thumbnail]' id='imageselector$id' width='200' style='width:200px;'>\n";
     $output .= "<option value='-1'>None</option>\n";
     $image_id = get_post_meta($id, LONGTAIL_KEY . "thumbnail", true);
+    $thumbnail_url = get_post_meta($id, LONGTAIL_KEY . "thumbnail_url", true);
     foreach($attachments as $post) {
       if (substr($post->post_mime_type, 0, 5) == "image") {
         if ($post->ID == $image_id) {
