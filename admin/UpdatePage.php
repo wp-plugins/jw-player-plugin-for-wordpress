@@ -116,12 +116,7 @@ function player_download() {
 }
 
 function player_upload() {
-  $type = $_FILES["file"]["type"];
-  if ($type == "application/x-zip-compressed" || $type == "application/zip"
-      || $type == "application/x-zip" || $type == "application/octet-stream") {
-    return unpack_player_archive($_FILES["file"]["tmp_name"]);
-  }
-  return false;
+  return unpack_player_archive($_FILES["file"]["tmp_name"]);
 }
 
 function default_state() { ?>
