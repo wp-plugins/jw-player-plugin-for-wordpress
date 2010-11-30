@@ -31,11 +31,11 @@ function jwplayer_tag_parser($matches) {
   if (preg_match_all($param_regex, $text, $match, PREG_SET_ORDER)) {
     foreach($match as $p_match) {
       if (!empty($p_match[1]))
-        $atts[strtolower($p_match[1])] = stripcslashes($p_match[2]);
+        $atts[$p_match[1]] = stripcslashes($p_match[2]);
       elseif (!empty($p_match[3]))
-        $atts[strtolower($p_match[3])] = stripcslashes($p_match[4]);
+        $atts[$p_match[3]] = stripcslashes($p_match[4]);
       elseif (!empty($p_match[5]))
-        $atts[strtolower($p_match[5])] = stripcslashes($p_match[6]);
+        $atts[$p_match[5]] = stripcslashes($p_match[6]);
       elseif (isset($p_match[7]) and strlen($p_match[7]))
         $atts[] = stripcslashes($p_match[7]);
       elseif (isset($p_match[8]))

@@ -83,6 +83,7 @@ class JWEmbedderConfig implements EmbedConfigInterface {
   }
 
   public function generateEmbedScript() {
+    $events = array();
     $script = $this->generateDiv();
     $script .= "<script type=\"text/javascript\">";
     $script .= "jwplayer(\"" . $this->id . "\").setup({";
@@ -90,8 +91,13 @@ class JWEmbedderConfig implements EmbedConfigInterface {
     $script .= "width: \"" . $this->dim["width"] . "\", ";
     $script .= "height: \"" . $this->dim["height"] . "\", ";
     foreach ($this->fvars as $key => $value) {
-      $script .= "\"" . $key . "\"" . ": \"" . html_entity_decode($value) . "\", ";
+      if (isset (self::$events[$key])) {
+        $events[] = "\"" . $key . "\"" . ": " . html_entity_decode($value);
+      } else {
+        $script .= "\"" . $key . "\"" . ": \"" . html_entity_decode($value) . "\", ";
+      }
     }
+    if ($events != "") $script .= "events: {" . implode(", ", $events) . "}, ";
     $script .= "config: \"" . $this->conf . "\"";
     $script .= "});</script>";
     return $script;
