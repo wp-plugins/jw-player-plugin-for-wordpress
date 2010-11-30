@@ -7,6 +7,60 @@
  */
 class JWEmbedderConfig implements EmbedConfigInterface {
 
+  private static $events = array(
+    "onBufferChange" => array(
+       "bufferPercent" => "number"
+    ),
+    "onBufferFull" => array(),
+    "onError" => array(
+      "message" => "string"
+    ),
+    "onFullscreen" => array(
+      "fullscreen" => "boolean"
+    ),
+    "onMeta" => array(
+      "metadata" => "object"
+    ),
+    "onMute" => array(
+      "mute" => "boolean"
+    ),
+    "onPlaylist" => array(
+      "playlist" => "array"
+    ),
+    "onPlaylistItem" => array(
+      "index" => "number"
+    ),
+    "onReady" => array(),
+    "onResize" => array(
+      "width" => "number",
+      "height" => "number"
+    ),
+    "onPlay" => array(
+      "oldstate" => "string",
+      "newstate" => "string"
+    ),
+    "onPause" => array(
+      "oldstate" => "string",
+      "newstate" => "string"
+    ),
+    "onBuffer" => array(
+      "oldstate" => "string",
+      "newstate" => "string"
+    ),
+    "onIdle" => array(
+      "oldstate" => "string",
+      "newstate" => "string"
+    ),
+    "onComplete" => array(),
+    "onTime" => array(
+      "duration" => "number",
+      "position" => "number"
+    ),
+    "onVolume" => array(
+      "volume" => "number"
+    )
+  );
+  
   private $id;
   private $path;
   private $conf;
@@ -36,7 +90,7 @@ class JWEmbedderConfig implements EmbedConfigInterface {
     $script .= "width: \"" . $this->dim["width"] . "\", ";
     $script .= "height: \"" . $this->dim["height"] . "\", ";
     foreach ($this->fvars as $key => $value) {
-      $script .= "\"" . $key . "\"" . ": \"" . $value . "\", ";
+      $script .= "\"" . $key . "\"" . ": \"" . html_entity_decode($value) . "\", ";
     }
     $script .= "config: \"" . $this->conf . "\"";
     $script .= "});</script>";
