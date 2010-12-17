@@ -45,7 +45,7 @@ function jwplayer_tag_parser($matches) {
     $atts = ltrim($text);
   }
   $player = jwplayer_handler($atts);
-  return $matches[1] . jwplayer_handler($atts) . $matches[6];
+  return $matches[1] . $player . $matches[6];
 }
 
 /**
