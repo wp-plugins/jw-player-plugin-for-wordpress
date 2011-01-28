@@ -18,6 +18,7 @@
                 <option>bottom</option>
                 <option>top</option>
                 <option>over</option>
+                <option>none</option>
             </select>
         </flashvar>
         <flashvar type="field">
