@@ -109,17 +109,17 @@ function jwplayer_handler($atts) {
 function resolve_media_id(&$atts) {
   $id = $atts["mediaid"];
   $post = get_post($id);
-  $thumbnail = get_post_meta($id, LONGTAIL_KEY . "thumbnail_url", true);
-  if (!isset($thumbnail) || $thumbnail == null || $thumbnail == "") {
-    $image_id = get_post_meta($id, LONGTAIL_KEY . "thumbnail", true);
-    if (isset($image_id)) {
-      $image_attachment = get_post($image_id);
-      if (!isset($atts["image"])) {
+  if (!isset($atts["image"])) {
+    $thumbnail = get_post_meta($id, LONGTAIL_KEY . "thumbnail_url", true);
+    if (!isset($thumbnail) || $thumbnail == null || $thumbnail == "") {
+      $image_id = get_post_meta($id, LONGTAIL_KEY . "thumbnail", true);
+      if (isset($image_id)) {
+        $image_attachment = get_post($image_id);
         $atts["image"] = $image_attachment->guid;
       }
+    } else {
+      $atts["image"] = $thumbnail;
     }
-  } else {
-    $atts["image"] = $thumbnail;
   }
   $mime_type = substr($post->post_mime_type, 0, 5);
   if ($mime_type == "image") {
