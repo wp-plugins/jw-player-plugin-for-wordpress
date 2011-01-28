@@ -91,11 +91,14 @@ function jwplayer_handler($atts) {
     }
     unset($atts["playlistid"]);
   }
-  if ( is_feed() || is_archive() || is_search()) {
+  if (is_feed() || (get_option(LONGTAIL_KEY . "show_archive") && (is_archive() || is_search()))) {
     $out = '';
     // remove media file from RSS feed
-    if ( !empty($image) ) {
-      $out .= '<br /><img src="' . $image . '" alt="media" /><br />'."\n";
+    if (!empty($image)) {
+      $loaded_config = LongTailFramework::getConfigValues();
+      $width = isset($atts["width"]) ? $atts["width"] : $loaded_config["width"];
+      $height = isset($atts["height"]) ? $atts["height"] : $loaded_config["height"];
+      $out .= '<br /><img src="' . $image . '" width="' . $width . '" height="' . $height . '" alt="media" /><br />'."\n";
     }
     return $out;
   }

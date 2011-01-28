@@ -103,6 +103,11 @@ class AdminContext {
       if (isset($_POST[LONGTAIL_KEY . "default"])) {
         update_option(LONGTAIL_KEY . "default", $_POST[LONGTAIL_KEY . "default"]);
       }
+      if (isset($_POST[LONGTAIL_KEY . "show_archive"])) {
+        update_option(LONGTAIL_KEY . "show_archive", true);
+      } else if (!empty($_POST)) {
+        update_option(LONGTAIL_KEY . "show_archive", false);
+      }
       LongTailFramework::setConfig($_POST[LONGTAIL_KEY . "config"]);
       $state->render();
     }
