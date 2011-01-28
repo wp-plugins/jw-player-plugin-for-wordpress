@@ -90,11 +90,12 @@ class JWEmbedderConfig implements EmbedConfigInterface {
     $script .= "flashplayer: \"" . $this->path . "\", ";
     $script .= "width: \"" . $this->dim["width"] . "\", ";
     $script .= "height: \"" . $this->dim["height"] . "\", ";
+    $script .= "controlbar: \"" . $this->dim["controlbar"] . "\", ";
     foreach ($this->fvars as $key => $value) {
       if (isset (self::$events[$key])) {
-        $events[] = "\"" . $key . "\"" . ": " . html_entity_decode($value);
+        $events[] = "\"" . $key . "\"" . ": " . urldecode(html_entity_decode($value));
       } else {
-        $script .= "\"" . $key . "\"" . ": \"" . html_entity_decode($value) . "\", ";
+        $script .= "\"" . $key . "\"" . ": \"" . urldecode(html_entity_decode($value)) . "\", ";
       }
     }
     if ($events != "") $script .= "events: {" . implode(", ", $events) . "}, ";

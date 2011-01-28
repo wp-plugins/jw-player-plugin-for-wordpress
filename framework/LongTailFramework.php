@@ -374,6 +374,7 @@ class LongTailFramework
     $params = array(
       "width" => $flash_vars["Basic Player Settings"]["General"]["width"]->getDefaultValue(),
       "height" => $flash_vars["Basic Player Settings"]["General"]["height"]->getDefaultValue(),
+      "controlbar" => $flash_vars["Basic Player Settings"]["Appearance"]["controlbar"]->getDefaultValue()
     );
     return $params;
   }
