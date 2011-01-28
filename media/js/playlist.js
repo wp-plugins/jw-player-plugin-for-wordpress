@@ -365,10 +365,18 @@ function dump (object, depth) {
   var result = (type == "array") ? "[" : "{";
 
   var loopRan = false;
-  for (var i in object) {
-    loopRan = true;
-    if (type == "object") { result += "\""+i+"\": "};
-    result += dump(object[i], depth)+", ";
+
+  if (type == "array") {
+    for (var i = 0; i < object.length; i++) {
+      loopRan = true;
+      result += dump(object[i], depth)+", ";
+    }
+  } else {
+    for (var j in object) {
+      loopRan = true;
+      if (type == "object") { result += "\""+j+"\": "};
+      result += dump(object[j], depth)+", ";
+    }
   }
 
   if (loopRan) {
