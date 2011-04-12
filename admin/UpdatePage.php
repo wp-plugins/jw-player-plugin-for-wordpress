@@ -159,7 +159,8 @@ function download_state() { ?>
 function upload_state() { ?>
   <h2><?php echo "JW Player Install"; ?></h2>
   <p/>
-  <?php if (player_upload() == SUCCESS) { ?>
+  $result = player_upload()
+  <?php if ($result == SUCCESS) { ?>
   <div id="info" class="fade updated" style="display: none;">
     <p><strong><span id="player_version"><?php echo "Successfully installed your player, JW Player "; ?></span></strong></p>
   </div>
@@ -176,7 +177,7 @@ function upload_state() { ?>
     </table>
   </form>
   <?php } else if ($result == WRITE_ERROR) {
-    error_message("Not able to install JW Player.  Please make sure the uploads/jw-player-plugin-for-wordpress/player directory exists (and is writabe) and then visit the <a href='admin.php?page=jwplayer-update'>upgrade page</a>.  " . JW_FILE_PERMISSIONS);
+    error_message("Not able to install JW Player.  Please make sure the " . LongTailFramework::getPlayerPath() . " directory exists (and is writabe) and then visit the <a href='admin.php?page=jwplayer-update'>upgrade page</a>.  " . JW_FILE_PERMISSIONS);
     default_state();
   } else if ($result == ZIP_ERROR) {
     error_message("The necessary zip classes are missing.  Please upload the player manually instead using the <a href='admin.php?page=jwplayer-update'>upgrade page</a>.");

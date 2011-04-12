@@ -66,7 +66,7 @@ define("JWPLAYER_FILES_DIR", $uploads["basedir"] . "/" . plugin_basename(dirname
 define("JWPLAYER_FILES_URL", $uploads["baseurl"] . "/" . plugin_basename(dirname(__FILE__)));
 
 if (!@is_dir(JWPLAYER_FILES_DIR)) {
-  add_action('admin_notices', create_function('', 'echo \'<div id="message" class="fade updated"><p><strong>' . __('Activation of the JW Player Plugin for WordPress could not complete successfully.  The following directories could not be created automatically: </p><ul><li>- wp-content/uploads/jw-player-plugin-for-wordpress</li><li>- wp-content/uploads/jw-player-plugin-for-wordpress/configs</li><li>- wp-content/uploads/jw-player-plugin-for-wordpress/player</li></ul><p>Please ensure these directories are writable.  ' . JW_FILE_PERMISSIONS) . '</strong></p></div>\';'));
+  add_action('admin_notices', create_function('', 'echo \'<div id="message" class="fade updated"><p><strong>' . __('Activation of the JW Player Plugin for WordPress could not complete successfully.  The following directories could not be created automatically: </p><ul><li>- ' . JWPLAYER_FILES_DIR . '</li><li>- ' . JWPLAYER_FILES_DIR . '/configs</li><li>- ' . JWPLAYER_FILES_DIR . '/player</li></ul><p>Please ensure these directories are writable.  ' . JW_FILE_PERMISSIONS) . '</strong></p></div>\';'));
 } else if (!file_exists(LongTailFramework::getPlayerPath())) {
   // Error if the player doesn't exist
   add_action('admin_notices', "jwplayer_install_notices");

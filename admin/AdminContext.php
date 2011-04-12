@@ -96,7 +96,7 @@ class AdminContext {
       if ($success) {
         $this->feedback_message("The '$save_player' Player was successfully saved.");
       } else {
-        $this->error_message("The '$save_player' failed to save.  Please make sure the /uploads/jw-player-plugin-for-wordpress/configs exists and is writable.  " . JW_FILE_PERMISSIONS);
+        $this->error_message("The '$save_player' failed to save.  Please make sure the " . LongTailFramework::getConfigPath() . " exists and is writable.  " . JW_FILE_PERMISSIONS);
       }
       $state->getSaveState()->render();
     } else {
