@@ -32,8 +32,10 @@ function media_jwplayer_url_insert_form($errors) {
     );
     if (preg_match($youtube_pattern, $url, $match)) {
       $youtube_api = get_youtube_meta_data($match[1]);
-      $attachment["post_title"] = $youtube_api["title"];
-      $attachment["post_content"] = $youtube_api["description"];
+      if ($youtube_api) {
+        $attachment["post_title"] = $youtube_api["title"];
+        $attachment["post_content"] = $youtube_api["description"];
+      }
     } else {
       $file_info = wp_check_filetype($url);
       if ($file_info["type"] != null) {
@@ -41,7 +43,7 @@ function media_jwplayer_url_insert_form($errors) {
       }
     }
     $id = wp_insert_attachment($attachment, $url, $post_id);
-    if (isset($youtube_api)) {
+    if ($youtube_api) {
       update_post_meta($id, LONGTAIL_KEY . "thumbnail_url", $youtube_api["thumbnail_url"]);
       update_post_meta($id, LONGTAIL_KEY . "creator", $youtube_api["author"]);
     } else if (strstr($url, "rtmp://")) {
@@ -125,6 +127,9 @@ function get_youtube_meta_data($video_id = "") {
   $youtube_meta = array();
   $youtube_url = "http://gdata.youtube.com/feeds/api/videos/" . $video_id;
   $youtube_file = download_url($youtube_url);
+  if (is_wp_error($youtube_file)) {
+    return false;
+  }
   $youtube_xml = simplexml_load_file($youtube_file);
   $youtube_meta["author"] = (string) $youtube_xml->author->name;
   $youtube_media = $youtube_xml->children("http://search.yahoo.com/mrss/");
