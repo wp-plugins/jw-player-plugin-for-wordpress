@@ -1,5 +1,4 @@
 <?php
-
 /**
  * @file This file contains the functions for rendering the External Media tab.
  * This is a combination of the default WordPress From Computer and URL Import
@@ -51,14 +50,14 @@ function media_jwplayer_url_insert_form($errors) {
       update_post_meta($id, LONGTAIL_KEY . "rtmp", true);
     }
     update_post_meta($id, LONGTAIL_KEY . "external", true);
-    wp_update_attachment_metadata( $id, wp_generate_attachment_metadata( $id, $url ) );
+    wp_update_attachment_metadata($id, wp_generate_attachment_metadata($id, $url));
   }
+  ?>
 
-?>
   <form enctype="multipart/form-data" method="post" action="<?php echo esc_attr($form_action_url); ?>" class="media-upload-form type-form validate" id="<?php echo $type; ?>-form">
     <input type="submit" class="hidden" name="save" value="" />
     <input type="hidden" name="post_id" id="post_id" value="<?php echo (int) $post_id; ?>" />
-    <?php wp_nonce_field('media-form'); ?>
+  <?php wp_nonce_field('media-form'); ?>
 
     <h3 class="media-title"><?php _e('Add media file from URL'); ?></h3>
 
@@ -67,7 +66,7 @@ function media_jwplayer_url_insert_form($errors) {
         <tbody>
           <tr>
             <th valign="top" scope="row" class="label">
-              <span class="alignleft"><label for="insertonly[href]"><?php  _e('URL') ?></label></span>
+              <span class="alignleft"><label for="insertonly[href]"><?php _e('URL') ?></label></span>
               <span class="alignright"><abbr title="required" class="required">*</abbr></span>
             </th>
             <td class="field"><input id="insertonly[href]" name="insertonly[href]" value="" type="text" aria-required="true"></td>
@@ -94,23 +93,23 @@ function media_jwplayer_url_insert_form($errors) {
       //]]>
     </script>
     <div id="media-items">
-<?php
-      if ( $id ) {
-        if ( !is_wp_error($id) ) {
-          add_filter('attachment_fields_to_edit', 'media_post_single_attachment_fields_to_edit', 10, 2);
-          echo get_media_items( $id, $errors );
-        } else {
-          echo '<div id="media-upload-error">'.esc_html($id->get_error_message()).'</div>';
-          exit;
-        }
-      }
-?>
+  <?php
+  if ($id) {
+    if (!is_wp_error($id)) {
+      add_filter('attachment_fields_to_edit', 'media_post_single_attachment_fields_to_edit', 10, 2);
+      echo get_media_items($id, $errors);
+    } else {
+      echo '<div id="media-upload-error">' . esc_html($id->get_error_message()) . '</div>';
+      exit;
+    }
+  }
+  ?>
     </div>
     <p class="savebutton ml-submit">
-      <input type="submit" class="button" name="save" value="<?php esc_attr_e( 'Save all changes' ); ?>" />
+      <input type="submit" class="button" name="save" value="<?php esc_attr_e('Save all changes'); ?>" />
     </p>
   </form>
-<?php
+  <?php
 }
 
 /**
@@ -125,7 +124,8 @@ function get_youtube_meta_data($video_id = "") {
   }
   $youtube_meta = array();
   $youtube_url = "http://gdata.youtube.com/feeds/api/videos/" . $video_id;
-  $youtube_xml = simplexml_load_file($youtube_url);
+  $youtube_file = download_url($youtube_url);
+  $youtube_xml = simplexml_load_file($youtube_file);
   $youtube_meta["author"] = (string) $youtube_xml->author->name;
   $youtube_media = $youtube_xml->children("http://search.yahoo.com/mrss/");
   $youtube_meta["title"] = $youtube_media->group->title;
@@ -137,7 +137,7 @@ function get_youtube_meta_data($video_id = "") {
       break;
     }
   }
+  unlink($youtube_file);
   return $youtube_meta;
 }
-
 ?>

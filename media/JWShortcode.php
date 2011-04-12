@@ -82,7 +82,8 @@ function jwplayer_handler($atts) {
     }
     if (($playlist)) {
       if ($version && $embedder) {
-        $atts["file"] = get_option ('siteurl') . '/' . 'index.php?xspf=true&id=' . $id;
+//        $atts["file"] = get_option ('siteurl') . '/' . 'index.php?xspf=true&id=' . $id;
+        $atts["playlist"] = generate_playlist($id);
       } else {
         $atts["file"] = urlencode (get_option ('siteurl') . '/' . 'index.php?xspf=true&id=' . $id);
       }
@@ -127,9 +128,10 @@ function resolve_media_id(&$atts) {
     $atts["duration"] = $duration ? $duration : 10;
     $atts["image"] = $post->guid;
   } else if ($mime_type == "audio") {
-    if (empty($atts["image"])) {
+    if (empty($atts["image"]) && empty($atts["width"]) && empty($atts["height"])) {
       $atts["playerReady"] = "function(obj) { document.getElementById(obj['id']).height = document.getElementById(obj['id']).getPluginConfig('controlbar')['height']}";
       $atts["icons"] = false;
+      $atts["controlbar"] = "bottom";
     }
   }
   $rtmp = get_post_meta($id, LONGTAIL_KEY . "rtmp");
@@ -161,6 +163,51 @@ function generate_embed_code($config, $atts) {
     $swf = LongTailFramework::generateSWFObject($atts, $version && $embedder);
     return $swf->generateEmbedScript();
   }
+}
+
+function generate_playlist($playlist_id) {
+  $output = array();
+  $playlist = get_post($playlist_id);
+  if ($playlist) {
+    $playlist_items = explode(",", get_post_meta($playlist_id, LONGTAIL_KEY. "playlist_items", true));
+  }
+  if (is_array ($playlist_items)) {
+    foreach ($playlist_items as $playlist_item_id) {
+      $p_item = array();
+      $playlist_item = get_post($playlist_item_id);
+      $image_id = get_post_meta($playlist_item_id, LONGTAIL_KEY . "thumbnail", true);
+      $creator = get_post_meta($playlist_item_id, LONGTAIL_KEY . "creator", true);
+      $thumbnail = get_post_meta($playlist_item_id, LONGTAIL_KEY . "thumbnail_url", true);
+      $streamer = get_post_meta($playlist_item_id, LONGTAIL_KEY . "streamer", true);
+      $file = get_post_meta($playlist_item_id, LONGTAIL_KEY . "file", true);
+      if (empty($thumbnail)) {
+        $temp = get_post($image_id);
+        $image = $temp->guid;
+      } else {
+        $image = $thumbnail;
+      }
+      $p_item[] = "\"title\": " . json_encode($playlist_item->post_title);
+      $p_item[] = "\"creator\": \"" . esc_attr($creator) . "\"";
+      if (!empty($streamer)) {
+        $p_item[] = "\"streamer\": \"" . esc_attr($streamer) . "\"";
+        $p_item[] = "\"file\": \"" . esc_attr($file) . "\"";
+      } else {
+        $p_item[] = "\"file\": \"" . esc_attr($playlist_item->guid) . "\"";
+      }
+      if (substr($playlist_item->post_mime_type, 0, 5) == "image") {
+        $duration = get_post_meta($playlist_item_id, LONGTAIL_KEY . "duration", true);
+        $p_item[] = "\"duration\": \"" . ($duration ? $duration : 10) . "\"";
+        $p_item[] = "\"image\": \"" . esc_attr($playlist_item->guid) . "\"";
+      } else {
+        $p_item[] = "\"image\": \"" . esc_attr($image) . "\"";
+      }
+      $p_item[] = "\"description\": " . json_encode($playlist_item->post_content);
+      $p_item[] = "\"mediaid\": \"" . $playlist_item_id . "\"";
+      $p_item[] = "\"id\": \"" . $playlist_item_id . "\"";
+      $output[] = "{" . implode(", ", $p_item) . "}";
+    }
+  }
+  return "[" . implode(",\n", $output) . "]";
 }
 
 ?>

@@ -94,6 +94,8 @@ class JWEmbedderConfig implements EmbedConfigInterface {
     foreach ($this->fvars as $key => $value) {
       if (isset (self::$events[$key])) {
         $events[] = "\"" . $key . "\"" . ": " . urldecode(html_entity_decode($value));
+      } else if ($key == "playlist") {
+        $script .= "playlist: " . $value . ", "; 
       } else {
         $script .= "\"" . $key . "\"" . ": \"" . urldecode(html_entity_decode($value)) . "\", ";
       }
