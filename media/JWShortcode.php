@@ -212,7 +212,21 @@ function generate_playlist($playlist_id) {
 
 function generateModeString(&$atts, $id) {
   $html5 = get_post_meta($id, LONGTAIL_KEY . "html5_file", true);
+  if (!isset($html5) || $html5 == null || $html5 == "") {
+    $html5_id = get_post_meta($id, LONGTAIL_KEY . "html5_file_selector", true);
+    if (isset($html5_id)) {
+      $html5_attachment = get_post($html5_id);
+      $html5 = $html5_attachment->guid;
+    }
+  }
   $download = get_post_meta($id, LONGTAIL_KEY . "download_file", true);
+  if (!isset($download) || $download == null || $download == "") {
+    $download_id = get_post_meta($id, LONGTAIL_KEY . "download_file_selector", true);
+    if (isset($download_id)) {
+      $download_attachment = get_post($download_id);
+      $download = $download_attachment->guid;
+    }
+  }
   if (isset($html5) || isset($download)) {
     $mode = "[{type: \"flash\", src: \"" . LongTailFramework::getPlayerURL() . "\"}";
     if (isset($html5)) {
