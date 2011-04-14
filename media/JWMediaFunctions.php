@@ -26,6 +26,10 @@ function jwplayer_attachment_fields_to_save($post, $attachment) {
     update_post_meta($post["ID"], LONGTAIL_KEY . "thumbnail", $attachment[LONGTAIL_KEY . "thumbnail"]);
     update_post_meta($post["ID"], LONGTAIL_KEY . "thumbnail_url", $attachment[LONGTAIL_KEY . "thumbnail_url"]);
     update_post_meta($post["ID"], LONGTAIL_KEY . "creator", $attachment[LONGTAIL_KEY . "creator"]);
+    update_post_meta($post["ID"], LONGTAIL_KEY . "html5_file", $attachment[LONGTAIL_KEY . "html5_file"]);
+    update_post_meta($post["ID"], LONGTAIL_KEY . "html5_file_selector", $attachment[LONGTAIL_KEY . "html5_file_selector"]);
+    update_post_meta($post["ID"], LONGTAIL_KEY . "download_file", $attachment[LONGTAIL_KEY . "download_file"]);
+    update_post_meta($post["ID"], LONGTAIL_KEY . "download_file_selector", $attachment[LONGTAIL_KEY . "download_file_selector"]);
   }
   if ($mime_type == "image") {
     update_post_meta($post["ID"], LONGTAIL_KEY . "duration", $attachment[LONGTAIL_KEY . "duration"]);
@@ -44,6 +48,22 @@ add_filter("attachment_fields_to_edit", "jwplayer_attachment_fields", 10, 2);
  * @return array Updated $form_fields with the new fields.
  */
 function jwplayer_attachment_fields($form_fields, $post) {
+  $image_args = array(
+    "post_type" => "attachment",
+    "numberposts" => 50,
+    "post_status" => null,
+    "post_mime_type" => "image",
+    "post_parent" => null
+  );
+  $image_attachments = get_posts($image_args);
+  $video_args = array(
+    "post_type" => "attachment",
+    "numberposts" => 25,
+    "post_status" => null,
+    "post_mime_type" => "video",
+    "post_parent" => null
+  );
+  $video_attachments = get_posts($video_args);
   $mime_type = substr($post->post_mime_type, 0, 5);
   switch($mime_type) {
     case "image":
@@ -63,12 +83,32 @@ function jwplayer_attachment_fields($form_fields, $post) {
       $form_fields[LONGTAIL_KEY . "thumbnail"] = array(
         "label" => __("Thumbnail"),
         "input" => "html",
-        "html" => generateImageSelectorHTML($post->ID)
+        "html" => generateImageSelectorHTML($post->ID, $image_attachments)
       );
       $form_fields[LONGTAIL_KEY . "creator"] = array(
         "label" => __("Creator"),
         "input" => "text",
         "value" => get_post_meta($post->ID, LONGTAIL_KEY . "creator", true)
+      );
+      $form_fields[LONGTAIL_KEY . 'html5_file'] = array(
+        "label" => __("HTML5 file"),
+        "input" => "text",
+        "value" => get_post_meta($post->ID, LONGTAIL_KEY . "html5_file", true)
+      );
+      $form_fields[LONGTAIL_KEY . 'html5_file_selector'] = array(
+        "label" => __(""),
+        "input" => "html",
+        "html" => generateVideoSelectorHTML($post->ID, "html5_file_selector", $video_attachments)
+      );
+      $form_fields[LONGTAIL_KEY . 'download_file'] = array(
+        "label" => __("Download file"),
+        "input" => "text",
+        "value" => get_post_meta($post->ID, LONGTAIL_KEY . "download_file", true)
+      );
+      $form_fields[LONGTAIL_KEY . 'download_file_selector'] = array(
+        "label" => __(""),
+        "input" => "html",
+        "html" => generateVideoSelectorHTML($post->ID, "download_file_selector", $video_attachments)
       );
       break;
   }
@@ -108,17 +148,9 @@ function jwplayer_attachment_fields($form_fields, $post) {
  * @param int $id The id of the current attachment.
  * @return string The HTML to render the image selector.
  */
-function generateImageSelectorHTML($id) {
+function generateImageSelectorHTML($id, $attachments) {
   $output = "";
   $sel = false;
-  $args = array(
-    "post_type" => "attachment",
-    "numberposts" => 100,
-    "post_status" => null,
-    "post_mime_type" => "image",
-    "post_parent" => null
-  );
-  $attachments = get_posts($args);
   if ($attachments) {
     $output .= "<script language='javascript' src='" . WP_PLUGIN_URL . '/' . plugin_basename(dirname(__FILE__)) . "/msdropdown/js/uncompressed.jquery.dd.js' type='text/javascript'></script>\n";
     $output .= "<link rel='stylesheet' type='text/css' href='" . WP_PLUGIN_URL . '/' . plugin_basename(dirname(__FILE__)) . "/msdropdown/dd.css' />\n";
@@ -141,6 +173,45 @@ function generateImageSelectorHTML($id) {
     if (!$sel && $image_id != -1) {
       $image_post = get_post($image_id);
       $output .= "<option value='" . $image_post->ID . "' title='" . $image_post->guid . "' selected=selected >" . $image_post->post_title . "</option>\n";
+    }
+    $output .= "</select>\n";
+  }
+  return $output;
+}
+
+function generateVideoSelectorHTML($id, $field, $attachments) {
+  $output = "";
+  $sel = false;
+  if ($attachments) {
+    $output .= "<script language='javascript' src='" . WP_PLUGIN_URL . '/' . plugin_basename(dirname(__FILE__)) . "/msdropdown/js/uncompressed.jquery.dd.js' type='text/javascript'></script>\n";
+    $output .= "<link rel='stylesheet' type='text/css' href='" . WP_PLUGIN_URL . '/' . plugin_basename(dirname(__FILE__)) . "/msdropdown/dd.css' />\n";
+    $output .= "<script language='javascript'>jQuery(document).ready(function(e) {jQuery(\"#" . $field . "_selector$id\").msDropDown({visibleRows:3, rowHeight:50});});</script>\n";
+    $output .= "<select name='attachments[$id][" . LONGTAIL_KEY . "$field]' id='" . $field . "_selector$id' width='200' style='width:200px;'>\n";
+    $output .= "<option value='-1'>None</option>\n";
+    $video_id = get_post_meta($id, LONGTAIL_KEY . $field, true);
+    foreach($attachments as $post) {
+      if (substr($post->post_mime_type, 0, 5) == "video") {
+        if ($post->ID == $video_id) {
+          $selected = "selected='selected'";
+          $sel = true;
+        } else {
+          $selected = "";
+        }
+        $thumbnail = get_post_meta($post->ID, LONGTAIL_KEY . "thumbnail_url", true);
+        if (!isset($thumbnail) || $thumbnail == null || $thumbnail == "") {
+          $thumbnail_id = get_post_meta($id, LONGTAIL_KEY . "thumbnail", true);
+          if (isset($thumbnail_id)) {
+            $image_attachment = get_post($thumbnail_id);
+            $thumbnail = $image_attachment->guid;
+          }
+        }
+        $title = $post->post_title ? $post->post_title : $post->guid;
+        $output .= "<option value='" . $post->ID . "' title='" . $thumbnail . "' " . $selected . ">" . $title . "</option>\n";
+      }
+    }
+    if (!$sel && $video_id != -1 && !empty($video_id)) {
+      $video_post = get_post($video_id);
+      $output .= "<option value='" . $video_post->ID . "' title='" . $video_post->guid . "' selected=selected >" . $video_post->post_title . "</option>\n";
     }
     $output .= "</select>\n";
   }

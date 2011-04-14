@@ -96,6 +96,8 @@ class JWEmbedderConfig implements EmbedConfigInterface {
         $events[] = "\"" . $key . "\"" . ": " . urldecode(html_entity_decode($value));
       } else if ($key == "playlist") {
         $script .= "playlist: " . $value . ", "; 
+      } else if ($key == "modes") {
+        $script .= "modes: " . $value . ", "; 
       } else {
         $script .= "\"" . $key . "\"" . ": \"" . urldecode(html_entity_decode($value)) . "\", ";
       }

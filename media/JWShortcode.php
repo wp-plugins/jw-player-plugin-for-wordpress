@@ -82,7 +82,6 @@ function jwplayer_handler($atts) {
     }
     if (($playlist)) {
       if ($version && $embedder) {
-//        $atts["file"] = get_option ('siteurl') . '/' . 'index.php?xspf=true&id=' . $id;
         $atts["playlist"] = generate_playlist($id);
       } else {
         $atts["file"] = urlencode (get_option ('siteurl') . '/' . 'index.php?xspf=true&id=' . $id);
@@ -141,6 +140,7 @@ function resolve_media_id(&$atts) {
   } else {
     $atts["file"] = $post->guid;
   }
+  generateModeString(&$atts, $id);
 }
 
 function generate_embed_code($config, $atts) {
@@ -208,6 +208,22 @@ function generate_playlist($playlist_id) {
     }
   }
   return "[" . implode(",\n", $output) . "]";
+}
+
+function generateModeString(&$atts, $id) {
+  $html5 = get_post_meta($id, LONGTAIL_KEY . "html5_file", true);
+  $download = get_post_meta($id, LONGTAIL_KEY . "download_file", true);
+  if (isset($html5) || isset($download)) {
+    $mode = "[{type: \"flash\", src: \"" . LongTailFramework::getPlayerURL() . "\"}";
+    if (isset($html5)) {
+      $mode .= ", {type: \"html5\", config: {\"file\": \"$html5\"}}";
+    }
+    if (isset($download)) {
+      $mode .= ", {type: \"download\", config: {\"file\": \"$download\"}}";
+    }
+    $mode .= "]";
+    $atts["modes"] = $mode;
+  }
 }
 
 ?>
