@@ -211,7 +211,10 @@ function generate_playlist($playlist_id) {
 }
 
 function generateModeString(&$atts, $id) {
-  $html5 = get_post_meta($id, LONGTAIL_KEY . "html5_file", true);
+  $html5 = $atts["html5_file"];
+  if (!isset($html5) || $html5 == null || $html5 == "") {
+    $html5 = get_post_meta($id, LONGTAIL_KEY . "html5_file", true);    
+  }
   if (!isset($html5) || $html5 == null || $html5 == "") {
     $html5_id = get_post_meta($id, LONGTAIL_KEY . "html5_file_selector", true);
     if (isset($html5_id)) {
@@ -219,7 +222,10 @@ function generateModeString(&$atts, $id) {
       $html5 = $html5_attachment->guid;
     }
   }
-  $download = get_post_meta($id, LONGTAIL_KEY . "download_file", true);
+  $download = $atts["download_file"];
+  if (!isset($download) || $download == null || $download == "") {
+    $download = get_post_meta($id, LONGTAIL_KEY . "download_file", true);    
+  }
   if (!isset($download) || $download == null || $download == "") {
     $download_id = get_post_meta($id, LONGTAIL_KEY . "download_file_selector", true);
     if (isset($download_id)) {
@@ -230,10 +236,10 @@ function generateModeString(&$atts, $id) {
   if (isset($html5) || isset($download)) {
     $mode = "[{type: \"flash\", src: \"" . LongTailFramework::getPlayerURL() . "\"}";
     if (isset($html5)) {
-      $mode .= ", {type: \"html5\", config: {\"file\": \"$html5\"}}";
+      $mode .= ", {type: \"html5\", config: {\"file\": \"$html5\", \"streamer\": \"\", \"provider\": \"\"}}";
     }
     if (isset($download)) {
-      $mode .= ", {type: \"download\", config: {\"file\": \"$download\"}}";
+      $mode .= ", {type: \"download\", config: {\"file\": \"$download\", \"streamer\": \"\", \"provider\": \"\"}}";
     }
     $mode .= "]";
     $atts["modes"] = $mode;
