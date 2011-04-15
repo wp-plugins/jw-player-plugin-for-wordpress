@@ -44,16 +44,17 @@ function unpack_player_archive($player_package) {
     chmod(LongTailFramework::getPrimaryPlayerPath(), 0777);
     $contents = "";
     $fp = $zip->getStream($dir . "yt.swf");
-    if (!$fp) return READ_ERROR;
-    while (!feof($fp)) {
-      $contents .= fread($fp, 2);
+    if ($fp) {
+      while (!feof($fp)) {
+        $contents .= fread($fp, 2);
+      }
+      fclose($fp);
+      $result = @file_put_contents(str_replace("player.swf", "yt.swf", LongTailFramework::getPrimaryPlayerPath()), $contents);
+      if (!$result) {
+        return WRITE_ERROR;
+      }
+      chmod(str_replace("player.swf", "yt.swf", LongTailFramework::getPrimaryPlayerPath()), 0777);
     }
-    fclose($fp);
-    $result = @file_put_contents(str_replace("player.swf", "yt.swf", LongTailFramework::getPrimaryPlayerPath()), $contents);
-    if (!$result) {
-      return WRITE_ERROR;
-    }
-    chmod(str_replace("player.swf", "yt.swf", LongTailFramework::getPrimaryPlayerPath()), 0777);
     $fp = $zip->getStream($dir . "jwplayer.js");
     if ($fp) {
       $contents = "";
@@ -159,7 +160,7 @@ function download_state() { ?>
 function upload_state() { ?>
   <h2><?php echo "JW Player Install"; ?></h2>
   <p/>
-  $result = player_upload()
+  <?php $result = player_upload() ?>
   <?php if ($result == SUCCESS) { ?>
   <div id="info" class="fade updated" style="display: none;">
     <p><strong><span id="player_version"><?php echo "Successfully installed your player, JW Player "; ?></span></strong></p>
