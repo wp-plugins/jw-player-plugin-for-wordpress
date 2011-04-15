@@ -1,4 +1,5 @@
 <?php
+
 /**
  * @file This file contains the necessary functions for parsing the jwplayer
  * shortcode.  Re-implementation of the WordPress functionality was necessary
@@ -29,7 +30,7 @@ function jwplayer_tag_parser($matches) {
   $text = preg_replace("/[\x{00a0}\x{200b}]+/u", " ", $matches[3]);
   $atts = array();
   if (preg_match_all($param_regex, $text, $match, PREG_SET_ORDER)) {
-    foreach($match as $p_match) {
+    foreach ($match as $p_match) {
       if (!empty($p_match[1]))
         $atts[$p_match[1]] = stripcslashes($p_match[2]);
       elseif (!empty($p_match[3]))
@@ -84,7 +85,7 @@ function jwplayer_handler($atts) {
       if ($version && $embedder) {
         $atts["playlist"] = generate_playlist($id);
       } else {
-        $atts["file"] = urlencode (get_option ('siteurl') . '/' . 'index.php?xspf=true&id=' . $id);
+        $atts["file"] = urlencode(get_option('siteurl') . '/' . 'index.php?xspf=true&id=' . $id);
       }
     } else {
       return __("[PLAYLIST not found]");
@@ -98,7 +99,7 @@ function jwplayer_handler($atts) {
       $loaded_config = LongTailFramework::getConfigValues();
       $width = isset($atts["width"]) ? $atts["width"] : $loaded_config["width"];
       $height = isset($atts["height"]) ? $atts["height"] : $loaded_config["height"];
-      $out .= '<br /><img src="' . $image . '" width="' . $width . '" height="' . $height . '" alt="media" /><br />'."\n";
+      $out .= '<br /><img src="' . $image . '" width="' . $width . '" height="' . $height . '" alt="media" /><br />' . "\n";
     }
     return $out;
   }
@@ -169,9 +170,9 @@ function generate_playlist($playlist_id) {
   $output = array();
   $playlist = get_post($playlist_id);
   if ($playlist) {
-    $playlist_items = explode(",", get_post_meta($playlist_id, LONGTAIL_KEY. "playlist_items", true));
+    $playlist_items = explode(",", get_post_meta($playlist_id, LONGTAIL_KEY . "playlist_items", true));
   }
-  if (is_array ($playlist_items)) {
+  if (is_array($playlist_items)) {
     foreach ($playlist_items as $playlist_item_id) {
       $p_item = array();
       $playlist_item = get_post($playlist_item_id);
@@ -213,7 +214,7 @@ function generate_playlist($playlist_id) {
 function generateModeString(&$atts, $id) {
   $html5 = $atts["html5_file"];
   if (!isset($html5) || $html5 == null || $html5 == "") {
-    $html5 = get_post_meta($id, LONGTAIL_KEY . "html5_file", true);    
+    $html5 = get_post_meta($id, LONGTAIL_KEY . "html5_file", true);
   }
   if (!isset($html5) || $html5 == null || $html5 == "") {
     $html5_id = get_post_meta($id, LONGTAIL_KEY . "html5_file_selector", true);
@@ -224,7 +225,7 @@ function generateModeString(&$atts, $id) {
   }
   $download = $atts["download_file"];
   if (!isset($download) || $download == null || $download == "") {
-    $download = get_post_meta($id, LONGTAIL_KEY . "download_file", true);    
+    $download = get_post_meta($id, LONGTAIL_KEY . "download_file", true);
   }
   if (!isset($download) || $download == null || $download == "") {
     $download_id = get_post_meta($id, LONGTAIL_KEY . "download_file_selector", true);
