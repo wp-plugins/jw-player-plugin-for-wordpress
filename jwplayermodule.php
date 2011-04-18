@@ -60,10 +60,13 @@ if (isset($uploads["error"]) && !empty($uploads["error"])) {
   return;
 }
 
+$isHttps = $_SERVER["HTTPS"];
+$pluginURL = $isHttps ? str_replace("http://", "https://", WP_PLUGIN_URL) : WP_PLUGIN_URL;
+$uploadsURL = $isHttps ? str_replace("http://", "https://", $uploads["baseurl"]) : $uploads["baseurl"];
 define("JWPLAYER_PLUGIN_DIR", WP_PLUGIN_DIR . "/" . plugin_basename(dirname(__FILE__)));
-define("JWPLAYER_PLUGIN_URL", WP_PLUGIN_URL . "/" . plugin_basename(dirname(__FILE__)));
+define("JWPLAYER_PLUGIN_URL", $pluginURL . "/" . plugin_basename(dirname(__FILE__)));
 define("JWPLAYER_FILES_DIR", $uploads["basedir"] . "/" . plugin_basename(dirname(__FILE__)));
-define("JWPLAYER_FILES_URL", $uploads["baseurl"] . "/" . plugin_basename(dirname(__FILE__)));
+define("JWPLAYER_FILES_URL", $uploadsURL . "/" . plugin_basename(dirname(__FILE__)));
 
 if (!@is_dir(JWPLAYER_FILES_DIR)) {
   add_action('admin_notices', create_function('', 'echo \'<div id="message" class="fade updated"><p><strong>' . __('Activation of the JW Player Plugin for WordPress could not complete successfully.  The following directories could not be created automatically: </p><ul><li>- ' . JWPLAYER_FILES_DIR . '</li><li>- ' . JWPLAYER_FILES_DIR . '/configs</li><li>- ' . JWPLAYER_FILES_DIR . '/player</li></ul><p>Please ensure these directories are writable.  ' . JW_FILE_PERMISSIONS) . '</strong></p></div>\';'));
@@ -111,7 +114,7 @@ add_filter("widget_text", "jwplayer_tag_callback", 11);
 if (is_admin()) {
   add_action( 'plugins_loaded', create_function( '', 'global $adminContext; $adminContext = new AdminContext();' ) );
   add_action("admin_menu", "jwplayer_plugin_menu");
-  wp_register_script('jquery-ui-jw', WP_PLUGIN_URL . '/' . plugin_basename(dirname(__FILE__)) . "/js/jquery.ui.jw.js");
+  wp_register_script('jquery-ui-jw', $pluginURL . '/' . plugin_basename(dirname(__FILE__)) . "/js/jquery.ui.jw.js");
 }
 
 function jwplayer_install_notices() {
