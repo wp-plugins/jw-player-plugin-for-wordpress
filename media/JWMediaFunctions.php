@@ -4,6 +4,64 @@
  * Library.
  */
 
+add_action("wp_head", "jwplayer_wp_head");
+
+function jwplayer_wp_head() {
+  global $post;
+  
+  if ( !(is_single() || is_page() ) ) return;
+  
+  $config_values = array();
+  $attachment = null;
+  $settings = array();
+  $meta_header_id = get_post_meta($post->ID, LONGTAIL_KEY . "fb_headers_id", true);
+  $meta_header_config = get_post_meta($post->ID, LONGTAIL_KEY . "fb_headers_config", true);
+  if (empty($meta_header_id)) {
+    return;
+  } else if (is_numeric($meta_header_id)) {
+    $attachment = get_post($meta_header_id);
+    $title = $attachment->post_title;
+    $description = $attachment->post_content;
+    $thumbnail = get_post_meta($meta_header_id, LONGTAIL_KEY . "thumbnail_url", true);
+    if (!isset($thumbnail) || $thumbnail == null || $thumbnail == "") {
+      $image_id = get_post_meta($id, LONGTAIL_KEY . "thumbnail", true);
+      if (isset($image_id)) {
+        $image_attachment = get_post($image_id);
+        $thumbnail = $image_attachment->guid;
+      }
+    }
+  } else {
+    $title = $post->post_title;
+    $description = $post->post_excerpt;
+    $thumbnail = "";
+    $settings[] = "file=$meta_header_id";
+  }
+  if (!empty($meta_header_config) && $meta_header_config != "") {
+    LongTailFramework::setConfig($meta_header_config);
+  } else {
+    LongTailFramework::setConfig(get_option(LONGTAIL_KEY . "default"));
+  }
+  $config_values = LongTailFramework::getConfigValues();
+  $width = $config_values["width"];
+  $height = $config_values["height"];
+  foreach ($config_values as $key => $value) {
+    $settings[] = "$key=$value";
+  }
+  $settings_string = htmlspecialchars(implode("&", $settings));
+  $facebook_url = LongTailFramework::getPlayerURL();
+  if ($settings_string) $facebook_url .= "?$settings_string";
+  $output = "";
+  $output .= "<meta property='og:type' content='movie' />";
+  $output .= "<meta property='og:video:width' content='$width' />";
+  $output .= "<meta property='og:video:height' content='$height' />";
+  $output .= "<meta property='og:video:type' content='application/x-shockwave-flash' />";
+  $output .= "<meta property='og:title' content='" . htmlspecialchars($title) . "' />";
+  $output .= "<meta property='og:description' content='" . htmlspecialchars($description) . "' />";
+  $output .= "<meta property='og:image' content='$thumbnail' />";
+  $output .= "<meta property='og:video' content='$facebook_url' />";
+  echo $output;
+}
+
 // Filter hook for specifying which custom fields are save.
 add_filter("attachment_fields_to_save", "jwplayer_attachment_fields_to_save", 10, 2);
 
@@ -255,8 +313,10 @@ function jwplayer_tag_to_editor($html, $send_id, $attachment) {
     $output = "[jwplayer ";
     if ($attachment[LONGTAIL_KEY . "player_select"] != "Default") {
       $output .= "config=\"" . $attachment[LONGTAIL_KEY . "player_select"] . "\" ";
+      update_post_meta($_GET["post_id"], LONGTAIL_KEY . "fb_headers_config", $attachment[LONGTAIL_KEY . "player_select"]);
     }
     $output .= "mediaid=\"" . $send_id . "\"]";
+    update_post_meta($_GET["post_id"], LONGTAIL_KEY . "fb_headers_id", $send_id);
     return $output;
   }
   return $html;

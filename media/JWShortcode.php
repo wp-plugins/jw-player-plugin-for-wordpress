@@ -6,14 +6,25 @@
  * as it did not support '.'
  */
 
+function jwplayer_tag_excerpt_callback($the_content = "") {
+  if (get_option(LONGTAIL_KEY . "show_archive") && (is_archive() || is_search())) {
+    $tag_regex = '/(.?)\[(jwplayer)\b(.*?)(?:(\/))?\](?:(.+?)\[\/\2\])?(.?)/s';
+    $the_content = preg_replace_callback($tag_regex, "jwplayer_tag_parser", $the_content);
+  } 
+  return $the_content;
+}
+
 /**
  * Callback for locating [jwplayer] tag instances.
  * @param string $the_content The content to be parsed.
  * @return string The parsed and replaced [jwplayer] tag.
  */
 function jwplayer_tag_callback($the_content = "") {
-  $tag_regex = '/(.?)\[(jwplayer)\b(.*?)(?:(\/))?\](?:(.+?)\[\/\2\])?(.?)/s';
-  return preg_replace_callback($tag_regex, "jwplayer_tag_parser", $the_content);
+  if (!is_archive() && !is_search()) {
+    $tag_regex = '/(.?)\[(jwplayer)\b(.*?)(?:(\/))?\](?:(.+?)\[\/\2\])?(.?)/s';
+    $the_content = preg_replace_callback($tag_regex, "jwplayer_tag_parser", $the_content);
+  }
+  return $the_content;
 }
 
 /**
@@ -92,7 +103,7 @@ function jwplayer_handler($atts) {
     }
     unset($atts["playlistid"]);
   }
-  if (is_feed() || (get_option(LONGTAIL_KEY . "show_archive") && (is_archive() || is_search()))) {
+  if (is_feed()) {
     $out = '';
     // remove media file from RSS feed
     if (!empty($image)) {
