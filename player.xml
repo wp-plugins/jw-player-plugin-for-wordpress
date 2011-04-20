@@ -163,6 +163,15 @@
                 <option>uniform</option>
             </select>
         </flashvar>
+        <flashvar type="select">
+            <name>wmode</name>
+            <default>opaque</default>
+            <description>Sets the Window Mode property of the Flash movie for transparency, layering, and positioning in the browser.</description>
+            <select>
+                <option>opaque</option>
+                <option>transparent</option>
+            </select>
+        </flashvar>
     </flashvars>
     
     <flashvars section="Sound" type="Advanced Player Settings">

@@ -81,6 +81,7 @@ function jwplayer_handler($atts) {
   } else {
     unset($atts["config"]);
   }
+  LongTailFramework::setConfig($config);
   if (isset($atts["mediaid"])) {
     resolve_media_id($atts);
   }
@@ -103,11 +104,12 @@ function jwplayer_handler($atts) {
     }
     unset($atts["playlistid"]);
   }
+  $loaded_config = LongTailFramework::getConfigValues();
+  if ($loaded_config["wmode"] && !$atts["wmode"]) $atts["wmode"] = $loaded_config["wmode"];
   if (is_feed()) {
     $out = '';
     // remove media file from RSS feed
     if (!empty($image)) {
-      $loaded_config = LongTailFramework::getConfigValues();
       $width = isset($atts["width"]) ? $atts["width"] : $loaded_config["width"];
       $height = isset($atts["height"]) ? $atts["height"] : $loaded_config["height"];
       $out .= '<br /><img src="' . $image . '" width="' . $width . '" height="' . $height . '" alt="media" /><br />' . "\n";
@@ -156,7 +158,6 @@ function resolve_media_id(&$atts) {
 }
 
 function generate_embed_code($config, $atts) {
-  LongTailFramework::setConfig($config);
   $version = version_compare(get_option(LONGTAIL_KEY . "version"), "5.3", ">=");
   $embedder = file_exists(LongTailFramework::getEmbedderPath());
   if (!$embedder && !$version && preg_match("/iP(od|hone|ad)/i", $_SERVER["HTTP_USER_AGENT"])) {

@@ -36,13 +36,14 @@ class SWFObjectConfig implements EmbedConfigInterface {
    * @param array $flashVars The list of additional flashvars to be used in the embed
    */
   private function init($params, $flash_vars) {
+    $wmode = $flash_vars["wmode"] ? $flash_vars["wmode"] : "opaque";
     //Initialize defaults.
     $default_params = array(
       "width" => 400,
       "height" => 280,
       "allowfullscreen" => "true",
       "allowscriptaccess" => "always",
-      "wmode" => "opaque",
+      "wmode" => $wmode,
       "version" => "9",
       "type" => "movie",
       "bgcolor" => "#FFFFFF",
