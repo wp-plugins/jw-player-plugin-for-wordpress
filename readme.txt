@@ -2,7 +2,7 @@
 Contributors: LongTail Video Inc.
 Tags: JW Player, Video, Flash, LongTail Video, RTMP, Playlists, Audio, Image, HTML5, iPad, iPhone, iPod
 Requires at least: 2.8.6
-Tested up to: 3.0.4
+Tested up to: 3.1
 Stable tag: 1.3.3
 
 This plugin is provided by LongTail Video Inc.  It enables you to configure and embed the JW Player for Flash for use on your WordPress website.
@@ -62,6 +62,22 @@ You can perform the automatic update, download the plugin and upload, or FTP the
 1. Save your posts.
 
 == Changelog ==
+
+= 1.4 =
+
+ * FEATURE: Support for Modes.  You can now specify different files for HTML5 mode.  This can be done in the shortcode (html5_file and download_file) or when editing a piece of content.
+ * FEATURE: Support for posting to Facebook.  Handled automatically when inserting via the media overlay.  Alternatively you can use two custom fields for the post (jwplayermodule_fb_headers_id and jwplayermodule_fb_headers_config).
+ * ENHANCEMENT: Rewrite of code handling category behavior.  If checked in the JW Player afdmin section players should now appear when viewing categories.  If unchecked players and code will not show up in category view.
+ * ENHANCEMENT: wmode is now a configurable option for players.
+ * ENHANCEMENT: Add more robust URL loading for YouTube XML
+ * ENHANCEMENT: Better handling of audio controlbar
+ * ENHANCEMENT: Switched to JSON playlists.  Playlists should now work for HTML5 player and no longer break as a result of theme formatting.
+ * ENHANCEMENT: The plugin now behaves correctly with HTTPS sites
+ * ENHANCEMENT: Increased security when setting file permissions.
+ * BUG: Fixed error in .zip uploading
+ * BUG: Dynamic error messaging for plugin directories.  This should make it easier to debug network sites.
+ * BUG: Error handling on youtube api failure
+
 
 = 1.3.3 =
 
