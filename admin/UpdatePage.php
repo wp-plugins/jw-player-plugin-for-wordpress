@@ -41,7 +41,7 @@ function unpack_player_archive($player_package) {
     if (!$result) {
       return WRITE_ERROR;
     }
-    chmod(LongTailFramework::getPrimaryPlayerPath(), 0777);
+    chmod(LongTailFramework::getPrimaryPlayerPath(), 0755);
     $contents = "";
     $fp = $zip->getStream($dir . "yt.swf");
     if ($fp) {
@@ -53,7 +53,7 @@ function unpack_player_archive($player_package) {
       if (!$result) {
         return WRITE_ERROR;
       }
-      chmod(str_replace("player.swf", "yt.swf", LongTailFramework::getPrimaryPlayerPath()), 0777);
+      chmod(str_replace("player.swf", "yt.swf", LongTailFramework::getPrimaryPlayerPath()), 0755);
     }
     $fp = $zip->getStream($dir . "jwplayer.js");
     if ($fp) {
@@ -66,7 +66,7 @@ function unpack_player_archive($player_package) {
       if (!$result) {
         return WRITE_ERROR;
       }
-      chmod(LongTailFramework::getEmbedderPath(), 0777);
+      chmod(LongTailFramework::getEmbedderPath(), 0755);
     }
     $zip->close();
   }

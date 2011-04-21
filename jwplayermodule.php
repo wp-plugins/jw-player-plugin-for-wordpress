@@ -78,21 +78,21 @@ if (!@is_dir(JWPLAYER_FILES_DIR)) {
 function jwplayer_activation() {
   clearstatcache();
   if (!@is_dir(JWPLAYER_FILES_DIR)) {
-    if (!@mkdir(JWPLAYER_FILES_DIR, 0777, true)) {
+    if (!@mkdir(JWPLAYER_FILES_DIR, 0755, true)) {
       add_action('admin_notices', create_function('', 'echo \'<div id="message" class="fade updated"><p><strong>' . __('There was a problem completing activation of the plugin.  The wp-content/uploads/jw-player-plugin-for-wordpress directory could not be created.  Please ensure the WordPress uploads directory is writable.  ' . JW_FILE_PERMISSIONS) . '</strong></p></div>\';'));
       return;
     }
-    chmod(JWPLAYER_FILES_DIR, 0777);
-    if (!@mkdir(JWPLAYER_FILES_DIR . "/player", 0777)) {
+    chmod(JWPLAYER_FILES_DIR, 0755);
+    if (!@mkdir(JWPLAYER_FILES_DIR . "/player", 0755)) {
       add_action('admin_notices', create_function('', 'echo \'<div id="message" class="fade updated"><p><strong>' . __('There was a problem completing activation of the plugin.  The wp-content/uploads/jw-player-plugin-for-wordpress/player directory could not be created.  Please ensure the WordPress uploads directory is writable.  ' . JW_FILE_PERMISSIONS) . '</strong></p></div>\';'));
       return;
     }
-    chmod(JWPLAYER_FILES_DIR . "/player", 0777);
-    if (!@mkdir(JWPLAYER_FILES_DIR . "/configs", 0777)) {
+    chmod(JWPLAYER_FILES_DIR . "/player", 0755);
+    if (!@mkdir(JWPLAYER_FILES_DIR . "/configs", 0755)) {
       add_action('admin_notices', create_function('', 'echo \'<div id="message" class="fade updated"><p><strong>' . __('There was a problem completing activation of the plugin.  The wp-content/uploads/jw-player-plugin-for-wordpress/configs directory could not be created.  Please ensure the WordPress uploads directory is writable.  ' . JW_FILE_PERMISSIONS) . '</strong></p></div>\';'));
       return;
     }
-    chmod(JWPLAYER_FILES_DIR . "/configs", 0777);
+    chmod(JWPLAYER_FILES_DIR . "/configs", 0755);
     if (@is_dir(JWPLAYER_PLUGIN_DIR . "/configs")) {
       foreach (get_old_configs() as $config) {
         @rename(JWPLAYER_PLUGIN_DIR . "/configs/$config.xml", JWPLAYER_FILES_DIR . "/configs/$config.xml");
