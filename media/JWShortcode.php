@@ -154,7 +154,7 @@ function resolve_media_id(&$atts) {
   } else {
     $atts["file"] = $post->guid;
   }
-  generateModeString(&$atts, $id);
+  generateModeString($atts, $id);
 }
 
 function generate_embed_code($config, $atts) {
