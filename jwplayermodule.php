@@ -108,7 +108,7 @@ wp_enqueue_script("google-swfobject", "http://ajax.googleapis.com/ajax/libs/swfo
 
 add_filter("the_content", "jwplayer_tag_callback", 11);
 add_filter("the_excerpt", "jwplayer_tag_excerpt_callback", 11);
-add_filter("widget_text", "jwplayer_tag_callback", 11);
+add_filter("widget_text", "jwplayer_tag_widget_callback", 11);
 
 // Player configuration and Media Management, limited to administrators.
 if (is_admin()) {

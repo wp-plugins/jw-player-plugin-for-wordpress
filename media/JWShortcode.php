@@ -14,6 +14,12 @@ function jwplayer_tag_excerpt_callback($the_content = "") {
   return $the_content;
 }
 
+function jwplayer_tag_widget_callback($the_content = "") {
+  $tag_regex = '/(.?)\[(jwplayer)\b(.*?)(?:(\/))?\](?:(.+?)\[\/\2\])?(.?)/s';
+  $the_content = preg_replace_callback($tag_regex, "jwplayer_tag_parser", $the_content);
+  return $the_content;
+}
+
 /**
  * Callback for locating [jwplayer] tag instances.
  * @param string $the_content The content to be parsed.

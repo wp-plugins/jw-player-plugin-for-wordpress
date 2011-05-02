@@ -24,12 +24,13 @@ function jwplayer_wp_head() {
     $description = $attachment->post_content;
     $thumbnail = get_post_meta($meta_header_id, LONGTAIL_KEY . "thumbnail_url", true);
     if (!isset($thumbnail) || $thumbnail == null || $thumbnail == "") {
-      $image_id = get_post_meta($id, LONGTAIL_KEY . "thumbnail", true);
+      $image_id = get_post_meta($meta_header_id, LONGTAIL_KEY . "thumbnail", true);
       if (isset($image_id)) {
         $image_attachment = get_post($image_id);
         $thumbnail = $image_attachment->guid;
       }
     }
+    $settings[] = "file=" . $attachment->guid;
   } else {
     $title = $post->post_title;
     $description = $post->post_excerpt;
