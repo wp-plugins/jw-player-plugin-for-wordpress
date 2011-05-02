@@ -77,7 +77,7 @@ class JWEmbedderConfig implements EmbedConfigInterface {
 
   public function generateDiv() {
     //The outer div is needed for LTAS support.
-    return  "<div id=\"$this->id-div\" name=\"$this->id-div\">\n" .
+    return  "<div id=\"$this->id-div\">\n" .
             "<div id=\"$this->id\"></div>\n" .
             "</div>\n";
   }
