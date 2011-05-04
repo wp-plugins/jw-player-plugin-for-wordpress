@@ -30,19 +30,19 @@ class AdminContext {
     }
     switch ($state) {
       case BasicState::getID() :
-        $state = new BasicState($_POST[LONGTAIL_KEY . "config"], $post_values);
+        $state = new BasicState($_POST[LONGTAIL_KEY . "config"]);
         break;
       case AdvancedState::getID() :
-        $state = new AdvancedState($_POST[LONGTAIL_KEY . "config"], $post_values);
+        $state = new AdvancedState($_POST[LONGTAIL_KEY . "config"]);
         break;
       case LTASState::getID() :
-        $state = new LTASState($_POST[LONGTAIL_KEY . "config"], $post_values);
+        $state = new LTASState($_POST[LONGTAIL_KEY . "config"]);
         break;
       case PluginState::getID() :
-        $state = new PluginState($_POST[LONGTAIL_KEY . "config"], $post_values);
+        $state = new PluginState($_POST[LONGTAIL_KEY . "config"]);
         break;
       default :
-        $state = new PlayerState($_POST[LONGTAIL_KEY . "config"], $post_values);
+        $state = new PlayerState($_POST[LONGTAIL_KEY . "config"]);
         break;
     }
     $this->processPost($state);
@@ -68,7 +68,7 @@ class AdminContext {
         } else if (!$configs || count($configs) == 1) {
           update_option(LONGTAIL_KEY . "default", "Out-of-the-Box");
         }
-        $state = new PlayerState($_POST[LONGTAIL_KEY . "config"], $post_values);
+        $state = new PlayerState($_POST[LONGTAIL_KEY . "config"]);
         $del_player = $_POST[LONGTAIL_KEY . "config"];
         $this->feedback_message("The '$del_player' Player was successfully deleted.");
         $state->render();
@@ -122,7 +122,7 @@ class AdminContext {
     $data = LongTailFramework::getConfigValues();
     $plugins = array();
     foreach ($_POST as $name => $value) {
-      if (strstr($name, LONGTAIL_KEY . "player_") && $value != null) {
+      if (strstr($name, LONGTAIL_KEY . "player_")) {
         $val = esc_html($value);
         $new_val = $val;
         $new_name = str_replace(LONGTAIL_KEY . "player_", "", $name);
@@ -134,13 +134,15 @@ class AdminContext {
           }
         } else if ($new_name == "flashvars") {
           $this->parseFlashvarString($new_val, $data);
-        } else {
+        } else if (!empty($new_val)) {
           $data[$new_name] = $new_val;
+        } else {
+          unset($data[$new_name]);
         }
       } else if(strstr($name, LONGTAIL_KEY . "plugin_") && strstr($name, "_enable")) {
         $plugins[str_replace("_enable", "", str_replace(LONGTAIL_KEY . "plugin_", "", $name))] = esc_html($value);
       //Process the plugin flashvars.
-      } else if(strstr($name, LONGTAIL_KEY . "plugin_") && $value != null) {
+      } else if(strstr($name, LONGTAIL_KEY . "plugin_") && !empty($value)) {
         $plugin_key = preg_replace("/_/", ".", str_replace(LONGTAIL_KEY . "plugin_", "", $name), 1);
         $found = false;
         foreach(array_keys($plugins) as $repo) {
