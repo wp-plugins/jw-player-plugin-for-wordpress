@@ -176,10 +176,10 @@ class AdminContext {
   }
 
   private function parseFlashvarString($fv_str, &$data) {
-    $pairs = preg_split("/,/", $fv_str);
-    foreach ($pairs as $pair) {
-      $key_val = preg_split("/=/", $pair);
-      $data[trim($key_val[0])] = trim($key_val[1]);
+    $regex = "~([a-zA-Z0-9.]+)=([a-zA-Z0-9:\-./]+)~";
+    preg_match_all($regex, $fv_str, $matches);
+    for ($i = 0; $i < count($matches[0]); $i++) {
+      $data[trim($matches[1][$i])] = trim($matches[2][$i]);
     }
   }
 
