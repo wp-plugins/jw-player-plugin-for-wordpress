@@ -26,7 +26,7 @@ function jwplayer_tag_widget_callback($the_content = "") {
  * @return string The parsed and replaced [jwplayer] tag.
  */
 function jwplayer_tag_callback($the_content = "") {
-  if (!is_archive() && !is_search()) {
+  if (!get_option(LONGTAIL_KEY . "show_archive") || (!is_archive() && !is_search())) {
     $tag_regex = '/(.?)\[(jwplayer)\b(.*?)(?:(\/))?\](?:(.+?)\[\/\2\])?(.?)/s';
     $the_content = preg_replace_callback($tag_regex, "jwplayer_tag_parser", $the_content);
   }

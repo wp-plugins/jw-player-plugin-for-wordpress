@@ -214,7 +214,7 @@ class PlayerState extends AdminState {
                           <br/>
                           <input class="button-secondary action" type="submit" name="Next" value="Create Custom Player"/>
                           <div style="display: inline-block; float: right;">
-                            <label for="<?php echo LONGTAIL_KEY . "show_archive"; ?>">Show players on category and search pages</label>
+                            <label for="<?php echo LONGTAIL_KEY . "show_archive"; ?>">Apply filter to excerpt on Category and Search pages</label>
                             <input id="<?php echo LONGTAIL_KEY . "show_archive"; ?>" type="checkbox" name="<?php echo LONGTAIL_KEY . "show_archive"; ?>" onclick="form.submit();" <?php checked(true, get_option(LONGTAIL_KEY . "show_archive")); ?>/>
                           </div>
                           <input id="<?php echo LONGTAIL_KEY . "new_player"; ?>" type="hidden" name="<?php echo LONGTAIL_KEY . "new_player"; ?>" value=""/>
