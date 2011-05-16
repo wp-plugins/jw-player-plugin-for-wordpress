@@ -59,7 +59,7 @@ if (isset($uploads["error"]) && !empty($uploads["error"])) {
   add_action('admin_notices', create_function('', 'echo \'<div id="message" class="fade updated"><p><strong>There was a problem completing activation of the JW Player Plugin for WordPress.  Please note that the JWPlayer Plugin for WordPress requires that the WordPress uploads directory exists and is writable.  ' . JW_FILE_PERMISSIONS . '</strong></p></div>\';'));
   return;
 }
-$isHttps = $_SERVER["HTTPS"] == "on";
+$isHttps = is_ssl();
 $pluginURL = $isHttps ? str_replace("http://", "https://", WP_PLUGIN_URL) : WP_PLUGIN_URL;
 $uploadsURL = $isHttps ? str_replace("http://", "https://", $uploads["baseurl"]) : $uploads["baseurl"];
 define("JWPLAYER_PLUGIN_DIR", WP_PLUGIN_DIR . "/" . plugin_basename(dirname(__FILE__)));
@@ -104,7 +104,10 @@ function jwplayer_activation() {
 if (version_compare(get_option(LONGTAIL_KEY . "version"), "5.3", ">=")) {
   wp_enqueue_script("jw-embedder", LongTailFramework::getEmbedderURL());
 }
-wp_enqueue_script("google-swfobject", "http://ajax.googleapis.com/ajax/libs/swfobject/2.2/swfobject.js");
+
+wp_deregister_script("swfobject");
+wp_register_script("swfobject", 'http' . (is_ssl() ? 's' : '') . '://ajax.googleapis.com/ajax/libs/swfobject/2.2/swfobject.js',NULL,NULL);
+wp_enqueue_script("swfobject");
 
 add_filter("the_content", "jwplayer_tag_callback", 11);
 add_filter("the_excerpt", "jwplayer_tag_excerpt_callback", 11);
