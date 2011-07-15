@@ -40,6 +40,8 @@ function media_jwplayer_url_insert_form($errors) {
       $file_info = wp_check_filetype($url);
       if ($file_info["type"] != null) {
         $attachment["post_mime_type"] = $file_info["type"];
+        $attachment["post_content"]="";
+	      $attachment["post_title"]="";
       }
     }
     $id = wp_insert_attachment($attachment, $url, $post_id);

@@ -26,6 +26,13 @@
   max-width: 40px;
 }
 
+.playlist-item .thumbnail {
+  float: left;
+  margin: 2px;
+  max-height: 32px;
+  max-width: 40px;
+}
+
 #media-upload .ui-sortable .playlist-item {
   cursor: move;
 }

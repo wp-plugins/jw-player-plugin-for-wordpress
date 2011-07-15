@@ -146,7 +146,7 @@
 		var inputhidden = getPostID("postInputhidden");
 		var sText = $("#"+elementid+" option:selected").text();
 		var arrow = $("#"+elementid+" option:selected").attr("title");
-		arrow = (arrow.length==0 || arrow==undefined || options.showIcon==false) ? "" : '<img src="'+arrow+'" align="left" style="height: '+options.rowHeight+'px;"/> ';
+		arrow = (arrow==undefined || arrow.length==0 || options.showIcon==false) ? "" : '<img src="'+arrow+'" align="left" style="height: '+options.rowHeight+'px;"/> ';
 		var sDiv = '<div id="'+titleid+'" class="'+styles.ddTitle+'" style="height:'+options.rowHeight+'px;"';
 		sDiv += '>';
 		sDiv += '<span id="'+arrowid+'" class="'+styles.arrow+'"></span><span class="textTitle" id="'+titletextid+'">'+arrow + sText+'</span></div>';
