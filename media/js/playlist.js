@@ -68,7 +68,7 @@ function preparePlaylistItem(fileObj, serverData) {
 function preparePlaylistItemInit(fileObj) {
 	var item = jQuery('#playlist-item-' + fileObj.id);
 	// Clone the thumbnail as a "pinkynail" -- a tiny image to the left of the filename
-	jQuery('.thumbnail', item).clone().attr('className', 'pinkynail toggle').prependTo(item);
+	jQuery('.thumbnail', item).clone().attr('class', 'pinkynail toggle').prependTo(item);
 
 	// Replace the original filename with the new (unique) one assigned during upload
 	jQuery('.filename.original', item).replaceWith( jQuery('.filename.new', item) );
