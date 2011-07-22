@@ -242,7 +242,7 @@ function generateVideoSelectorHTML($id, $field, $attachments) {
   $output = "";
   $sel = false;
   if ($attachments) {
-//    $output .= "<script language='javascript' src='" . WP_PLUGIN_URL . '/' . plugin_basename(dirname(__FILE__)) . "/msdropdown/js/uncompressed.jquery.dd.js' type='text/javascript'></script>\n";
+    $output .= "<script language='javascript' src='" . WP_PLUGIN_URL . '/' . plugin_basename(dirname(__FILE__)) . "/msdropdown/js/uncompressed.jquery.dd.js' type='text/javascript'></script>\n";
     $output .= "<link rel='stylesheet' type='text/css' href='" . WP_PLUGIN_URL . '/' . plugin_basename(dirname(__FILE__)) . "/msdropdown/dd.css' />\n";
     $output .= "<script language='javascript'>jQuery(document).ready(function(e) {jQuery(\"#" . $field . "_selector$id\").msDropDown({visibleRows:3, rowHeight:50});});</script>\n";
     $output .= "<select name='attachments[$id][" . LONGTAIL_KEY . "$field]' id='" . $field . "_selector$id' width='200' style='width:200px;'>\n";
