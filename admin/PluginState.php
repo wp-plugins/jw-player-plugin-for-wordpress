@@ -108,7 +108,7 @@ class PluginState extends WizardState {
             <table class="form-table">
               <?php foreach($plugins as $plugin) { ?>
                 <?php $name = LONGTAIL_KEY . "plugin_" . $plugin->getRepository() . "_" . "enable"; ?>
-                <?php $value = $_POST[$name] ? $_POST[$name] : $plugin->isEnabled(); ?>
+                <?php $value = isset($_POST[$name]) ? $_POST[$name] : $plugin->isEnabled(); ?>
                 <?php unset($_POST[$name]); ?>
                 <tr valign="top">
                   <th>Enable <?php echo $plugin->getTitle(); ?>:</th>
@@ -133,7 +133,7 @@ class PluginState extends WizardState {
                   <?php foreach($p_vars[$plugin_flash_vars] as $plugin_flash_var) { ?>
                     <tr valign="top">
                       <?php $name = LONGTAIL_KEY . "plugin_" . $plugin->getPluginPrefix() . "_" . $plugin_flash_var->getName(); ?>
-                      <?php $value = $_POST[$name] ? $_POST[$name] : $plugin_flash_var->getDefaultValue(); ?>
+                      <?php $value = isset($_POST[$name]) ? $_POST[$name] : $plugin_flash_var->getDefaultValue(); ?>
                       <?php unset($_POST[$name]); ?>
                       <th><?php echo $plugin->getPluginPrefix() . "." . $plugin_flash_var->getName(); ?>:</th>
                       <td>

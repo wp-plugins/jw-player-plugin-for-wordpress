@@ -98,7 +98,7 @@ function media_jwplayer_url_insert_form($errors) {
     </script>
     <div id="media-items">
   <?php
-  if ($id) {
+  if (isset($id)) {
     if (!is_wp_error($id)) {
       add_filter('attachment_fields_to_edit', 'media_post_single_attachment_fields_to_edit', 10, 2);
       echo get_media_items($id, $errors);
@@ -138,12 +138,7 @@ function get_youtube_meta_data($video_id = "") {
   $youtube_meta["title"] = $youtube_media->group->title;
   $youtube_meta["description"] = $youtube_media->group->description;
   $thumbnails = $youtube_xml->xpath("media:group/media:thumbnail");
-  foreach ($thumbnails as $thumbnail) {
-    if ($thumbnail["height"] == 240) {
-      $youtube_meta["thumbnail_url"] = (string) $thumbnail["url"];
-      break;
-    }
-  }
+  $youtube_meta["thumbnail_url"] = (string) $thumbnails[0]["url"];
   unlink($youtube_file);
   return $youtube_meta;
 }

@@ -22,7 +22,7 @@ function media_jwplayer_insert_form($errors) {
   $args = array(
     'post_parent' => null,
     'posts_per_page' => 10,
-    'paged' => $_GET['paged'] ? $_GET['paged'] : 1,
+    'paged' => isset($_GET['paged']) ? $_GET['paged'] : 1,
     'post_status' => 'inherit',
     'post_type' => 'attachment',
     'orderby' => 'title ASC, ID',
@@ -38,6 +38,7 @@ function media_jwplayer_insert_form($errors) {
   $form_action_url = apply_filters('media_upload_form_url', $form_action_url, $type);
   $playlists = jwplayer_get_playlists();
 
+  $new_playlist_id = -1;
   if (isset($_POST[LONGTAIL_KEY . "playlist_create"]) || isset($_POST["save"])) {
     $post_title = $_POST[LONGTAIL_KEY . "playlist_name"];
     $new_playlist = array();
@@ -45,7 +46,6 @@ function media_jwplayer_insert_form($errors) {
     $new_playlist["post_type"] = "jw_playlist";
     $new_playlist["post_status"] = null;
     $new_playlist["post_parent"] = null;
-    $new_playlist_id = -1;
     if (isset($_POST["save"])) {
       $new_playlist_id = isset($_POST[LONGTAIL_KEY . "playlist_select"]) ? $_POST[LONGTAIL_KEY . "playlist_select"] : $playlists[0]->ID;
     } else {
@@ -224,7 +224,7 @@ function media_jwplayer_insert_form($errors) {
         'prev_text' => __('&laquo;'),
         'next_text' => __('&raquo;'),
         'total' => ceil($jw_query->found_posts / 10),
-        'current' => $_GET['paged'] ? $_GET['paged'] : 1,
+        'current' => isset($_GET['paged']) ? $_GET['paged'] : 1,
         'add_args' => array('playlist' => $current_playlist)
       ));
 
@@ -297,12 +297,12 @@ function get_jw_playlist_items($post_id, $errors, $current_playlist) {
 
   $attachments = array();
   foreach ($p_items as $p_item) {
-    $attachments[$p_item] = $playlist_items[$p_item];
+    $attachments[$p_item] = isset($playlist_items[$p_item]) ? $playlist_items[$p_item] : "";
   }
 
   $output = '';
 	foreach ( (array) $attachments as $id => $attachment ) {
-		if ( $attachment->post_status == 'trash' )
+		if ( !empty($attachment) && $attachment->post_status == 'trash' )
 			continue;
 		if ( $item = get_jw_playlist_item( $id, array( 'errors' => isset($errors[$id]) ? $errors[$id] : null), $current_playlist, "playlist_"))
 			$output .= "\n<div id='playlist-item-$id' class='playlist-item child-of-$attachment->post_parent preloaded'><div class='progress'><div class='bar'></div></div><div id='playlist-upload-error-$id'></div><div class='filename'></div>$item\n</div>";
@@ -423,7 +423,8 @@ function get_jw_playlist_item($attachment_id, $args, $current_playlist, $prefix 
 		$image_edit_button = "<input type='button' id='imgedit-open-btn-{$post->ID}' onclick='imageEdit.open($post->ID, \"$nonce\")' class='button' value='" . esc_attr__( 'Edit image' ) . "' /> <img src='images/wpspin_light.gif' class='imgedit-wait-spin' alt='' />";
 	}
 
-	$item = "
+  $toggle_links = "";
+  $item = "
 	$type_html
 	$toggle_links
 	$order

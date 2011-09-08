@@ -36,7 +36,7 @@ class SWFObjectConfig implements EmbedConfigInterface {
    * @param array $flashVars The list of additional flashvars to be used in the embed
    */
   private function init($params, $flash_vars) {
-    $wmode = $flash_vars["wmode"] ? $flash_vars["wmode"] : "opaque";
+    $wmode = isset($flash_vars["wmode"]) ? $flash_vars["wmode"] : "opaque";
     //Initialize defaults.
     $default_params = array(
       "width" => 400,
@@ -58,7 +58,7 @@ class SWFObjectConfig implements EmbedConfigInterface {
     $version = $params["version"];
     $bg_color = $params["bgcolor"];
     $this->cls = implode(" ", array($params["class"], "swfobject"));
-    $this->no_flash = $params["no_flash"];
+    $this->no_flash = isset($params["no_flash"]) ? $params["no_flash"] : "";
 
     //Set the config flashvar to the Player configuration path
     if ($this->conf != "") {
@@ -68,8 +68,8 @@ class SWFObjectConfig implements EmbedConfigInterface {
     //Populate the values used for the embed process.
     $this->config["swfobject"]["files"][$this->id] = array(
       "url" => $this->path,
-      "width" => $flash_vars["width"] ? $flash_vars["width"] : $width,
-      "height" => $flash_vars["height"] ? $flash_vars["height"] : $height,
+      "width" => isset($flash_vars["width"]) ? $flash_vars["width"] : $width,
+      "height" => isset($flash_vars["height"]) ? $flash_vars["height"] : $height,
       "express_redirect" => $express,
       "version" => $version,
       "bgcolor" => $bg_color,

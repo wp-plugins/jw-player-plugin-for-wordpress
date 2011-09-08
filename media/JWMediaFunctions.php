@@ -77,9 +77,9 @@ function jwplayer_attachment_fields_to_save($post, $attachment) {
   $mime_type = substr($post["post_mime_type"], 0, 5);
   $rtmp = get_post_meta($post["ID"], LONGTAIL_KEY . "rtmp");
   if ($mime_type == "video" && isset($rtmp)) {
-    update_post_meta($post["ID"], LONGTAIL_KEY . "streamer", $attachment[LONGTAIL_KEY . "streamer"]);
-    update_post_meta($post["ID"], LONGTAIL_KEY . "file", $attachment[LONGTAIL_KEY . "file"]);
-    update_post_meta($post["ID"], LONGTAIL_KEY . "provider", $attachment[LONGTAIL_KEY . "provider"]);
+    update_post_meta($post["ID"], LONGTAIL_KEY . "streamer", isset($attachment[LONGTAIL_KEY . "streamer"]) ? $attachment[LONGTAIL_KEY . "streamer"] : "");
+    update_post_meta($post["ID"], LONGTAIL_KEY . "file", isset($attachment[LONGTAIL_KEY . "file"]) ? $attachment[LONGTAIL_KEY . "file"] : "");
+    update_post_meta($post["ID"], LONGTAIL_KEY . "provider", isset($attachment[LONGTAIL_KEY . "provider"]) ? $attachment[LONGTAIL_KEY . "provider"] : "");
   }
   if ($mime_type == "video" || $mime_type == "audio") {
     update_post_meta($post["ID"], LONGTAIL_KEY . "thumbnail", $attachment[LONGTAIL_KEY . "thumbnail"]);
@@ -229,7 +229,7 @@ function generateImageSelectorHTML($id, $attachments) {
         $output .= "<option value='" . $post->ID . "' title='" . $post->guid . "' " . $selected . ">" . $post->post_title . "</option>\n";
       }
     }
-    if (!$sel && $image_id != -1 && !$thumbnail_url) {
+    if (!$sel && isset($image_post) && isset($image_id) && $image_id != -1 && isset($thumbnail_url) && !$thumbnail_url) {
       $image_post = get_post($image_id);
       $output .= "<option value='" . $image_post->ID . "' title='" . $image_post->guid . "' selected=selected >" . $image_post->post_title . "</option>\n";
     }
@@ -261,7 +261,7 @@ function generateVideoSelectorHTML($id, $field, $attachments) {
           $thumbnail_id = get_post_meta($id, LONGTAIL_KEY . "thumbnail", true);
           if (isset($thumbnail_id)) {
             $image_attachment = get_post($thumbnail_id);
-            $thumbnail = $image_attachment->guid;
+            $thumbnail = isset($image_attachment) ? $image_attachment->guid : "";
           }
         }
         $title = $post->post_title ? $post->post_title : $post->guid;
@@ -331,6 +331,7 @@ add_action("media_upload_jwplayer_url", "jwplayer_url_render");
  * @return string The HTML to render the tab.
  */
 function jwplayer_url_render() {
+  $errors = null;
   if (!empty($_POST)) {
     $return = media_upload_form_handler();
 
@@ -353,6 +354,7 @@ add_action("media_upload_jwplayer", "jwplayer_render");
  * @return string The HTML to render the tab.
  */
 function jwplayer_render() {
+  $errors = null;
   if (!empty($_POST)) {
     $return = media_upload_form_handler();
 
@@ -410,8 +412,9 @@ add_filter("get_attached_file", "url_attached_file", 10, 2);
  * @return string The modified file path.
  */
 function url_attached_file($file, $attachment_id) {
+  global $post;
   $external = get_post_meta($attachment_id, LONGTAIL_KEY . "external", true);
-  if (substr($post["post_mime_type"], 0, 5) == "video" || $external) {
+  if ((isset($post) && substr($post->post_mime_type, 0, 5) == "video") || $external) {
     $upload_dir = wp_upload_dir();
     return str_replace($upload_dir["basedir"] . "/", "", $file);
   }

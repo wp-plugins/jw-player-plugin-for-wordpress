@@ -81,7 +81,7 @@ function jwplayer_handler($atts) {
   $config = "";
   $default = get_option(LONGTAIL_KEY . "default");
   $image = "";
-  if (LongTailFramework::configExists($atts["config"])) {
+  if (isset($atts["config"]) && LongTailFramework::configExists($atts["config"])) {
     $config = $atts["config"];
   } else if (LongTailFramework::configExists($default)) {
     $config = $default;
@@ -93,7 +93,7 @@ function jwplayer_handler($atts) {
     resolve_media_id($atts);
   }
   if (empty($image)) {
-    $image = $atts["image"];
+    $image = isset($atts["image"]) ? $atts["image"] : "";
   }
   if (isset($atts["playlistid"])) {
     $id = $atts["playlistid"];
@@ -112,7 +112,7 @@ function jwplayer_handler($atts) {
     unset($atts["playlistid"]);
   }
   $loaded_config = LongTailFramework::getConfigValues();
-  if ($loaded_config["wmode"] && !$atts["wmode"]) $atts["wmode"] = $loaded_config["wmode"];
+  if (isset($loaded_config["wmode"]) && !isset($atts["wmode"])) $atts["wmode"] = $loaded_config["wmode"];
   if (is_feed()) {
     $out = '';
     // remove media file from RSS feed
@@ -136,7 +136,7 @@ function resolve_media_id(&$atts) {
       $image_id = get_post_meta($id, LONGTAIL_KEY . "thumbnail", true);
       if (isset($image_id)) {
         $image_attachment = get_post($image_id);
-        $atts["image"] = $image_attachment->guid;
+        $atts["image"] = isset($image_attachment) ? $image_attachment->guid : "";
       }
     } else {
       $atts["image"] = $thumbnail;
@@ -149,7 +149,7 @@ function resolve_media_id(&$atts) {
     $atts["image"] = $post->guid;
   } else if ($mime_type == "audio") {
     if (empty($atts["image"]) && empty($atts["width"]) && empty($atts["height"])) {
-      $atts["playerReady"] = "function(obj) { document.getElementById(obj['id']).height = document.getElementById(obj['id']).getPluginConfig('controlbar')['height']}";
+      $atts["playerReady"] = "function(obj) { document.getElementById(obj['id']).parentNode.style.height = document.getElementById(obj['id']).getPluginConfig('controlbar')['height'] %2B 'px'; }";
       $atts["icons"] = false;
       $atts["controlbar"] = "bottom";
     }
@@ -231,7 +231,7 @@ function generate_playlist($playlist_id) {
 }
 
 function generateModeString(&$atts, $id) {
-  $html5 = $atts["html5_file"];
+  $html5 = array_key_exists("html5_file", $atts) ? $atts["html5_file"] : null;
   if (!isset($html5) || $html5 == null || $html5 == "") {
     $html5 = get_post_meta($id, LONGTAIL_KEY . "html5_file", true);
   }
@@ -242,7 +242,7 @@ function generateModeString(&$atts, $id) {
       $html5 = $html5_attachment->guid;
     }
   }
-  $download = $atts["download_file"];
+  $download = array_key_exists("download_file", $atts) ? $atts["download_file"] : null;
   if (!isset($download) || $download == null || $download == "") {
     $download = get_post_meta($id, LONGTAIL_KEY . "download_file", true);
   }

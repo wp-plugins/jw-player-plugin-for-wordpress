@@ -24,7 +24,7 @@ class AdminContext {
    * Given the current wizard state, determines the next state.
    */
   public function processState() {
-    $state = $_POST[LONGTAIL_KEY . "state"];
+    $state = isset($_POST[LONGTAIL_KEY . "state"]) ? $_POST[LONGTAIL_KEY . "state"] : null;
     if (isset($_POST["breadcrumb"]) && !empty($_POST["breadcrumb"])) {
       $state = $_POST["breadcrumb"];
     }
@@ -42,7 +42,7 @@ class AdminContext {
         $state = new PluginState($_POST[LONGTAIL_KEY . "config"]);
         break;
       default :
-        $state = new PlayerState($_POST[LONGTAIL_KEY . "config"]);
+        $state = new PlayerState(isset($_POST[LONGTAIL_KEY . "config"]) ? $_POST[LONGTAIL_KEY . "config"] : "");
         break;
     }
     $this->processPost($state);
@@ -108,7 +108,7 @@ class AdminContext {
       } else if (!empty($_POST)) {
         update_option(LONGTAIL_KEY . "show_archive", false);
       }
-      LongTailFramework::setConfig($_POST[LONGTAIL_KEY . "config"]);
+      LongTailFramework::setConfig(isset($_POST[LONGTAIL_KEY . "config"]) ? $_POST[LONGTAIL_KEY . "config"] : "");
       $state->render();
     }
   }

@@ -445,7 +445,7 @@ class LongTailFramework
             $default = preg_replace("/(\.swf|\.zip)/", "", $default);
           }
           $values = (array) $flash_var->select;
-          $val = $values["option"];
+          $val = isset($values["option"]) ? $values["option"] : "";
           $type = (string) $flash_var["type"];
           //Load the possible values for the skin flashvar.
           if ($flash_var->name == "skin") {
@@ -493,7 +493,7 @@ class LongTailFramework
     } else {
       $config_found = false;
     }
-    $enabled = strstr((string) $config_file->plugins, $repository) ? true : false;
+    $enabled = isset($config_file) && strstr((string) $config_file->plugins, $repository) ? true : false;
     $f_vars = array();
     //Process the flashvars in the plugin xml file.
     foreach($plugin_xml->flashvars as $flash_vars) {
@@ -512,9 +512,10 @@ class LongTailFramework
           $default = (string) $config_file->{$plugin_name . "." . $flash_var->name};
         }
         $values = (array) $flash_var->select;
+        $value_option = isset($values["option"]) ? (array) $values["option"] : array();
         $temp_var = new FlashVar(
           (string) $flash_var->name, $default, (string) $flash_var->description,
-          (array) $values["option"], (string) $flash_var["type"]
+          $value_option, (string) $flash_var["type"]
         );
         $f_var[(string) $flash_var->name] = $temp_var;
       }

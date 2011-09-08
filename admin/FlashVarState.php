@@ -73,7 +73,7 @@ class FlashVarState extends WizardState {
                           <th><?php echo $fvar->getName(); ?>:</th>
                           <td>
                             <?php $name = LONGTAIL_KEY . "player_" . $fvar->getName(); ?>
-                            <?php $value = $_POST[$name] ? $_POST[$name] : $fvar->getDefaultValue(); ?>
+                            <?php $value = isset($_POST[$name]) ? $_POST[$name] : $fvar->getDefaultValue(); ?>
                             <?php unset($_POST[$name]); ?>
                             <?php if ($fvar->getType() == FlashVar::SELECT) { ?>
                               <select size="1" name="<?php echo $name ?>">

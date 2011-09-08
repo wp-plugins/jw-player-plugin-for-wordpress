@@ -52,6 +52,7 @@ include_once (dirname (__FILE__) . "/media/JWMediaFunctions.php");
 include_once (dirname (__FILE__) . "/media/JWShortcode.php");
 
 register_activation_hook(__FILE__, "jwplayer_activation");
+add_action('init', 'jwplayer_init');
 
 //Define the plugin directory and url for file access.
 $uploads = wp_upload_dir();
@@ -105,9 +106,11 @@ if (version_compare(get_option(LONGTAIL_KEY . "version"), "5.3", ">=")) {
   wp_enqueue_script("jw-embedder", LongTailFramework::getEmbedderURL());
 }
 
-wp_deregister_script("swfobject");
-wp_register_script("swfobject", 'http' . (is_ssl() ? 's' : '') . '://ajax.googleapis.com/ajax/libs/swfobject/2.2/swfobject.js',NULL,NULL);
-wp_enqueue_script("swfobject");
+function jwplayer_init() {
+  wp_deregister_script("swfobject");
+  wp_register_script("swfobject", 'http' . (is_ssl() ? 's' : '') . '://ajax.googleapis.com/ajax/libs/swfobject/2.2/swfobject.js',NULL,NULL);
+  wp_enqueue_script("swfobject");
+}
 
 add_filter("the_content", "jwplayer_tag_callback", 11);
 add_filter("the_excerpt", "jwplayer_tag_excerpt_callback", 11);

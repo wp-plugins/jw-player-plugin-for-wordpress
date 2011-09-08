@@ -1,11 +1,11 @@
 <?php
 if(preg_match('#' . basename(__FILE__) . '#', $_SERVER['PHP_SELF'])) { die('You are not allowed to call this page directly.'); }
 
-define(DOWNLOAD_ERROR, "Download failed.");
-define(WRITE_ERROR, "Write failed");
-define(READ_ERROR, "Read failed");
-define(ZIP_ERROR, "Zip classes missing");
-define(SUCCESS, "Success");
+define("DOWNLOAD_ERROR", "Download failed.");
+define("WRITE_ERROR", "Write failed");
+define("READ_ERROR", "Read failed");
+define("ZIP_ERROR", "Zip classes missing");
+define("SUCCESS", "Success");
 
 ?>
 
@@ -24,7 +24,7 @@ if (isset($_POST["Non_commercial"]) || isset($_POST["Install"])) {
 function unpack_player_archive($player_package) {
 
   if (!class_exists("ZipArchive")) {
-    return zip_fallback($player_package);;
+    return zip_fallback($player_package);
   }
 
   $zip = new ZipArchive();
