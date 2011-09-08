@@ -1,23 +1,23 @@
-=== JW Player Plugin for WordPress ===
+=== JW Player for WordPress – Flash and HTML5 Video Player ===
 Contributors: LongTail Video Inc.
 Tags: JW Player, Video, Flash, LongTail Video, RTMP, Playlists, Audio, Image, HTML5, iPad, iPhone, iPod
 Requires at least: 2.8.6
 Tested up to: 3.2.1
 Stable tag: 1.4.3
 
-This plugin is provided by LongTail Video Inc.  It enables you to configure and embed the JW Player for Flash for use on your WordPress website.
+This video plugin is provided by LongTail Video Inc.  It enables you to embed Flash and HTML5 video using the JW Player on your WordPress website.
 
 == Description ==
 
-The JW Player Plugin for WordPress makes it extremely easy to deliver video through your WordPress website. This plugin has been developed by LongTail Video, the creator of the JW Player, and allows for easy customization and embedding of the JW Player in your WordPress posts. It provides support for all of the player's configuration options, including skins, plugins and the LongTail Video AdSolution.
+JW Player for WordPress makes it extremely easy to deliver Flash and HTML5 video through your WordPress website. This plugin has been developed by LongTail Video, the creator of the JW Player, and allows for easy customization and embedding of Flash and HTML5 video using the JW Player in your WordPress posts. It provides support for all of the player's configuration options, including skins, plugins and the LongTail Video AdSolution.
 
 <strong>Key Features</strong>
 
-* Full support for JW Player for HTML5.
+* Full support for JW Player for Flash and HTML5.
 * Manage multiple custom players.
 * Full skin and plugin support with easy to use plugin customization interface.
-* Full integration into the WordPress media library.  Embed media with the JW Player as you write your posts.
-* Support for adding external media to your media library including Youtube and RTMP streams.
+* Full integration into the WordPress media library.  Embed video with the JW Player as you write your posts.
+* Support for adding external video to your media library including Youtube and RTMP streams.
 * A full featured playlist manager - order your media by simply dragging the mouse.
 * A powerful shortcode system for customizations at embed time.
 
