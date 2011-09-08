@@ -83,7 +83,7 @@ class AdvancedState extends FlashVarState {
             <th><?php echo "flashvars:"; ?></th>
             <td>
               <?php $name = LONGTAIL_KEY . "player_flashvars"; ?>
-              <?php $value = $_POST[$name] ? $_POST[$name] : LongTailFramework::getPlayerAdditionalFlashVars(); ?>
+              <?php $value = isset($_POST[$name]) ? $_POST[$name] : LongTailFramework::getPlayerAdditionalFlashVars(); ?>
               <?php unset($_POST[$name]); ?>
               <textarea name="<?php echo $name; ?>" cols="80" rows="2"><?php echo $value; ?></textarea>
               <br/>

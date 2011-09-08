@@ -132,6 +132,8 @@ class AdminContext {
             $new_val = LongTailFramework::getSkinURL() . $val . "." . $skins[$val];
             $data[$new_name] = $new_val;
           }
+        } else if ($new_name == "playlist_position") {
+          $data[str_replace("_", ".", $new_name)] = $new_val;
         } else if ($new_name == "flashvars") {
           $this->parseFlashvarString($new_val, $data);
         } else if (!empty($new_val)) {
@@ -169,7 +171,7 @@ class AdminContext {
     if (!empty($plugins)) {
       $data["plugins"] = $plugin_string;
     }
-    if ($data["plugins"] == "" || empty($data["plugins"])) {
+    if (!isset($data["plugins"]) || $data["plugins"] == "" || empty($data["plugins"])) {
       unset($data["plugins"]);
     }
     return $data;

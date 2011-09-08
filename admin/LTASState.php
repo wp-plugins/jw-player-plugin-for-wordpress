@@ -89,7 +89,7 @@ class LTASState extends WizardState {
                       <td colspan="2"><span class="description"><?php echo JW_PLAYER_LTAS_DESC; ?></span></td>
                     </tr>
                     <tr>
-                      <?php $value = $_POST["jwplayermodule_plugin_ltas_cc"] ? $_POST["jwplayermodule_plugin_ltas_cc"] : $ltas["channel_code"]; ?>
+                      <?php $value = isset($_POST["jwplayermodule_plugin_ltas_cc"]) ? $_POST["jwplayermodule_plugin_ltas_cc"] : $ltas["channel_code"]; ?>
                       <?php unset($_POST["jwplayermodule_plugin_ltas_cc"]); ?>
                       <th>ltas.cc</th>
                       <td>

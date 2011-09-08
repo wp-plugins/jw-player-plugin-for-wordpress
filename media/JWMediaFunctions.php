@@ -27,7 +27,7 @@ function jwplayer_wp_head() {
       $image_id = get_post_meta($meta_header_id, LONGTAIL_KEY . "thumbnail", true);
       if (isset($image_id)) {
         $image_attachment = get_post($image_id);
-        $thumbnail = $image_attachment->guid;
+        $thumbnail = !empty($image_attachment) ? $image_attachment->guid : "";
       }
     }
     $settings[] = "file=" . $attachment->guid;
@@ -187,7 +187,7 @@ function jwplayer_attachment_fields($form_fields, $post) {
     $form_fields[LONGTAIL_KEY . "provider"] = array(
         "label" => __("Provider"),
         "input" => "text",
-        "value" => get_post_meta($post->ID, LONGTAIL_KEY . "Provider", true)
+        "value" => get_post_meta($post->ID, LONGTAIL_KEY . "provider", true)
     );
   }
   if (isset($_GET["post_id"]) && ($mime_type == "video" || $mime_type == "audio" || $mime_type == "image")) {

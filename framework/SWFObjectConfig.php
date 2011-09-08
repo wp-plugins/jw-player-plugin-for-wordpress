@@ -18,22 +18,30 @@ class SWFObjectConfig implements EmbedConfigInterface {
   /**
    * Constructor.
    * @param int $divId The unique identifier for the div used in the embed process
-   * @param string $playerPath The path to the player swf
+   * @param $player_path
    * @param string $config The path to the Player configuration to be used
    * @param array $params The list of SWFObject params
-   * @param array $flashVars The list of additional flashvars to be used in the embed
+   * @param array $flash_vars
+   * @return \SWFObjectConfig
+   *
+   * @internal param string $playerPath The path to the player swf
+   *
+   * @internal param array $flashVars The list of additional flashvars to be used in the embed
    */
   function __construct($divId, $player_path, $config, $params = array(), $flash_vars = array()) {
     $this->id = "jwplayer-" . $divId;
     $this->path = $player_path;
     $this->conf = $config;
+    $this->cls = $config;
     $this->init($params, $flash_vars);
   }
 
   /**
    * Perform the necessary initialization operations to prepare the SWFObject javascript object.
    * @param array $params The list of SWFObject params
-   * @param array $flashVars The list of additional flashvars to be used in the embed
+   * @param $flash_vars
+   *
+   * @internal param array $flashVars The list of additional flashvars to be used in the embed
    */
   private function init($params, $flash_vars) {
     $wmode = isset($flash_vars["wmode"]) ? $flash_vars["wmode"] : "opaque";
@@ -132,7 +140,9 @@ class SWFObjectConfig implements EmbedConfigInterface {
 
   /**
    * Convert the PHP array of embed parameters to an array of JavaScript objects.
-   * @param array The PHP array to be transcribed.
+   * @param $target
+   *
+   * @internal param \The $array PHP array to be transcribed.
    * @return string The array of JavaScript objects.
    */
   private function transcribe_array($target) {

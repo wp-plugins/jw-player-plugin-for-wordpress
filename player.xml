@@ -106,7 +106,7 @@
             <description>PlaylistItem that should start to play. Use this to start the player with a specific item selected.</description>
         </flashvar>
         <flashvar type="select">
-            <name>playlist</name>
+            <name>playlist.position</name>
             <default>none</default>
             <description>Position of the playlist. Can be set to bottom, over, right or none.</description>
             <select>

@@ -202,7 +202,7 @@ function generate_playlist($playlist_id) {
       $file = get_post_meta($playlist_item_id, LONGTAIL_KEY . "file", true);
       if (empty($thumbnail)) {
         $temp = get_post($image_id);
-        $image = $temp->guid;
+        $image = isset($temp) ? $temp->guid : "";
       } else {
         $image = $thumbnail;
       }

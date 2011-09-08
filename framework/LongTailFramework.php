@@ -386,9 +386,9 @@ class LongTailFramework
    */
   public static function generateSWFObject($flash_vars, $useJWEmbedder = false) {
     if ($useJWEmbedder) {
-      return new JWEmbedderConfig(LongTailFramework::$div_id++, LongTailFramework::getPlayerURL(), LongTailFramework::getConfigURL(), LongTailFramework::getEmbedParameters(), $flash_vars);
+      return new JWEmbedderConfig(LongTailFramework::$div_id++, LongTailFramework::getPlayerURL(), LongTailFramework::getConfigURL(), LongTailFramework::getEmbedParameters(), $flash_vars, LongTailFramework::$current_config);
     }
-    return new SWFObjectConfig(LongTailFramework::$div_id++, LongTailFramework::getPlayerURL(), LongTailFramework::getConfigURL(), LongTailFramework::getEmbedParameters(), $flash_vars);
+    return new SWFObjectConfig(LongTailFramework::$div_id++, LongTailFramework::getPlayerURL(), LongTailFramework::getConfigURL(), LongTailFramework::getEmbedParameters(), $flash_vars, LongTailFramework::$current_config);
   }
 
   /**

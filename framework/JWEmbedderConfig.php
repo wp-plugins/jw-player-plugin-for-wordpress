@@ -66,18 +66,20 @@ class JWEmbedderConfig implements EmbedConfigInterface {
   private $conf;
   private $fvars;
   private $dim;
+  private $config;
 
-  function  __construct($divId, $player_path, $config, $params = array(), $flash_vars = array()) {
+  function  __construct($divId, $player_path, $config, $params = array(), $flash_vars = array(), $config_name = "") {
     $this->id = "jwplayer-" . $divId;
     $this->path = $player_path;
     $this->conf = $config;
+    $this->config = $config_name;
     $this->dim = $params;
     $this->fvars = $flash_vars;
   }
 
   public function generateDiv() {
     //The outer div is needed for LTAS support.
-    return  "<div id=\"$this->id-div\">\n" .
+    return  "<div id=\"$this->id-div\" class=\"$this->config\">\n" .
             "<div id=\"$this->id\"></div>\n" .
             "</div>\n";
   }
