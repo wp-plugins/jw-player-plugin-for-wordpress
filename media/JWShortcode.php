@@ -8,13 +8,37 @@
  * @return string
  */
 function jwplayer_tag_excerpt_callback($the_content = "") {
-  if (get_option(LONGTAIL_KEY . "show_archive") && (is_archive() || is_search() || is_tag())) {
-    $tag_regex = '/(.?)\[(jwplayer)\b(.*?)(?:(\/))?\](?:(.+?)\[\/\2\])?(.?)/s';
+  $execute = $disable = false;
+  if (is_archive()) {
+    $archive_mode = get_option(LONGTAIL_KEY . "category_mode");
+    $execute = $archive_mode == "excerpt";
+    $disable = $archive_mode == "disable";
+  } else if (is_search()) {
+    $search_mode = get_option(LONGTAIL_KEY . "search_mode");
+    $execute = $search_mode == "excerpt";
+    $disable = $search_mode == "disable";
+  } else if (is_tag()) {
+    $tag_mode = get_option(LONGTAIL_KEY . "tag_mode");
+    $execute = $tag_mode == "excerpt";
+    $disable = $tag_mode == "disable";
+  } else if (is_home()) {
+    $home_mode = get_option(LONGTAIL_KEY . "home_mode");
+    $execute = $home_mode == "excerpt";
+    $disable = $home_mode == "disable";
+  }
+  $tag_regex = '/(.?)\[(jwplayer)\b(.*?)(?:(\/))?\](?:(.+?)\[\/\2\])?(.?)/s';
+  if ($execute) {
     $the_content = preg_replace_callback($tag_regex, "jwplayer_tag_parser", $the_content);
-  } 
+  } else if ($disable) {
+    $the_content = preg_replace_callback($tag_regex, "jwplayer_tag_stripper", $the_content);
+  }
   return $the_content;
 }
 
+/**
+ * @param string $the_content
+ * @return mixed|string
+ */
 function jwplayer_tag_widget_callback($the_content = "") {
   $tag_regex = '/(.?)\[(jwplayer)\b(.*?)(?:(\/))?\](?:(.+?)\[\/\2\])?(.?)/s';
   $the_content = preg_replace_callback($tag_regex, "jwplayer_tag_parser", $the_content);
@@ -27,9 +51,31 @@ function jwplayer_tag_widget_callback($the_content = "") {
  * @return string The parsed and replaced [jwplayer] tag.
  */
 function jwplayer_tag_callback($the_content = "") {
-  if (!get_option(LONGTAIL_KEY . "show_archive") || (!is_archive() && !is_search() && !is_tag())) {
-    $tag_regex = '/(.?)\[(jwplayer)\b(.*?)(?:(\/))?\](?:(.+?)\[\/\2\])?(.?)/s';
+  $execute = $disable = false;
+  if (is_archive()) {
+    $archive_mode = get_option(LONGTAIL_KEY . "category_mode");
+    $execute = $archive_mode == "content";
+    $disable = $archive_mode == "disable";
+  } else if (is_search()) {
+    $search_mode = get_option(LONGTAIL_KEY . "search_mode");
+    $execute = $search_mode == "content";
+    $disable = $search_mode == "disable";
+  } else if (is_tag()) {
+    $tag_mode = get_option(LONGTAIL_KEY . "tag_mode");
+    $execute = $tag_mode == "content";
+    $disable = $tag_mode == "disable";
+  } else if (is_home()) {
+    $home_mode = get_option(LONGTAIL_KEY . "home_mode");
+    $execute = $home_mode == "content";
+    $disable = $home_mode == "disable";
+  } else {
+    $execute = true;
+  }
+  $tag_regex = '/(.?)\[(jwplayer)\b(.*?)(?:(\/))?\](?:(.+?)\[\/\2\])?(.?)/s';
+  if ($execute) {
     $the_content = preg_replace_callback($tag_regex, "jwplayer_tag_parser", $the_content);
+  } else if($disable) {
+    $the_content = preg_replace_callback($tag_regex, "jwplayer_tag_stripper", $the_content);
   }
   return $the_content;
 }
@@ -65,6 +111,17 @@ function jwplayer_tag_parser($matches) {
   }
   $player = jwplayer_handler($atts);
   return $matches[1] . $player . $matches[6];
+}
+
+/**
+ * @param $matches
+ * @return string
+ */
+function jwplayer_tag_stripper($matches) {
+  if ($matches[1] == "[" && $matches[6] == "]") {
+    return substr($matches[0], 1, -1);
+  }
+  return $matches[1] . $matches[6];
 }
 
 /**

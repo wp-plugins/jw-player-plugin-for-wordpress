@@ -110,6 +110,16 @@ function jwplayer_init() {
   wp_deregister_script("swfobject");
   wp_register_script("swfobject", 'http' . (is_ssl() ? 's' : '') . '://ajax.googleapis.com/ajax/libs/swfobject/2.2/swfobject.js',NULL,NULL);
   wp_enqueue_script("swfobject");
+  if (get_option(LONGTAIL_KEY . "show_archive")) {
+    if(!get_option(LONGTAIL_KEY . "category_mode")) update_option(LONGTAIL_KEY . "category_mode", "excerpt");
+    if(!get_option(LONGTAIL_KEY . "search_mode")) update_option(LONGTAIL_KEY . "search_mode", "excerpt");
+    if(!get_option(LONGTAIL_KEY . "tag_mode")) update_option(LONGTAIL_KEY . "tag_mode", "excerpt");
+  } else {
+    if(!get_option(LONGTAIL_KEY . "category_mode")) update_option(LONGTAIL_KEY . "category_mode", "content");
+    if(!get_option(LONGTAIL_KEY . "search_mode")) update_option(LONGTAIL_KEY . "search_mode", "content");
+    if(!get_option(LONGTAIL_KEY . "tag_mode")) update_option(LONGTAIL_KEY . "tag_mode", "content");
+  }
+  if(!get_option(LONGTAIL_KEY . "home_mode")) update_option(LONGTAIL_KEY . "home_mode", "content");
 }
 
 add_filter("the_content", "jwplayer_tag_callback", 11);
@@ -141,7 +151,8 @@ function jwplayer_install_notices() {
 function jwplayer_plugin_menu() {
   $admin = add_menu_page("JW Player Title", "JW Player", "administrator", "jwplayer", "jwplayer_plugin_pages");
   add_submenu_page("jwplayer", "JW Player Plugin Licensing", "Licensing", "administrator", "jwplayer-license", "jwplayer_plugin_pages");
-  $update = add_submenu_page("jwplayer", "JW Player Plugin Update", "Upgrade", "administrator", "jwplayer-update", "jwplayer_plugin_pages");
+  add_submenu_page("jwplayer", "JW Player Plugin Update", "Upgrade", "administrator", "jwplayer-update", "jwplayer_plugin_pages");
+  add_submenu_page("jwplayer", "JW Player Plugin Settings", "Settings", "administrator", "jwplayer-settings", "jwplayer_plugin_pages");
   add_action("admin_print_scripts-$admin", "add_admin_js");
 }
 
@@ -163,6 +174,9 @@ function jwplayer_plugin_pages() {
       break;
     case "jwplayer-update" :
       require_once (dirname(__FILE__) . "/admin/UpdatePage.php");
+      break;
+    case "jwplayer-settings" :
+      require_once (dirname(__FILE__) . "/admin/SettingsPage.php");
       break;
   }
 }

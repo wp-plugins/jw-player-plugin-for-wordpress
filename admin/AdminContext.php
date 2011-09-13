@@ -55,10 +55,7 @@ class AdminContext {
    */
   private function processPost($st) {
     $state = $st;
-    if ( isset($_POST['Uninstall']) ) {
-      $this->uninstall();
-      $state->render();
-    } else if (isset($_POST["Next"])) {
+    if (isset($_POST["Next"])) {
       if ($_POST["Next"] == "Delete") {
         LongTailFramework::setConfig($_POST[LONGTAIL_KEY . "config"]);
         LongTailFramework::deleteConfig();
@@ -218,25 +215,6 @@ class AdminContext {
     <div class="error fade" id="message">
       <p><strong><?php echo $message ?></strong></p>
     </div> <?php
-  }
-
-  /**
-   * Removes this plugin's database entries.
-   * @global <type> $wpdb A reference to the WordPress database.
-   */
-  private function uninstall() {
-    global $wpdb;
-
-    $meta_query = "DELETE FROM $wpdb->postmeta WHERE meta_key LIKE '" . LONGTAIL_KEY . "%';";
-    $post_query = "DELETE FROM $wpdb->posts WHERE post_type = 'jw_playlist';";
-
-    $wpdb->query($meta_query);
-    $wpdb->query($post_query);
-
-    delete_option(LONGTAIL_KEY . "default");
-    delete_option(LONGTAIL_KEY . "ootb");
-
-		$this->feedback_message(__('Tables and settings deleted, deactivate the plugin now'));
   }
 
 }
