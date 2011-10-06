@@ -12,6 +12,18 @@ if (isset($_POST["category_config"])) {
   update_option(LONGTAIL_KEY . "tag_mode", $_POST["tag_config"]);
   update_option(LONGTAIL_KEY . "home_mode", $_POST["home_config"]);
 }
+if (isset($_POST["player_location"])) {
+  update_option(LONGTAIL_KEY . "player_location", $_POST["player_location"]);
+}
+if (isset($_POST["image_duration"])) {
+  update_option(LONGTAIL_KEY . "image_duration", $_POST["image_duration"]);
+}
+if (isset($_POST["image_insert"])) {
+  update_option(LONGTAIL_KEY . "image_insert", $_POST["image_insert"]);
+}
+if (isset($_POST["facebook"])) {
+  update_option(LONGTAIL_KEY . "facebook", $_POST["facebook"]);
+}
 
 function uninstall() {
   global $wpdb;
@@ -37,7 +49,7 @@ function feedback_message ($message, $timeout = 0) { ?>
 ?>
  
 <div class="wrap">
-  <h2><?php echo "JW Player Settings"; ?></h2>
+  <h2><?php echo "JW Player Plugin Settings"; ?></h2>
   <form name="<?php echo LONGTAIL_KEY . "form" ?>" method="post" action="">
     <div id="poststuff">
       <div id="post-body">
@@ -105,7 +117,70 @@ function feedback_message ($message, $timeout = 0) { ?>
       <div id="post-body">
         <div id="post-body-content">
           <div class="stuffbox">
-            <h3 class="hndle"><span>JW Player Plugin for WordPress Uninstall</span></h3>
+            <h3 class="hndle"><span>Player Settings</span></h3>
+            <div class="inside" style="margin: 15px;">
+              <table class="form-table">
+                <tr valign="top">
+                  <th>Player Location:</th>
+                  <td>
+                    <input type="text" id="player_location" name="player_location" value="<?php echo get_option(LONGTAIL_KEY . "player_location"); ?>" onblur="form.submit();" style="width: 300px;"/>
+                    <span class="description">Configure the location the player.swf and jwplayer.js files should be loaded from.</span>
+                  </td>
+                </tr>
+              </table>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div id="poststuff">
+      <div id="post-body">
+        <div id="post-body-content">
+          <div class="stuffbox">
+            <h3 class="hndle"><span>Content Settings</span></h3>
+            <div class="inside" style="margin: 15px;">
+              <table class="form-table">
+                <tr valign="top">
+                  <th>Show Duration on Images:</th>
+                  <td>
+                    <label for="image_duration_yes">Yes</label>
+                    <input id="image_duration_yes" type="radio" value="1" name="image_duration" onclick="form.submit();" <?php checked(true, get_option(LONGTAIL_KEY . "image_duration")); ?> />
+                    <label for="image_duration_no">No</label>
+                    <input id="image_duration_no" type="radio" value="0" name="image_duration" onclick="form.submit();" <?php checked(0, get_option(LONGTAIL_KEY . "image_duration")); ?> />
+                    <span class="description">Controls whether the duration field is visible when editing the meta data for images.</span>
+                  </td>
+                </tr>
+                <tr valign="top">
+                  <th>Show Insert Button on Images:</th>
+                  <td>
+                    <label for="image_insert_yes">Yes</label>
+                    <input id="image_insert_yes" type="radio" value="1" name="image_insert" onclick="form.submit();" <?php checked(true, get_option(LONGTAIL_KEY . "image_insert")); ?> />
+                    <label for="image_insert_no">No</label>
+                    <input id="image_insert_no" type="radio" value="0" name="image_insert" onclick="form.submit();" <?php checked(0, get_option(LONGTAIL_KEY . "image_insert")); ?> />
+                    <span class="description">Controls whether the insert button is visible when editing the meta data for images.</span>
+                  </td>
+                </tr>
+                <tr valign="top">
+                  <th>Enable Facebook Open Graph Data:</th>
+                  <td>
+                    <label for="facebook_yes">Yes</label>
+                    <input id="facebook_yes" type="radio" value="1" name="facebook" onclick="form.submit();" <?php checked(true, get_option(LONGTAIL_KEY . "facebook")); ?> />
+                    <label for="facebook_no">No</label>
+                    <input id="facebook_no" type="radio" value="0" name="facebook" onclick="form.submit();" <?php checked(0, get_option(LONGTAIL_KEY . "facebook")); ?> />
+                    <span class="description">Whether or not Facebook Open Graph information should be inserted into the page for sharing on Facebook.</span>
+                  </td>
+                </tr>
+              </table>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div id="poststuff">
+      <div id="post-body">
+        <div id="post-body-content">
+          <div class="stuffbox">
+            <h3 class="hndle"><span>Uninstall</span></h3>
             <div class="inside" style="margin: 15px;">
               <table>
                 <tr valign="top">

@@ -9,7 +9,7 @@ add_action("wp_head", "jwplayer_wp_head");
 function jwplayer_wp_head() {
   global $post;
   
-  if ( !(is_single() || is_page() ) ) return;
+  if (!(is_single() || is_page()) || !get_option(LONGTAIL_KEY . "facebook")) return;
   
   $config_values = array();
   $attachment = null;
@@ -126,11 +126,13 @@ function jwplayer_attachment_fields($form_fields, $post) {
   $mime_type = substr($post->post_mime_type, 0, 5);
   switch($mime_type) {
     case "image":
-      $form_fields[LONGTAIL_KEY . "duration"] = array(
-        "label" => __("Duration"),
-        "input" => "text",
-        "value" => get_post_meta($post->ID, LONGTAIL_KEY . "duration", true)
-      );
+      if (get_option(LONGTAIL_KEY . "image_duration")) {
+        $form_fields[LONGTAIL_KEY . "duration"] = array(
+          "label" => __("Duration"),
+          "input" => "text",
+          "value" => get_post_meta($post->ID, LONGTAIL_KEY . "duration", true)
+        );
+      }
       break;
     case "audio":
     case "video":
@@ -190,7 +192,7 @@ function jwplayer_attachment_fields($form_fields, $post) {
         "value" => get_post_meta($post->ID, LONGTAIL_KEY . "provider", true)
     );
   }
-  if (isset($_GET["post_id"]) && ($mime_type == "video" || $mime_type == "audio" || $mime_type == "image")) {
+  if (isset($_GET["post_id"]) && ($mime_type == "video" || $mime_type == "audio" || ($mime_type == "image" && get_option(LONGTAIL_KEY . "image_duration")))) {
     $insert = "<input type='submit' class='button-primary' name='send[$post->ID]' value='" . esc_attr__( 'Insert JW Player' ) . "' />";
     $form_fields[LONGTAIL_KEY . "player_select"] = array(
       "label" => __("Select Player"),
