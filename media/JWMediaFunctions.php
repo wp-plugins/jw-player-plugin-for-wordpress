@@ -85,6 +85,7 @@ function jwplayer_attachment_fields_to_save($post, $attachment) {
     update_post_meta($post["ID"], LONGTAIL_KEY . "thumbnail", $attachment[LONGTAIL_KEY . "thumbnail"]);
     update_post_meta($post["ID"], LONGTAIL_KEY . "thumbnail_url", $attachment[LONGTAIL_KEY . "thumbnail_url"]);
     update_post_meta($post["ID"], LONGTAIL_KEY . "creator", $attachment[LONGTAIL_KEY . "creator"]);
+    update_post_meta($post["ID"], LONGTAIL_KEY . "duration", $attachment[LONGTAIL_KEY . "duration"]);
     update_post_meta($post["ID"], LONGTAIL_KEY . "html5_file", $attachment[LONGTAIL_KEY . "html5_file"]);
     update_post_meta($post["ID"], LONGTAIL_KEY . "html5_file_selector", $attachment[LONGTAIL_KEY . "html5_file_selector"]);
     update_post_meta($post["ID"], LONGTAIL_KEY . "download_file", $attachment[LONGTAIL_KEY . "download_file"]);
@@ -150,6 +151,11 @@ function jwplayer_attachment_fields($form_fields, $post) {
         "label" => __("Creator"),
         "input" => "text",
         "value" => get_post_meta($post->ID, LONGTAIL_KEY . "creator", true)
+      );
+      $form_fields[LONGTAIL_KEY . "duration"] = array(
+        "label" => __("Duration"),
+        "input" => "text",
+        "value" => get_post_meta($post->ID, LONGTAIL_KEY . "duration", true)
       );
       $form_fields[LONGTAIL_KEY . 'html5_file'] = array(
         "label" => __("HTML5 file"),

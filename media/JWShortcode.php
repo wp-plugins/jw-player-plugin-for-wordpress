@@ -275,9 +275,9 @@ function generate_playlist($playlist_id) {
       } else {
         $p_item[] = "\"file\": \"" . esc_attr($playlist_item->guid) . "\"";
       }
+      $duration = get_post_meta($playlist_item_id, LONGTAIL_KEY . "duration", true);
+      $p_item[] = "\"duration\": \"" . ($duration ? $duration : 10) . "\"";
       if (substr($playlist_item->post_mime_type, 0, 5) == "image") {
-        $duration = get_post_meta($playlist_item_id, LONGTAIL_KEY . "duration", true);
-        $p_item[] = "\"duration\": \"" . ($duration ? $duration : 10) . "\"";
         $p_item[] = "\"image\": \"" . esc_attr($playlist_item->guid) . "\"";
       } else {
         $p_item[] = "\"image\": \"" . esc_attr($image) . "\"";
