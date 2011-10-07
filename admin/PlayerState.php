@@ -107,7 +107,8 @@ class PlayerState extends AdminState {
       <?php if (file_exists(LongTailFramework::getPrimaryPlayerPath())) {?>
         <form name="<?php echo LONGTAIL_KEY . "upgrade_form" ?>" method="post" action="admin.php?page=jwplayer-update">
           <?php $version = get_option(LONGTAIL_KEY . "version"); ?>
-          <?php if (isset($version) && !empty($version)) { ?>
+          <?php $alternate = get_option(LONGTAIL_KEY . "player_location_enable"); ?>
+          <?php $location = get_option(LONGTAIL_KEY . "player_location"); ?>
             <div id="poststuff">
               <div id="post-body">
                 <div id="post-body-content">
@@ -118,24 +119,28 @@ class PlayerState extends AdminState {
                         <tr valign="top">
                           <td>
                             <div>
+                            <?php if (isset($version) && !empty($version) && !$alternate) { ?>
                               <p><span><?php echo "<strong>Current Player:</strong> JW Player " . $version; ?></span></p>
                               <?php if (!strstr($version, "Licensed")) { ?>
                                 <p><span><?php echo JW_LICENSED; ?></span></p>
                                 <p><input class="button-secondary" type="submit" name="Update_Player" value="Click Here to Upgrade" /></p>
                               <?php } ?>
-                            </div>
-                          </td>
-                        </tr>
-                      </table>
-                    </div>
+                            <?php } else if ($alternate) { ?>
+                              <p><span><?php echo "<strong>Current Player:</strong> Version Unknown"; ?></span></p>
+                              <p><span>The player is being loaded from an alternate location (<strong><?php echo $location; ?></strong>) and is not being managed by the plugin.</span></p>
+                            <?php } else { ?>
+                              <p><span><?php echo "<strong>Current Player:</strong> Version Unknown"; ?></span></p>
+                              <p><input class="button-secondary" type="submit" name="Update_Player" value="Click Here to Reinstall" /></p>
+                            <?php } ?>
+                          </div>
+                        </td>
+                      </tr>
+                    </table>
                   </div>
                 </div>
               </div>
             </div>
-          <?php } else { ?>
-            <span><?php echo "<strong>Current Player:</strong> Version Unknown"; ?></span>
-            <input class="button-secondary" type="submit" name="Update_Player" value="Click Here to Reinstall" />
-          <?php } ?>
+          </div>
         </form>
       <?php } else if (file_exists(LongTailFramework::getSecondaryPlayerPath())) { ?>
         <form name="<?php echo LONGTAIL_KEY . "upgrade_form" ?>" method="post" action="admin.php?page=jwplayer-update">
@@ -158,7 +163,7 @@ class PlayerState extends AdminState {
                           <table class="widefat" cellspacing="0">
                             <thead>
                               <tr>
-                                <th class="manage-column column-name">Default</th>
+                                <th class="manage-column column-name" style="text-shadow: none;">Default</th>
                                 <th class="manage-column column-name">Players</th>
                                 <th class="manage-column column-name">Control Bar</th>
                                 <th class="manage-column column-name">Skin</th>
@@ -166,7 +171,7 @@ class PlayerState extends AdminState {
                                 <th class="manage-column column-name">Autostart</th>
                                 <th class="manage-column column-name">Height</th>
                                 <th class="manage-column column-name">Width</th>
-                                <th class="manage-column column-name">Actions</th>
+                                <th class="manage-column column-name" style="text-shadow: none;">Actions</th>
                               </tr>
                             </thead>
                             <tbody>

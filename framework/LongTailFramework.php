@@ -384,11 +384,12 @@ class LongTailFramework
    * @param array $flashVars The array of flashVars to be used in the embedding
    * @return SWFObjectConfig The configured SWFObjectConfig object to be used for embedding
    */
-  public static function generateSWFObject($flash_vars, $useJWEmbedder = false) {
+  public static function generateSWFObject($flash_vars, $useJWEmbedder = false, $customLocation = "") {
+    $playerLocation = $customLocation ? $customLocation . "player.swf" : LongTailFramework::getPlayerURL();
     if ($useJWEmbedder) {
-      return new JWEmbedderConfig(LongTailFramework::$div_id++, LongTailFramework::getPlayerURL(), LongTailFramework::getConfigURL(), LongTailFramework::getEmbedParameters(), $flash_vars, LongTailFramework::$current_config);
+      return new JWEmbedderConfig(LongTailFramework::$div_id++, $playerLocation, LongTailFramework::getConfigURL(), LongTailFramework::getEmbedParameters(), $flash_vars, LongTailFramework::$current_config);
     }
-    return new SWFObjectConfig(LongTailFramework::$div_id++, LongTailFramework::getPlayerURL(), LongTailFramework::getConfigURL(), LongTailFramework::getEmbedParameters(), $flash_vars, LongTailFramework::$current_config);
+    return new SWFObjectConfig(LongTailFramework::$div_id++, $playerLocation, LongTailFramework::getConfigURL(), LongTailFramework::getEmbedParameters(), $flash_vars, LongTailFramework::$current_config);
   }
 
   /**

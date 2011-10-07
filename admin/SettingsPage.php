@@ -12,6 +12,9 @@ if (isset($_POST["category_config"])) {
   update_option(LONGTAIL_KEY . "tag_mode", $_POST["tag_config"]);
   update_option(LONGTAIL_KEY . "home_mode", $_POST["home_config"]);
 }
+if (isset($_POST["player_location_enable"])) {
+  update_option(LONGTAIL_KEY . "player_location_enable", $_POST["player_location_enable"]);
+}
 if (isset($_POST["player_location"])) {
   update_option(LONGTAIL_KEY . "player_location", $_POST["player_location"]);
 }
@@ -120,6 +123,16 @@ function feedback_message ($message, $timeout = 0) { ?>
             <h3 class="hndle"><span>Player Settings</span></h3>
             <div class="inside" style="margin: 15px;">
               <table class="form-table">
+                <tr valign="top">
+                  <th>Enable Alternative Player Location:</th>
+                  <td>
+                    <label for="player_location_yes">Yes</label>
+                    <input id="player_location_yes" type="radio" value="1" name="player_location_enable" onclick="form.submit();" <?php checked(true, get_option(LONGTAIL_KEY . "player_location_enable")); ?> />
+                    <label for="player_location_no">No</label>
+                    <input id="player_location_no" type="radio" value="0" name="player_location_enable" onclick="form.submit();" <?php checked(0, get_option(LONGTAIL_KEY . "player_location_enable")); ?> />
+                    <span class="description">When enabled the plugin will load the player from the specified location.</span>
+                  </td>
+                </tr>
                 <tr valign="top">
                   <th>Player Location:</th>
                   <td>

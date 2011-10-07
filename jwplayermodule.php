@@ -101,15 +101,18 @@ function jwplayer_activation() {
   }
 }
 
-// Add JW Embedder for 5.3 players or higher.  Otherwise add swfobject.js from Google CDN.
-if (version_compare(get_option(LONGTAIL_KEY . "version"), "5.3", ">=")) {
-  wp_enqueue_script("jw-embedder", LongTailFramework::getEmbedderURL());
-}
-
 function jwplayer_init() {
   wp_deregister_script("swfobject");
   wp_register_script("swfobject", 'http' . (is_ssl() ? 's' : '') . '://ajax.googleapis.com/ajax/libs/swfobject/2.2/swfobject.js',NULL,NULL);
   wp_enqueue_script("swfobject");
+  // Add JW Embedder for 5.3 players or higher.  Otherwise add swfobject.js from Google CDN.
+  if (version_compare(get_option(LONGTAIL_KEY . "version"), "5.3", ">=")) {
+    if (get_option(LONGTAIL_KEY . "player_location_enable")) {
+      wp_enqueue_script("jw-embedder", get_option(LONGTAIL_KEY . "player_location") . "jwplayer.js");
+    } else {
+      wp_enqueue_script("jw-embedder", LongTailFramework::getEmbedderURL());
+    }
+  }
   if (get_option(LONGTAIL_KEY . "show_archive")) {
     if(!get_option(LONGTAIL_KEY . "category_mode")) update_option(LONGTAIL_KEY . "category_mode", "excerpt");
     if(!get_option(LONGTAIL_KEY . "search_mode")) update_option(LONGTAIL_KEY . "search_mode", "excerpt");

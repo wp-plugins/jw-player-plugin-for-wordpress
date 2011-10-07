@@ -237,7 +237,11 @@ function generate_embed_code($config, $atts) {
     }
     return $output;
   } else {
-    $swf = LongTailFramework::generateSWFObject($atts, $version && $embedder);
+    if (get_option(LONGTAIL_KEY . "player_location_enable")) {
+      $swf = LongTailFramework::generateSWFObject($atts, $version && $embedder, get_option(LONGTAIL_KEY . "player_location"));
+    } else {
+      $swf = LongTailFramework::generateSWFObject($atts, $version && $embedder);
+    }
     return $swf->generateEmbedScript();
   }
 }
