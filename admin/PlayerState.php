@@ -22,6 +22,9 @@ class PlayerState extends AdminState {
 
   /**
    * @see AdminState::__construct()
+   * @param $player
+   * @param string $post_values
+   * @return \PlayerState
    */
   public function __construct($player, $post_values = "") {
     parent::__construct($player, $post_values);
@@ -29,6 +32,7 @@ class PlayerState extends AdminState {
 
   /**
    * @see AdminState::getID()
+   * @return string
    */
   public static function getID() {
     return "player";
@@ -36,6 +40,7 @@ class PlayerState extends AdminState {
 
   /**
    * @see AdminState::getNextState()
+   * @return \BasicState
    */
   public function getNextState() {
     LongTailFramework::setConfig($this->current_player);

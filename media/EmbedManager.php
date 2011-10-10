@@ -238,9 +238,9 @@ function media_jwplayer_insert_form($errors) {
       <div class="hide-if-no-js">
         <?php _e("Playlist:"); ?>
         <select onchange="this.form.submit()" id="<?php echo LONGTAIL_KEY . "playlist_select"; ?>" name="<?php echo LONGTAIL_KEY . "playlist_select"; ?>">
-          <?php foreach ($playlists as $playlist) { ?>
-            <option value="<?php echo $playlist->ID; ?>" <?php selected($playlist->ID, $current_playlist); ?>>
-              <?php echo $playlist->post_title; ?>
+          <?php foreach ($playlists as $playlist_list) { ?>
+            <option value="<?php echo $playlist_list->ID; ?>" <?php selected($playlist_list->ID, $current_playlist); ?>>
+              <?php echo $playlist_list->post_title; ?>
             </option>
           <?php } ?>
         </select>
@@ -305,7 +305,7 @@ function get_jw_playlist_items($post_id, $errors, $current_playlist) {
 		if ( !empty($attachment) && $attachment->post_status == 'trash' )
 			continue;
 		if ( $item = get_jw_playlist_item( $id, array( 'errors' => isset($errors[$id]) ? $errors[$id] : null), $current_playlist, "playlist_"))
-			$output .= "\n<div id='playlist-item-$id' class='playlist-item child-of-$attachment->post_parent preloaded'><div class='progress'><div class='bar'></div></div><div id='playlist-upload-error-$id'></div><div class='filename'></div>$item\n</div>";
+			$output .= "\n<div id='playlist-item-$id' class='playlist-item child-of-$attachment->post_parent preloaded'><div id='playlist-upload-error-$id'></div><div class='filename'></div>$item\n</div>";
 	}
 
 	return $output;
@@ -340,7 +340,7 @@ function get_playlist_items($post_id, $errors, $current_playlist) {
 		if ( $attachment->post_status == 'trash' )
 			continue;
 		if ( $item = get_jw_playlist_item( $id, array( 'errors' => isset($errors[$id]) ? $errors[$id] : null), $current_playlist))
-			$output .= "\n<div id='media-item-$id' class='media-item child-of-$attachment->post_parent preloaded'><div class='progress'><div class='bar'></div></div><div id='media-upload-error-$id'></div><div class='filename'></div>$item\n</div>";
+			$output .= "\n<div id='media-item-$id' class='media-item child-of-$attachment->post_parent preloaded'><div id='media-upload-error-$id'></div><div class='filename'></div>$item\n</div>";
 	}
 
 	return $output;
