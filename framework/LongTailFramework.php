@@ -356,6 +356,7 @@ class LongTailFramework
         $skins[$info[0]] = $info[1];
       }
     }
+    ksort($skins);
     return $skins;
   }
 

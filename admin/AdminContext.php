@@ -128,6 +128,8 @@ class AdminContext {
             $skins = LongTailFramework::getSkins();
             $new_val = LongTailFramework::getSkinURL() . $val . "." . $skins[$val];
             $data[$new_name] = $new_val;
+          } else {
+            unset($data[$new_name]);
           }
         } else if ($new_name == "playlist_position") {
           $data[str_replace("_", ".", $new_name)] = $new_val;

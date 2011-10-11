@@ -114,15 +114,24 @@ function jwplayer_init() {
     }
   }
   if (get_option(LONGTAIL_KEY . "show_archive")) {
-    if(!get_option(LONGTAIL_KEY . "category_mode")) update_option(LONGTAIL_KEY . "category_mode", "excerpt");
-    if(!get_option(LONGTAIL_KEY . "search_mode")) update_option(LONGTAIL_KEY . "search_mode", "excerpt");
-    if(!get_option(LONGTAIL_KEY . "tag_mode")) update_option(LONGTAIL_KEY . "tag_mode", "excerpt");
+    if (!get_option(LONGTAIL_KEY . "category_mode")) update_option(LONGTAIL_KEY . "category_mode", "excerpt");
+    if (!get_option(LONGTAIL_KEY . "search_mode")) update_option(LONGTAIL_KEY . "search_mode", "excerpt");
+    if (!get_option(LONGTAIL_KEY . "tag_mode")) update_option(LONGTAIL_KEY . "tag_mode", "excerpt");
   } else {
-    if(!get_option(LONGTAIL_KEY . "category_mode")) update_option(LONGTAIL_KEY . "category_mode", "content");
-    if(!get_option(LONGTAIL_KEY . "search_mode")) update_option(LONGTAIL_KEY . "search_mode", "content");
-    if(!get_option(LONGTAIL_KEY . "tag_mode")) update_option(LONGTAIL_KEY . "tag_mode", "content");
+    if (!get_option(LONGTAIL_KEY . "category_mode")) update_option(LONGTAIL_KEY . "category_mode", "content");
+    if (!get_option(LONGTAIL_KEY . "search_mode")) update_option(LONGTAIL_KEY . "search_mode", "content");
+    if (!get_option(LONGTAIL_KEY . "tag_mode")) update_option(LONGTAIL_KEY . "tag_mode", "content");
   }
-  if(!get_option(LONGTAIL_KEY . "home_mode")) update_option(LONGTAIL_KEY . "home_mode", "content");
+  if (!get_option(LONGTAIL_KEY . "home_mode")) update_option(LONGTAIL_KEY . "home_mode", "content");
+  if (!get_option(LONGTAIL_KEY . "skins_expanded")) {
+    $handler = opendir(LongTailFramework::getSkinPath());
+    while ($file = readdir($handler)) {
+      if ($file != "." && $file != ".." && (strstr($file, ".zip"))) {
+        skin_unzip(LongTailFramework::getSkinPath() . $file);
+      }
+    }
+    update_option(LONGTAIL_KEY . "skins_expanded", true);
+  }
 }
 
 add_filter("the_content", "jwplayer_tag_callback", 11);
@@ -227,6 +236,23 @@ function get_old_configs() {
   }
   @closedir($handler);
   return $results;
+}
+
+function skin_unzip($archive) {
+  if (class_exists('ZipArchive')) {
+    $zip = new ZipArchive();
+    if ($zip->open($archive)) {
+      $zip->extractTo(LongTailFramework::getSkinPath());
+      $zip->close();
+      return true;
+    }
+  } else {
+    require_once(ABSPATH . 'wp-admin/includes/class-pclzip.php');
+    $zip = new PclZip($archive);
+    $zip->extract(PCLZIP_OPT_PATH, LongTailFramework::getSkinPath());
+    return true;
+  }
+  return false;
 }
 
 ?>
