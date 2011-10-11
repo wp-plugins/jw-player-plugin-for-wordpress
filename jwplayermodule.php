@@ -127,7 +127,12 @@ function jwplayer_init() {
     $handler = opendir(LongTailFramework::getSkinPath());
     while ($file = readdir($handler)) {
       if ($file != "." && $file != ".." && (strstr($file, ".zip"))) {
-        skin_unzip(LongTailFramework::getSkinPath() . $file);
+        if (skin_unzip(LongTailFramework::getSkinPath() . $file)) {
+          $info = preg_split("/\./", $file);
+          $src = LongTailFramework::getSkinPath() . $file;
+          $dest = LongTailFramework::getSkinPath() . $info[0] . "/$file";
+          copy($src, $dest);
+        }
       }
     }
     update_option(LONGTAIL_KEY . "skins_expanded", true);

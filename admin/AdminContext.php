@@ -126,7 +126,7 @@ class AdminContext {
         if ($new_name == "skin") {
           if ($new_val != "[Default]") {
             $skins = LongTailFramework::getSkins();
-            $new_val = LongTailFramework::getSkinURL() . $val . "." . $skins[$val];
+            $new_val = LongTailFramework::getSkinURL() . "$val/$val." . $skins[$val];
             $data[$new_name] = $new_val;
           } else {
             unset($data[$new_name]);

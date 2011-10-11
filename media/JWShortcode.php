@@ -170,6 +170,9 @@ function jwplayer_handler($atts) {
   }
   $loaded_config = LongTailFramework::getConfigValues();
   if (isset($loaded_config["wmode"]) && !isset($atts["wmode"])) $atts["wmode"] = $loaded_config["wmode"];
+  if (isset($loaded_config["skin"]) && !isset($atts["skin"])) $atts["skin"] = $loaded_config["skin"];
+  if (isset($loaded_config["playlist.position"]) && !isset($atts["playlist.position"])) $atts["playlist.position"] = $loaded_config["playlist.position"];
+  if (isset($loaded_config["playlistsize"]) && !isset($atts["playlistsize"])) $atts["playlistsize"] = $loaded_config["playlistsize"];
   if (is_feed()) {
     $out = '';
     // remove media file from RSS feed
