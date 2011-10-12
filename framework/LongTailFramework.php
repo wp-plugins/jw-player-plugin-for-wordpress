@@ -29,7 +29,7 @@ class LongTailFramework
 
   /**
    * Sets the current config being worked with.  The passed in config is set as
-   * the current config and it's configuration is loaded into memoery.
+   * the current config and it's configuration is loaded into memory.
    * @param string $config The player config we would like to perform operations
    * on.
    */
@@ -46,9 +46,14 @@ class LongTailFramework
    */
   public static function getConfigValues() {
     $target = array();
+    $target["Additional"] = array();
     if (LongTailFramework::$current_config_values != null) {
-      foreach(LongTailFramework::$current_config_values as $name => $value) {
-        $target[$name] = (string) $value;
+      foreach(LongTailFramework::$current_config_values as $flash_var) {
+        if ($flash_var["type"] == "Additional") {
+          $target["Additional"][$flash_var->getName()] = (string) $flash_var;
+        } else {
+          $target[$flash_var->getName()] = (string) $flash_var;
+        }
       }
     }
     return $target;
@@ -79,9 +84,13 @@ class LongTailFramework
 
   /**
    * Save the Player configuration to an xml file.
-   * @param string $xmlString The xml formatted content to be saved.
+   * @param $xml_string
    * @param string $target Specified config file to save to.  Default is null,
    * in which case the currently loaded config is used.
+   * @return bool
+   *
+   * @internal param string $xmlString The xml formatted content to be saved.
+   *
    */
   public static function saveConfig($xml_string, $target = "") {
     $xml_file = "";
@@ -382,7 +391,11 @@ class LongTailFramework
 
   /**
    * Generates the SWFObjectConfig object which acts as a wrapper for the SWFObject javascript library.
-   * @param array $flashVars The array of flashVars to be used in the embedding
+   * @param $flash_vars
+   * @param bool $useJWEmbedder
+   * @param string $customLocation
+   *
+   * @internal param array $flashVars The array of flashVars to be used in the embedding
    * @return SWFObjectConfig The configured SWFObjectConfig object to be used for embedding
    */
   public static function generateSWFObject($flash_vars, $useJWEmbedder = false, $customLocation = "") {
@@ -405,8 +418,10 @@ class LongTailFramework
 
   /**
    * Helper function to flatten the additional flashvars into a string representation.
-   * @param array The array of additional flashvars
-   * @return string The string represetnation of the additional flashvars
+   * @param $flashvars
+   *
+   * @internal param \The $array array of additional flashvars
+   * @return string The string representation of the additional flashvars
    */
   private static function flattenAdditionalFlashVars($flashvars) {
     $output = "";
@@ -445,6 +460,8 @@ class LongTailFramework
             $default = (string) $config_file->{$flash_var->name};
             $default = str_replace(LongTailFramework::getSkinURL(), "", $default);
             $default = preg_replace("/(\.swf|\.zip)/", "", $default);
+            $parts = explode("/", $default);
+            $default = empty($parts) ? $default : $parts[0];
           }
           $values = (array) $flash_var->select;
           $val = isset($values["option"]) ? $values["option"] : "";
@@ -466,7 +483,7 @@ class LongTailFramework
     unset($config_values["ltas.cc"]);
     LongTailFramework::getPlugins($config_values);
     if ($config_values) {
-      LongTailFramework::$loaded_additional_flash_vars = LongTailFramework::flattenAdditionalFlashVars($config_values);
+      LongTailFramework::$loaded_additional_flash_vars = LongTailFramework::flattenAdditionalFlashVars($config_values["Additional"]);
     }
     LongTailFramework::$loaded_flash_vars = $f_vars;
   }

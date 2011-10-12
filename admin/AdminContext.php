@@ -177,15 +177,17 @@ class AdminContext {
   }
 
   private function parseFlashvarString($fv_str, &$data) {
+    $additional = array();
     $regex = "~([a-zA-Z0-9.]+)=([a-zA-Z0-9:_\-./]+)~";
     preg_match_all($regex, $fv_str, $matches);
     for ($i = 0; $i < count($matches[0]); $i++) {
-      $data[trim($matches[1][$i])] = trim($matches[2][$i]);
+      $additional[trim($matches[1][$i])] = trim($matches[2][$i]);
     }
+    $data["Additional"] = $additional;
   }
 
   /**
-   * Converts an one dimensional array into an XML string representation.
+   * Converts a one dimensional array into an XML string representation.
    * @param Array $target The one dimensional array to be converted to an XML
    * string.
    * @return An xml string representation of $target.
@@ -193,7 +195,13 @@ class AdminContext {
   private function convertToXML($target) {
     $output = "";
     foreach($target as $name => $value) {
-      $output .= "<" . $name . ">" . $value . "</" . $name . ">\n";
+      if ($name == "Additional") {
+        foreach ($value as $add_name => $add_value) {
+          $output .= "<" . $add_name . " type='Additional'>" . $add_value . "</" . $add_name . ">\n";
+        }
+      } else {
+        $output .= "<" . $name . ">" . $value . "</" . $name . ">\n";
+      }
     }
     return $output;
   }
