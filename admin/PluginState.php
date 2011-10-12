@@ -198,7 +198,7 @@ class PluginState extends WizardState {
                     <?php unset($_POST[$name]); ?>
                     <textarea name="<?php echo $name; ?>" cols="80" rows="2"><?php echo $value; ?></textarea>
                     <br/>
-                    <span class="description"><?php echo "Enter a comma delimited list of additional plugins you would like to be used by this player."; ?></span>
+                    <span class="description"><?php echo "Enter a comma delimited list of additional plugins you would like to be used by this player.  <strong>Note:</strong> Flashvars for these plugins will need to be set in the Additional Flashvars section under the Advanced Settings tab."; ?></span>
                   </td>
                 </tr>
               </table>

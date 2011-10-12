@@ -60,7 +60,7 @@ function feedback_message ($message, $timeout = 0) { ?>
           <div class="stuffbox">
             <h3 class="hndle"><span>Shortcode Settings</span></h3>
             <div class="inside" style="margin: 15px;">
-              <span>Configure the source of the content for each page type.</span>
+              <p><em>Configure the source for each page type.  This is dependent on your theme which can either pull from <strong>the_content</strong> or <strong>the_excerpt</strong>.  Optionally you can disable embedding on a specific page type.  This will strip out the shortcode.</em></p>
               <table class="form-table">
                 <tr valign="top">
                   <th>Category Pages:</th>

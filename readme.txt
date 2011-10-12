@@ -3,7 +3,7 @@ Contributors: LongTail Video Inc.
 Tags: JW Player, Video, Flash, LongTail Video, RTMP, Playlists, Audio, Image, HTML5, iPad, iPhone, iPod
 Requires at least: 2.8.6
 Tested up to: 3.2.1
-Stable tag: 1.4.3
+Stable tag: 1.5.0
 
 This video plugin is provided by LongTail Video Inc.  It enables you to embed Flash and HTML5 video using the JW Player on your WordPress website.
 
@@ -63,6 +63,30 @@ You can perform the automatic update, download the plugin and upload, or FTP the
 
 == Changelog ==
 
+= 1.5.0 =
+
+ * FEATURE: HTML 5 Skin support! When you update the plugin will automatically unzip the included skins.  (This may take a minute or two).
+ * FEATURE: HTML 5 visual playlist support!
+ * FEATURE: Additional Plugins field.  You can now specify extra plugins within the custom player itself.
+ * FEATURE: New settings page
+ * ENHANCEMENT: Duration is now an option for videos.  Useful for visual playlists.
+ * ENHANCEMENT: You can now specify where the player is located.
+ * ENHANCEMENT: Finer control over shortcode behavior
+ * ENHANCEMENT: Option to hide Insert Button and Duration for images
+ * ENHANCEMENT: Facebook OpenGraph data is now optional
+ * ENHANCEMENT: Custom player name added as a CSS class to enclosing player div.  This should help with theming the player.
+ * BUG: Additional flashvars field should now save as expected.  Removing flashvars should now work.
+ * BUG: Existing custom players can have their skin set back to the default.
+ * BUG: Removed deprecated swf only skins.
+ * BUG: Some code changes to the Playlist Manager.  This should hopefully fix any lingering white screen issues.
+ * BUG: added is_tag() to shortcode processing
+ * BUG: Provider should now save properly in the Media Library
+ * BUG: Playlist location flashvar updated with new name (playlist.location).  Playlist position should now behave as expected.
+ * BUG: Audio player wrapper now resizes correctly
+ * BUG: YouTube preview images should repopulate again
+ * BUG: Script registrations moved to init function
+ * BUG: Fixed missing variable declaration
+
 = 1.4.3 =
 
  * BUG: Playlist manager should now work correctly in WordPress version 3.2 and greater
@@ -78,7 +102,7 @@ You can perform the automatic update, download the plugin and upload, or FTP the
  * BUG: Tweaked handling of https
  * BUG: Fixed a warning message
 
-= 1.4 =
+= 1.4.0 =
 
  * FEATURE: Support for Modes.  You can now specify different files for HTML5 mode.  This can be done in the shortcode (html5_file and download_file) or when editing a piece of content.
  * FEATURE: Support for posting to Facebook.  Handled automatically when inserting via the media overlay.  Alternatively you can use two custom fields for the post (jwplayermodule_fb_headers_id and jwplayermodule_fb_headers_config).
