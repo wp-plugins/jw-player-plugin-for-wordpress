@@ -8,6 +8,9 @@ class AdvancedState extends FlashVarState {
 
   /**
    * @see FlashVarState::__construct()
+   * @param $player
+   * @param string $post_values
+   * @return \AdvancedState
    */
   public function __construct($player, $post_values = "") {
     parent::__construct($player, $post_values);
@@ -15,6 +18,7 @@ class AdvancedState extends FlashVarState {
 
   /**
    * @see FlashVarState::getID()
+   * @return string
    */
   public static function getID() {
     return "advanced";
@@ -22,6 +26,7 @@ class AdvancedState extends FlashVarState {
 
   /**
    * @see FlashVarState::getNextState()
+   * @return \LTASState
    */
   public function getNextState() {
     LongTailFramework::setConfig($this->current_player);
@@ -30,6 +35,7 @@ class AdvancedState extends FlashVarState {
 
   /**
    * @see FlashVarState::getPreviousState()
+   * @return \BasicState
    */
   public function getPreviousState() {
     LongTailFramework::setConfig($this->current_player);
@@ -38,6 +44,7 @@ class AdvancedState extends FlashVarState {
 
   /**
    * @see FlashVarState::getCancelState()
+   * @return \PlayerState
    */
   public function getCancelState() {
     return new PlayerState("");
@@ -45,6 +52,7 @@ class AdvancedState extends FlashVarState {
 
   /**
    * @see FlashVarState::getSaveState()
+   * @return \PlayerState
    */
   public function getSaveState() {
     return new PlayerState("");
@@ -52,6 +60,7 @@ class AdvancedState extends FlashVarState {
 
   /**
    * @see FlashVarState::flashVarCat()
+   * @return \LongTailFramework.ADVANCED
    */
   protected function flashVarCat() {
     return LongTailFramework::ADVANCED;
@@ -59,6 +68,7 @@ class AdvancedState extends FlashVarState {
 
   /**
    * @see FlashVarState::getButtonBar()
+   * @param bool $show_previous
    */
   protected function getButtonBar($show_previous = true) {
     $this->buttonBar(AdvancedState::getID());
@@ -66,6 +76,7 @@ class AdvancedState extends FlashVarState {
 
   /**
    * @see FlashVarState::getTitle()
+   * @return \WizardState.ADVANCED_STATE
    */
   public static function getTitle() {
     return WizardState::ADVANCED_STATE;

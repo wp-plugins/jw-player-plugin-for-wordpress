@@ -8,6 +8,9 @@ class PluginState extends WizardState {
 
   /**
    * @see AdminState::__construct()
+   * @param $player
+   * @param string $post_values
+   * @return \PluginState
    */
   public function __construct($player, $post_values = "") {
     parent::__construct($player, $post_values);
@@ -15,6 +18,7 @@ class PluginState extends WizardState {
 
   /**
    * @see AdminState::getID()
+   * @return string
    */
   public static function getID() {
     return "plugin";
@@ -29,6 +33,7 @@ class PluginState extends WizardState {
 
   /**
    * @see AdminState::getPreviousState()
+   * @return \LTASState
    */
   public function getPreviousState() {
     LongTailFramework::setConfig($this->current_player);
@@ -37,6 +42,7 @@ class PluginState extends WizardState {
 
   /**
    * @see AdminState::getCancelState()
+   * @return \PlayerState
    */
   public function getCancelState() {
     return new PlayerState("");
@@ -44,6 +50,7 @@ class PluginState extends WizardState {
 
   /**
    * @see AdminState::getSaveState()
+   * @return \PlayerState
    */
   public function getSaveState() {
     return new PlayerState("");
@@ -57,7 +64,14 @@ class PluginState extends WizardState {
    * @see AdminState::render()
    */
   public function render() {
-    $plugins = LongTailFramework::getPlugins(); ?>
+    $plugins = LongTailFramework::getPlugins();
+    $configValues = LongTailFramework::getConfigValues();
+    $pluginString = explode(",", $configValues["plugins"]);
+    $pluginList = array();
+    foreach ($pluginString as $pluginStr) {
+      $pluginList[$pluginStr] = $pluginStr;
+    }
+    ?>
     <div class="wrap">
 
       <script type="text/javascript">
@@ -126,6 +140,7 @@ class PluginState extends WizardState {
           </div>
 
           <?php foreach($plugins as $plugin) { ?>
+            <?php unset($pluginList[$plugin->getRepository()]); ?>
             <div id="<?php echo LONGTAIL_KEY . "plugin_" . $plugin->getRepository(); ?>">
               <table class="form-table">
                 <?php foreach(array_keys($plugin->getFlashVars()) as $plugin_flash_vars) { ?>
@@ -158,12 +173,42 @@ class PluginState extends WizardState {
           <?php } ?>
         </div>
 
+        <?php $this->getFooter($pluginList); ?>
         <?php $this->buttonBar(PluginState::getID(), true, false); ?>
 
       </form>
     </div>
-    <?php
-
+  <?php
   }
+
+  protected function getFooter($pluginList) { ?>
+    <p/>
+    <div id="poststuff">
+      <div id="post-body">
+        <div id="post-body-content">
+          <div class="stuffbox">
+            <h3 class="hndle"><span><?php echo "Additional Plugins"; ?></span></h3>
+            <div class="inside" style="margin: 15px;">
+              <table class="form-table">
+                <tr valign="top">
+                  <th><?php echo "plugins:"; ?></th>
+                  <td>
+                    <?php $name = LONGTAIL_KEY . "player_plugins"; ?>
+                    <?php $value = isset($_POST[$name]) ? $_POST[$name] : implode(",", $pluginList); ?>
+                    <?php unset($_POST[$name]); ?>
+                    <textarea name="<?php echo $name; ?>" cols="80" rows="2"><?php echo $value; ?></textarea>
+                    <br/>
+                    <span class="description"><?php echo "Enter a comma delimited list of additional plugins you would like to be used by this player."; ?></span>
+                  </td>
+                </tr>
+              </table>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div> <?php
+  }
+
 }
+
 ?>

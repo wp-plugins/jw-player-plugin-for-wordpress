@@ -118,6 +118,7 @@ class AdminContext {
   private function processSubmit() {
     $data = LongTailFramework::getConfigValues();
     $plugins = array();
+    $additional_plugins = "";
     foreach ($_POST as $name => $value) {
       if (strstr($name, LONGTAIL_KEY . "player_")) {
         $val = esc_html($value);
@@ -135,6 +136,8 @@ class AdminContext {
           $data[str_replace("_", ".", $new_name)] = $new_val;
         } else if ($new_name == "flashvars") {
           $this->parseFlashvarString($new_val, $data);
+        } else if ($new_name == "plugins") {
+          $additional_plugins = $new_val;
         } else if (!empty($new_val)) {
           $data[$new_name] = $new_val;
         } else {
@@ -167,6 +170,7 @@ class AdminContext {
       }
     }
     $plugin_string = implode(",", $active_plugins);
+    $plugin_string = empty($plugin_string) ? $additional_plugins : $plugin_string . "," . $additional_plugins;
     if (!empty($plugins)) {
       $data["plugins"] = $plugin_string;
     }

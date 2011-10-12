@@ -13,6 +13,9 @@ abstract class WizardState extends AdminState {
 
   /**
    * @see AdminState::__construct()
+   * @param $player
+   * @param string $post_values
+   * @return \WizardState
    */
   public function __construct($player, $post_values = "") {
     parent::__construct($player, $post_values);
@@ -24,7 +27,7 @@ abstract class WizardState extends AdminState {
         jQuery("#breadcrumbs").buttonset();
       });
     </script>
-    <div id="breadcrumbs" style="padding: 14px 15px 3px 0px;">
+    <div id="breadcrumbs" style="padding: 14px 15px 3px 0;">
       <input type="radio" id="<?php echo LONGTAIL_KEY . BasicState::getID(); ?>" name="breadcrumb" <?php checked(BasicState::getID(), $this->getID()); ?> value="<?php echo BasicState::getID(); ?>" onchange="form.submit();"/>
       <label for="<?php echo LONGTAIL_KEY . BasicState::getID(); ?>">
         <?php echo BasicState::getTitle(); ?>

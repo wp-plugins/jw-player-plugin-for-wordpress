@@ -320,7 +320,9 @@ class LongTailFramework
 
   /**
    * Generates a list of the available plugins along with their flashvars and default values.
-   * @param string $config (optional) Pass in if you wish to load the plugin enabled state and flashvar values.
+   * @param null $config_values
+   *
+   * @internal param string $config (optional) Pass in if you wish to load the plugin enabled state and flashvar values.
    * @return array The list of available plugins
    */
   public static function getPlugins(&$config_values = null) {
