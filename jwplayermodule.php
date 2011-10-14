@@ -99,20 +99,11 @@ function jwplayer_activation() {
       }
     }
   }
-}
-
-function jwplayer_init() {
-  wp_deregister_script("swfobject");
-  wp_register_script("swfobject", 'http' . (is_ssl() ? 's' : '') . '://ajax.googleapis.com/ajax/libs/swfobject/2.2/swfobject.js',NULL,NULL);
-  wp_enqueue_script("swfobject");
-  // Add JW Embedder for 5.3 players or higher.  Otherwise add swfobject.js from Google CDN.
-  if (version_compare(get_option(LONGTAIL_KEY . "version"), "5.3", ">=")) {
-    if (get_option(LONGTAIL_KEY . "player_location_enable")) {
-      wp_enqueue_script("jw-embedder", get_option(LONGTAIL_KEY . "player_location") . "jwplayer.js");
-    } else {
-      wp_enqueue_script("jw-embedder", LongTailFramework::getEmbedderURL());
-    }
-  }
+  if (!get_option(LONGTAIL_KEY . "default")) update_option(LONGTAIL_KEY . "default", "Out-of-the-Box");
+  if (!get_option(LONGTAIL_KEY . "player_location_enable")) update_option(LONGTAIL_KEY . "player_location_enable", 0);
+  if (!get_option(LONGTAIL_KEY . "image_duration")) update_option(LONGTAIL_KEY . "image_duration", true);
+  if (!get_option(LONGTAIL_KEY . "image_insert")) update_option(LONGTAIL_KEY . "image_insert", true);
+  if (!get_option(LONGTAIL_KEY . "facebook")) update_option(LONGTAIL_KEY . "facebook", true);
   if (get_option(LONGTAIL_KEY . "show_archive")) {
     if (!get_option(LONGTAIL_KEY . "category_mode")) update_option(LONGTAIL_KEY . "category_mode", "excerpt");
     if (!get_option(LONGTAIL_KEY . "search_mode")) update_option(LONGTAIL_KEY . "search_mode", "excerpt");
@@ -136,6 +127,20 @@ function jwplayer_init() {
       }
     }
     update_option(LONGTAIL_KEY . "skins_expanded", true);
+  }
+}
+
+function jwplayer_init() {
+  wp_deregister_script("swfobject");
+  wp_register_script("swfobject", 'http' . (is_ssl() ? 's' : '') . '://ajax.googleapis.com/ajax/libs/swfobject/2.2/swfobject.js',NULL,NULL);
+  wp_enqueue_script("swfobject");
+  // Add JW Embedder for 5.3 players or higher.  Otherwise add swfobject.js from Google CDN.
+  if (version_compare(get_option(LONGTAIL_KEY . "version"), "5.3", ">=")) {
+    if (get_option(LONGTAIL_KEY . "player_location_enable")) {
+      wp_enqueue_script("jw-embedder", get_option(LONGTAIL_KEY . "player_location") . "jwplayer.js");
+    } else {
+      wp_enqueue_script("jw-embedder", LongTailFramework::getEmbedderURL());
+    }
   }
 }
 

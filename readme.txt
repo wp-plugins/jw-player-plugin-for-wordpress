@@ -69,6 +69,7 @@ You can perform the automatic update, download the plugin and upload, or FTP the
  * FEATURE: HTML 5 visual playlist support!
  * FEATURE: Additional Plugins field.  You can now specify extra plugins within the custom player itself.
  * FEATURE: New settings page
+ * ENHANCEMENT: A large number of new skins have been added.
  * ENHANCEMENT: Duration is now an option for videos.  Useful for visual playlists.
  * ENHANCEMENT: You can now specify where the player is located.
  * ENHANCEMENT: Finer control over shortcode behavior

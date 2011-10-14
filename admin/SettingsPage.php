@@ -4,41 +4,41 @@ if(preg_match('#' . basename(__FILE__) . '#', $_SERVER['PHP_SELF'])) { die('You 
 
 if (isset($_POST['Uninstall'])) {
   uninstall();
+} else {
+  if (isset($_POST["category_config"])) {
+    update_option(LONGTAIL_KEY . "category_mode", $_POST["category_config"]);
+    update_option(LONGTAIL_KEY . "search_mode", $_POST["search_config"]);
+    update_option(LONGTAIL_KEY . "tag_mode", $_POST["tag_config"]);
+    update_option(LONGTAIL_KEY . "home_mode", $_POST["home_config"]);
+  }
+  if (isset($_POST["player_location_enable"])) {
+    update_option(LONGTAIL_KEY . "player_location_enable", $_POST["player_location_enable"]);
+  }
+  if (isset($_POST["player_location"])) {
+    update_option(LONGTAIL_KEY . "player_location", $_POST["player_location"]);
+  }
+  if (isset($_POST["image_duration"])) {
+    update_option(LONGTAIL_KEY . "image_duration", $_POST["image_duration"]);
+  }
+  if (isset($_POST["image_insert"])) {
+    update_option(LONGTAIL_KEY . "image_insert", $_POST["image_insert"]);
+  }
+  if (isset($_POST["facebook"])) {
+    update_option(LONGTAIL_KEY . "facebook", $_POST["facebook"]);
+  }
 }
 
-if (isset($_POST["category_config"])) {
-  update_option(LONGTAIL_KEY . "category_mode", $_POST["category_config"]);
-  update_option(LONGTAIL_KEY . "search_mode", $_POST["search_config"]);
-  update_option(LONGTAIL_KEY . "tag_mode", $_POST["tag_config"]);
-  update_option(LONGTAIL_KEY . "home_mode", $_POST["home_config"]);
-}
-if (isset($_POST["player_location_enable"])) {
-  update_option(LONGTAIL_KEY . "player_location_enable", $_POST["player_location_enable"]);
-}
-if (isset($_POST["player_location"])) {
-  update_option(LONGTAIL_KEY . "player_location", $_POST["player_location"]);
-}
-if (isset($_POST["image_duration"])) {
-  update_option(LONGTAIL_KEY . "image_duration", $_POST["image_duration"]);
-}
-if (isset($_POST["image_insert"])) {
-  update_option(LONGTAIL_KEY . "image_insert", $_POST["image_insert"]);
-}
-if (isset($_POST["facebook"])) {
-  update_option(LONGTAIL_KEY . "facebook", $_POST["facebook"]);
-}
 
 function uninstall() {
   global $wpdb;
 
   $meta_query = "DELETE FROM $wpdb->postmeta WHERE meta_key LIKE '" . LONGTAIL_KEY . "%';";
+  $option_query = "DELETE FROM $wpdb->options WHERE option_name LIKE '" . LONGTAIL_KEY . "%';";
   $post_query = "DELETE FROM $wpdb->posts WHERE post_type = 'jw_playlist';";
 
   $wpdb->query($meta_query);
+  $wpdb->query($option_query);
   $wpdb->query($post_query);
-
-  delete_option(LONGTAIL_KEY . "default");
-  delete_option(LONGTAIL_KEY . "ootb");
 
   feedback_message(__('Tables and settings deleted, deactivate the plugin now'));
 }
