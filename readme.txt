@@ -3,7 +3,7 @@ Contributors: LongTail Video Inc.
 Tags: JW Player, Video, Flash, LongTail Video, RTMP, Playlists, Audio, Image, HTML5, iPad, iPhone, iPod
 Requires at least: 2.8.6
 Tested up to: 3.2.1
-Stable tag: 1.4.3
+Stable tag: 1.5.1
 
 This video plugin is provided by LongTail Video Inc.  It enables you to embed Flash and HTML5 video using the JW Player on your WordPress website.
 
@@ -65,78 +65,77 @@ You can perform the automatic update, download the plugin and upload, or FTP the
 
 = 1.5.1 =
 
- * BUG: The plugin should now upgrade properly and the shortcode should behave as expected on your site.
- * BUG: The shortcode settings should now save properly.
- * BUG: Playlist videos without a duration set should no longer incorrectly default to 10 seconds.
+* BUG: The plugin should now upgrade properly and the shortcode should behave as expected on your site.
+* BUG: The shortcode settings should now save properly.
+* BUG: Playlist videos without a duration set should no longer incorrectly default to 10 seconds.
 
 = 1.5.0 =
 
- * FEATURE: HTML 5 Skin support! When you update the plugin will automatically unzip the included skins.  (This may take a minute or two).
- * FEATURE: HTML 5 visual playlist support!
- * FEATURE: Additional Plugins field.  You can now specify extra plugins within the custom player itself.
- * FEATURE: New settings page
- * ENHANCEMENT: A large number of new skins have been added.
- * ENHANCEMENT: Duration is now an option for videos.  Useful for visual playlists.
- * ENHANCEMENT: You can now specify where the player is located.
- * ENHANCEMENT: Finer control over shortcode behavior
- * ENHANCEMENT: Option to hide Insert Button and Duration for images
- * ENHANCEMENT: Facebook OpenGraph data is now optional
- * ENHANCEMENT: Custom player name added as a CSS class to enclosing player div.  This should help with theming the player.
- * BUG: Additional flashvars field should now save as expected.  Removing flashvars should now work.
- * BUG: Existing custom players can have their skin set back to the default.
- * BUG: Removed deprecated swf only skins.
- * BUG: Some code changes to the Playlist Manager.  This should hopefully fix any lingering white screen issues.
- * BUG: added is_tag() to shortcode processing
- * BUG: Provider should now save properly in the Media Library
- * BUG: Playlist location flashvar updated with new name (playlist.location).  Playlist position should now behave as expected.
- * BUG: Audio player wrapper now resizes correctly
- * BUG: YouTube preview images should repopulate again
- * BUG: Script registrations moved to init function
- * BUG: Fixed missing variable declaration
+* FEATURE: HTML 5 Skin support! When you update the plugin will automatically unzip the included skins.  (This may take a minute or two).
+* FEATURE: HTML 5 visual playlist support!
+* FEATURE: Additional Plugins field.  You can now specify extra plugins within the custom player itself.
+* FEATURE: New settings page
+* ENHANCEMENT: A large number of new skins have been added.
+* ENHANCEMENT: Duration is now an option for videos.  Useful for visual playlists.
+* ENHANCEMENT: You can now specify where the player is located.
+* ENHANCEMENT: Finer control over shortcode behavior
+* ENHANCEMENT: Option to hide Insert Button and Duration for images
+* ENHANCEMENT: Facebook OpenGraph data is now optional
+* ENHANCEMENT: Custom player name added as a CSS class to enclosing player div.  This should help with theming the player.
+* BUG: Additional flashvars field should now save as expected.  Removing flashvars should now work.
+* BUG: Existing custom players can have their skin set back to the default.
+* BUG: Removed deprecated swf only skins.
+* BUG: Some code changes to the Playlist Manager.  This should hopefully fix any lingering white screen issues.
+* BUG: added is_tag() to shortcode processing
+* BUG: Provider should now save properly in the Media Library
+* BUG: Playlist location flashvar updated with new name (playlist.location).  Playlist position should now behave as expected.
+* BUG: Audio player wrapper now resizes correctly
+* BUG: YouTube preview images should repopulate again
+* BUG: Script registrations moved to init function
+* BUG: Fixed missing variable declaration
 
 = 1.4.3 =
 
- * BUG: Playlist manager should now work correctly in WordPress version 3.2 and greater
- * BUG: Fixed improper embed code generation when using the new html5_file and download_file attributes
+* BUG: Playlist manager should now work correctly in WordPress version 3.2 and greater
+* BUG: Fixed improper embed code generation when using the new html5_file and download_file attributes
 
 = 1.4.2 =
 
- * ENHANCEMENT: Use WordPress' built in ssl detection
- * BUG: Adjusted category/archive page behavior.  Checkbox now controls whether the jwplayer tag filter runs on the_excerpt() or the_content().
+* ENHANCEMENT: Use WordPress' built in ssl detection
+* BUG: Adjusted category/archive page behavior.  Checkbox now controls whether the jwplayer tag filter runs on the_excerpt() or the_content().
 
 = 1.4.1 = 
 
- * BUG: Tweaked handling of https
- * BUG: Fixed a warning message
+* BUG: Tweaked handling of https
+* BUG: Fixed a warning message
 
 = 1.4.0 =
 
- * FEATURE: Support for Modes.  You can now specify different files for HTML5 mode.  This can be done in the shortcode (html5_file and download_file) or when editing a piece of content.
- * FEATURE: Support for posting to Facebook.  Handled automatically when inserting via the media overlay.  Alternatively you can use two custom fields for the post (jwplayermodule_fb_headers_id and jwplayermodule_fb_headers_config).
- * ENHANCEMENT: Rewrite of code handling category behavior.  If checked in the JW Player afdmin section players should now appear when viewing categories.  If unchecked players and code will not show up in category view.
- * ENHANCEMENT: wmode is now a configurable option for players.
- * ENHANCEMENT: Add more robust URL loading for YouTube XML
- * ENHANCEMENT: Better handling of audio controlbar
- * ENHANCEMENT: Switched to JSON playlists.  Playlists should now work for HTML5 player and no longer break as a result of theme formatting.
- * ENHANCEMENT: The plugin now behaves correctly with HTTPS sites
- * ENHANCEMENT: Increased security when setting file permissions.
- * BUG: Fixed error in .zip uploading
- * BUG: Dynamic error messaging for plugin directories.  This should make it easier to debug network sites.
- * BUG: Error handling on youtube api failure
-
+* FEATURE: Support for Modes.  You can now specify different files for HTML5 mode.  This can be done in the shortcode (html5_file and download_file) or when editing a piece of content.
+* FEATURE: Support for posting to Facebook.  Handled automatically when inserting via the media overlay.  Alternatively you can use two custom fields for the post (jwplayermodule_fb_headers_id and jwplayermodule_fb_headers_config).
+* ENHANCEMENT: Rewrite of code handling category behavior.  If checked in the JW Player afdmin section players should now appear when viewing categories.  If unchecked players and code will not show up in category view.
+* ENHANCEMENT: wmode is now a configurable option for players.
+* ENHANCEMENT: Add more robust URL loading for YouTube XML
+* ENHANCEMENT: Better handling of audio controlbar
+* ENHANCEMENT: Switched to JSON playlists.  Playlists should now work for HTML5 player and no longer break as a result of theme formatting.
+* ENHANCEMENT: The plugin now behaves correctly with HTTPS sites
+* ENHANCEMENT: Increased security when setting file permissions.
+* BUG: Fixed error in .zip uploading
+* BUG: Dynamic error messaging for plugin directories.  This should make it easier to debug network sites.
+* BUG: Error handling on youtube api failure
 
 = 1.3.3 =
 
- * FEATURE: Simple event handlers (with anonymous functions) can now be added via the shortcode.
- * ENHANCEMENT: Option to toggle player embed on Category pages.
- * ENHANCEMENT: Mootools no longer breaks the playlist manager.
- * BUG: Added 'none' option for controlbar.
- * BUG: Controlbar settings are now correctly applied.
- * BUG: Urldecode passed in attributes in case they have been encoded.
- * BUG: Fixed image priority.
- * BUG: Now decodes the flashvar values to compensate for wordpress encoding.
- * BUG: Removed unnecessary check for zip file that was causing errors
- * BUG: Removed unnecessary shortcode call
+* FEATURE: Simple event handlers (with anonymous functions) can now be added via the shortcode.
+* ENHANCEMENT: Option to toggle player embed on Category pages.
+* ENHANCEMENT: Mootools no longer breaks the playlist manager.
+* BUG: Added 'none' option for controlbar.
+* BUG: Controlbar settings are now correctly applied.
+* BUG: Urldecode passed in attributes in case they have been encoded.
+* BUG: Fixed image priority.
+* BUG: Now decodes the flashvar values to compensate for wordpress encoding.
+* BUG: Removed unnecessary check for zip file that was causing errors
+* BUG: Removed unnecessary shortcode call
 
 = 1.3.2 =
 
