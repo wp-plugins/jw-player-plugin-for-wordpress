@@ -52,6 +52,7 @@ include_once (dirname (__FILE__) . "/media/JWMediaFunctions.php");
 include_once (dirname (__FILE__) . "/media/JWShortcode.php");
 
 register_activation_hook(__FILE__, "jwplayer_activation");
+register_deactivation_hook(__FILE__, "jwplayer_deactivation");
 add_action('init', 'jwplayer_init');
 
 //Define the plugin directory and url for file access.
@@ -99,35 +100,10 @@ function jwplayer_activation() {
       }
     }
   }
-  if (!get_option(LONGTAIL_KEY . "default")) update_option(LONGTAIL_KEY . "default", "Out-of-the-Box");
-  if (!get_option(LONGTAIL_KEY . "player_location_enable")) update_option(LONGTAIL_KEY . "player_location_enable", 0);
-  if (!get_option(LONGTAIL_KEY . "image_duration")) update_option(LONGTAIL_KEY . "image_duration", true);
-  if (!get_option(LONGTAIL_KEY . "image_insert")) update_option(LONGTAIL_KEY . "image_insert", true);
-  if (!get_option(LONGTAIL_KEY . "facebook")) update_option(LONGTAIL_KEY . "facebook", true);
-  if (get_option(LONGTAIL_KEY . "show_archive")) {
-    if (!get_option(LONGTAIL_KEY . "category_mode")) update_option(LONGTAIL_KEY . "category_mode", "excerpt");
-    if (!get_option(LONGTAIL_KEY . "search_mode")) update_option(LONGTAIL_KEY . "search_mode", "excerpt");
-    if (!get_option(LONGTAIL_KEY . "tag_mode")) update_option(LONGTAIL_KEY . "tag_mode", "excerpt");
-  } else {
-    if (!get_option(LONGTAIL_KEY . "category_mode")) update_option(LONGTAIL_KEY . "category_mode", "content");
-    if (!get_option(LONGTAIL_KEY . "search_mode")) update_option(LONGTAIL_KEY . "search_mode", "content");
-    if (!get_option(LONGTAIL_KEY . "tag_mode")) update_option(LONGTAIL_KEY . "tag_mode", "content");
-  }
-  if (!get_option(LONGTAIL_KEY . "home_mode")) update_option(LONGTAIL_KEY . "home_mode", "content");
-  if (!get_option(LONGTAIL_KEY . "skins_expanded")) {
-    $handler = opendir(LongTailFramework::getSkinPath());
-    while ($file = readdir($handler)) {
-      if ($file != "." && $file != ".." && (strstr($file, ".zip"))) {
-        if (skin_unzip(LongTailFramework::getSkinPath() . $file)) {
-          $info = preg_split("/\./", $file);
-          $src = LongTailFramework::getSkinPath() . $file;
-          $dest = LongTailFramework::getSkinPath() . $info[0] . "/$file";
-          copy($src, $dest);
-        }
-      }
-    }
-    update_option(LONGTAIL_KEY . "skins_expanded", true);
-  }
+}
+
+function jwplayer_deactivation() {
+  delete_option(LONGTAIL_KEY . "uninstalled");
 }
 
 function jwplayer_init() {
@@ -141,6 +117,43 @@ function jwplayer_init() {
     } else {
       wp_enqueue_script("jw-embedder", LongTailFramework::getEmbedderURL());
     }
+  }
+  if (!get_option(LONGTAIL_KEY . "uninstalled")) jwplayer_upgrade();
+}
+
+function jwplayer_upgrade() {
+  $version = get_option(LONGTAIL_KEY . "plugin_version");
+  if (!$version || version_compare($version, '1.5.1', '<')) {
+    if (!get_option(LONGTAIL_KEY . "default")) update_option(LONGTAIL_KEY . "default", "Out-of-the-Box");
+    if (!get_option(LONGTAIL_KEY . "player_location_enable")) update_option(LONGTAIL_KEY . "player_location_enable", 0);
+    if (!get_option(LONGTAIL_KEY . "image_duration")) update_option(LONGTAIL_KEY . "image_duration", true);
+    if (!get_option(LONGTAIL_KEY . "image_insert")) update_option(LONGTAIL_KEY . "image_insert", true);
+    if (!get_option(LONGTAIL_KEY . "facebook")) update_option(LONGTAIL_KEY . "facebook", true);
+    if (get_option(LONGTAIL_KEY . "show_archive")) {
+      if (!get_option(LONGTAIL_KEY . "category_mode")) update_option(LONGTAIL_KEY . "category_mode", "excerpt");
+      if (!get_option(LONGTAIL_KEY . "search_mode")) update_option(LONGTAIL_KEY . "search_mode", "excerpt");
+      if (!get_option(LONGTAIL_KEY . "tag_mode")) update_option(LONGTAIL_KEY . "tag_mode", "excerpt");
+    } else {
+      if (!get_option(LONGTAIL_KEY . "category_mode")) update_option(LONGTAIL_KEY . "category_mode", "content");
+      if (!get_option(LONGTAIL_KEY . "search_mode")) update_option(LONGTAIL_KEY . "search_mode", "content");
+      if (!get_option(LONGTAIL_KEY . "tag_mode")) update_option(LONGTAIL_KEY . "tag_mode", "content");
+    }
+    if (!get_option(LONGTAIL_KEY . "home_mode")) update_option(LONGTAIL_KEY . "home_mode", "content");
+    if (!get_option(LONGTAIL_KEY . "skins_expanded")) {
+      $handler = opendir(LongTailFramework::getSkinPath());
+      while ($file = readdir($handler)) {
+        if ($file != "." && $file != ".." && (strstr($file, ".zip"))) {
+          if (skin_unzip(LongTailFramework::getSkinPath() . $file)) {
+            $info = preg_split("/\./", $file);
+            $src = LongTailFramework::getSkinPath() . $file;
+            $dest = LongTailFramework::getSkinPath() . $info[0] . "/$file";
+            copy($src, $dest);
+          }
+        }
+      }
+      update_option(LONGTAIL_KEY . "skins_expanded", true);
+    }
+    update_option(LONGTAIL_KEY . "plugin_version", "1.5.1");
   }
 }
 

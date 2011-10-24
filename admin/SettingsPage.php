@@ -5,29 +5,18 @@ if(preg_match('#' . basename(__FILE__) . '#', $_SERVER['PHP_SELF'])) { die('You 
 if (isset($_POST['Uninstall'])) {
   uninstall();
 } else {
-  if (isset($_POST["category_config"])) {
-    update_option(LONGTAIL_KEY . "category_mode", $_POST["category_config"]);
-    update_option(LONGTAIL_KEY . "search_mode", $_POST["search_config"]);
-    update_option(LONGTAIL_KEY . "tag_mode", $_POST["tag_config"]);
-    update_option(LONGTAIL_KEY . "home_mode", $_POST["home_config"]);
-  }
-  if (isset($_POST["player_location_enable"])) {
-    update_option(LONGTAIL_KEY . "player_location_enable", $_POST["player_location_enable"]);
-  }
-  if (isset($_POST["player_location"])) {
-    update_option(LONGTAIL_KEY . "player_location", $_POST["player_location"]);
-  }
-  if (isset($_POST["image_duration"])) {
-    update_option(LONGTAIL_KEY . "image_duration", $_POST["image_duration"]);
-  }
-  if (isset($_POST["image_insert"])) {
-    update_option(LONGTAIL_KEY . "image_insert", $_POST["image_insert"]);
-  }
-  if (isset($_POST["facebook"])) {
-    update_option(LONGTAIL_KEY . "facebook", $_POST["facebook"]);
-  }
-}
+  if (isset($_POST["category_config"])) update_option(LONGTAIL_KEY . "category_mode", $_POST["category_config"]);
+  if (isset($_POST["search_config"])) update_option(LONGTAIL_KEY . "search_mode", $_POST["search_config"]);
+  if (isset($_POST["tag_config"])) update_option(LONGTAIL_KEY . "tag_mode", $_POST["tag_config"]);
+  if (isset($_POST["home_config"])) update_option(LONGTAIL_KEY . "home_mode", $_POST["home_config"]);
 
+  if (isset($_POST["player_location_enable"])) update_option(LONGTAIL_KEY . "player_location_enable", $_POST["player_location_enable"]);
+  if (isset($_POST["player_location"])) update_option(LONGTAIL_KEY . "player_location", $_POST["player_location"]);
+
+  if (isset($_POST["image_duration"])) update_option(LONGTAIL_KEY . "image_duration", $_POST["image_duration"]);
+  if (isset($_POST["image_insert"])) update_option(LONGTAIL_KEY . "image_insert", $_POST["image_insert"]);
+  if (isset($_POST["facebook"])) update_option(LONGTAIL_KEY . "facebook", $_POST["facebook"]);
+}
 
 function uninstall() {
   global $wpdb;
@@ -40,6 +29,7 @@ function uninstall() {
   $wpdb->query($option_query);
   $wpdb->query($post_query);
 
+  update_option(LONGTAIL_KEY . "uninstalled", true);
   feedback_message(__('Tables and settings deleted, deactivate the plugin now'));
 }
 

@@ -63,6 +63,12 @@ You can perform the automatic update, download the plugin and upload, or FTP the
 
 == Changelog ==
 
+= 1.5.1 =
+
+ * BUG: The plugin should now upgrade properly and the shortcode should behave as expected on your site.
+ * BUG: The shortcode settings should now save properly.
+ * BUG: Playlist videos without a duration set should no longer incorrectly default to 10 seconds.
+
 = 1.5.0 =
 
  * FEATURE: HTML 5 Skin support! When you update the plugin will automatically unzip the included skins.  (This may take a minute or two).
