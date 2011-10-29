@@ -127,7 +127,12 @@ class AdminContext {
         if ($new_name == "skin") {
           if ($new_val != "[Default]") {
             $skins = LongTailFramework::getSkins();
-            $new_val = LongTailFramework::getSkinURL() . "$val/$val." . $skins[$val];
+            $skin_new = LongTailFramework::getSkinPath() . "$val/$val." . $skins[$val];
+            if (file_exists($skin_new)) {
+              $new_val = LongTailFramework::getSkinURL() . "$val/$val." . $skins[$val];
+            } else {
+              $new_val = LongTailFramework::getSkinURL() . "$val." . $skins[$val];
+            }
             $data[$new_name] = $new_val;
           } else {
             unset($data[$new_name]);
