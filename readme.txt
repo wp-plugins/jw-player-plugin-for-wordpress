@@ -3,7 +3,7 @@ Contributors: LongTail Video Inc.
 Tags: JW Player, Video, Flash, LongTail Video, RTMP, Playlists, Audio, Image, HTML5, iPad, iPhone, iPod
 Requires at least: 2.8.6
 Tested up to: 3.2.1
-Stable tag: 1.5.1
+Stable tag: 1.5.2
 
 This video plugin is provided by LongTail Video Inc.  It enables you to embed Flash and HTML5 video using the JW Player on your WordPress website.
 
@@ -62,6 +62,11 @@ You can perform the automatic update, download the plugin and upload, or FTP the
 1. Save your posts.
 
 == Changelog ==
+
+= 1.5.2 =
+
+* BUG: newtube skin is now all lower case.  You should no longer see a warning message during plugin installation.
+* BUG: Added a fallback to use the old skin location if the new skin directory structure wasn't updated.
 
 = 1.5.1 =
 
