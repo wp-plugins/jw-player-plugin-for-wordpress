@@ -108,16 +108,11 @@ function jwplayer_deactivation() {
 }
 
 function jwplayer_init() {
-  $use_ssl = get_option(LONGTAIL_KEY . "use_ssl");
-  wp_deregister_script("swfobject");
-  wp_register_script("swfobject", 'http' . (is_ssl() && $use_ssl ? 's' : '') . '://ajax.googleapis.com/ajax/libs/swfobject/2.2/swfobject.js',NULL,NULL);
-  wp_enqueue_script("swfobject");
-  // Add JW Embedder for 5.3 players or higher.  Otherwise add swfobject.js from Google CDN.
-  if (version_compare(get_option(LONGTAIL_KEY . "version"), "5.3", ">=")) {
+  if (file_exists(LongTailFramework::getEmbedderPath())) {
     if (get_option(LONGTAIL_KEY . "player_location_enable")) {
-      wp_enqueue_script("jw-embedder", get_option(LONGTAIL_KEY . "player_location") . "jwplayer.js");
+      wp_register_script("jw-embedder", get_option(LONGTAIL_KEY . "player_location") . "jwplayer.js", array(), false, true);
     } else {
-      wp_enqueue_script("jw-embedder", LongTailFramework::getEmbedderURL());
+      wp_register_script("jw-embedder", LongTailFramework::getEmbedderURL(), array(), false, true);
     }
   }
   if (!get_option(LONGTAIL_KEY . "uninstalled")) jwplayer_upgrade();

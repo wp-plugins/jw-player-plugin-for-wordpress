@@ -204,6 +204,7 @@ function embed_demo_player($download = false) {
     "image" => "http://content.longtailvideo.com/videos/bunny.jpg",
     "id" => "jwplayer-1"
   );
+  wp_print_scripts('swfobject');
   $swf = LongTailFramework::generateSWFObject($atts, false); ?>
   <script type="text/javascript">
     var player, t;

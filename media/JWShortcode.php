@@ -225,6 +225,7 @@ function resolve_media_id(&$atts) {
 }
 
 function generate_embed_code($config, $atts) {
+  global $add_embedder;
   $version = version_compare(get_option(LONGTAIL_KEY . "version"), "5.3", ">=");
   $embedder = file_exists(LongTailFramework::getEmbedderPath());
   if (!$embedder && !$version && preg_match("/iP(od|hone|ad)/i", $_SERVER["HTTP_USER_AGENT"])) {
@@ -245,6 +246,7 @@ function generate_embed_code($config, $atts) {
     } else {
       $swf = LongTailFramework::generateSWFObject($atts, $version && $embedder);
     }
+    insert_embedder($embedder);
     return $swf->generateEmbedScript();
   }
 }
@@ -327,6 +329,14 @@ function generateModeString(&$atts, $id) {
     }
     $mode .= "]";
     $atts["modes"] = $mode;
+  }
+}
+
+function insert_embedder($embedderExists) {
+  if ($embedderExists) {
+    wp_print_scripts('jw-embedder');
+  } else {
+    wp_print_scripts('swfobject');
   }
 }
 
