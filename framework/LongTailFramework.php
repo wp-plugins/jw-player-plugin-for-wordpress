@@ -371,12 +371,14 @@ class LongTailFramework
     return $skins;
   }
 
-  /**
-   * Get the necessary embed parameters for embedding a flash object.  For now we assume
-   * the flash object will be as big as the dimensions of the player.
-   * @param string @config The Player configuration that is going to be embedded
-   * @return array The array with the flash object dimensions
-   */
+    /**
+     * Get the necessary embed parameters for embedding a flash object.  For now we assume
+     * the flash object will be as big as the dimensions of the player.
+
+     *
+     * @internal param $string @config The Player configuration that is going to be embedded
+     * @return array The array with the flash object dimensions
+     */
   public static function getEmbedParameters() {
     //If no config has been passed, use the player defaults.
     if (LongTailFramework::$current_config == "") {

@@ -61,7 +61,8 @@ if (isset($uploads["error"]) && !empty($uploads["error"])) {
   add_action('admin_notices', create_function('', 'echo \'<div id="message" class="fade updated"><p><strong>There was a problem completing activation of the JW Player Plugin for WordPress.  Please note that the JWPlayer Plugin for WordPress requires that the WordPress uploads directory exists and is writable.  ' . JW_FILE_PERMISSIONS . '</strong></p></div>\';'));
   return;
 }
-$isHttps = is_ssl();
+$use_ssl = get_option(LONGTAIL_KEY . "use_ssl");
+$isHttps = is_ssl() && $use_ssl;
 $pluginURL = $isHttps ? str_replace("http://", "https://", WP_PLUGIN_URL) : WP_PLUGIN_URL;
 $uploadsURL = $isHttps ? str_replace("http://", "https://", $uploads["baseurl"]) : $uploads["baseurl"];
 define("JWPLAYER_PLUGIN_DIR", WP_PLUGIN_DIR . "/" . plugin_basename(dirname(__FILE__)));
@@ -107,8 +108,9 @@ function jwplayer_deactivation() {
 }
 
 function jwplayer_init() {
+  $use_ssl = get_option(LONGTAIL_KEY . "use_ssl");
   wp_deregister_script("swfobject");
-  wp_register_script("swfobject", 'http' . (is_ssl() ? 's' : '') . '://ajax.googleapis.com/ajax/libs/swfobject/2.2/swfobject.js',NULL,NULL);
+  wp_register_script("swfobject", 'http' . (is_ssl() && $use_ssl ? 's' : '') . '://ajax.googleapis.com/ajax/libs/swfobject/2.2/swfobject.js',NULL,NULL);
   wp_enqueue_script("swfobject");
   // Add JW Embedder for 5.3 players or higher.  Otherwise add swfobject.js from Google CDN.
   if (version_compare(get_option(LONGTAIL_KEY . "version"), "5.3", ">=")) {
@@ -154,6 +156,10 @@ function jwplayer_upgrade() {
       update_option(LONGTAIL_KEY . "skins_expanded", true);
     }
     update_option(LONGTAIL_KEY . "plugin_version", "1.5.1");
+  }
+  if (!$version || version_compare($version, '1.5.3', '<')) {
+    update_option(LONGTAIL_KEY . "use_ssl", true);
+    update_option(LONGTAIL_KEY . "plugin_version", "1.5.3");
   }
 }
 

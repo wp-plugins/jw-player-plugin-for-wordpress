@@ -16,6 +16,8 @@ if (isset($_POST['Uninstall'])) {
   if (isset($_POST["image_duration"])) update_option(LONGTAIL_KEY . "image_duration", $_POST["image_duration"]);
   if (isset($_POST["image_insert"])) update_option(LONGTAIL_KEY . "image_insert", $_POST["image_insert"]);
   if (isset($_POST["facebook"])) update_option(LONGTAIL_KEY . "facebook", $_POST["facebook"]);
+
+  if (isset($_POST["ssl"])) update_option(LONGTAIL_KEY . "use_ssl", $_POST["ssl"]);
 }
 
 function uninstall() {
@@ -171,6 +173,29 @@ function feedback_message ($message, $timeout = 0) { ?>
                     <label for="facebook_no">No</label>
                     <input id="facebook_no" type="radio" value="0" name="facebook" onclick="form.submit();" <?php checked(0, get_option(LONGTAIL_KEY . "facebook")); ?> />
                     <span class="description">Whether or not Facebook Open Graph information should be inserted into the page for sharing on Facebook.</span>
+                  </td>
+                </tr>
+              </table>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div id="poststuff">
+      <div id="post-body">
+        <div id="post-body-content">
+          <div class="stuffbox">
+            <h3 class="hndle"><span>Site Settings</span></h3>
+            <div class="inside" style="margin: 15px;">
+              <table class="form-table">
+                <tr valign="top">
+                  <th>Use SSL when loading the player:</th>
+                  <td>
+                    <label for="ssl_yes">Yes</label>
+                    <input id="ssl_yes" type="radio" value="1" name="ssl" onclick="form.submit();" <?php checked(true, get_option(LONGTAIL_KEY . "use_ssl")); ?> />
+                    <label for="ssl_no">No</label>
+                    <input id="ssl_no" type="radio" value="0" name="ssl" onclick="form.submit();" <?php checked(0, get_option(LONGTAIL_KEY . "use_ssl")); ?> />
+                    <span class="description">Controls whether the plugin will load the player, configs and skins using https if your site is https.  <strong>Note:</strong>You will need to resave your players after making a change.</span>
                   </td>
                 </tr>
               </table>
