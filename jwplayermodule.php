@@ -51,7 +51,6 @@ include_once (dirname (__FILE__) . "/admin/AdminContext.php");
 include_once (dirname (__FILE__) . "/media/JWMediaFunctions.php");
 include_once (dirname (__FILE__) . "/media/JWShortcode.php");
 
-register_activation_hook(__FILE__, "jwplayer_activation");
 register_deactivation_hook(__FILE__, "jwplayer_deactivation");
 add_action('init', 'jwplayer_init');
 
@@ -70,14 +69,11 @@ define("JWPLAYER_PLUGIN_URL", $pluginURL . "/" . plugin_basename(dirname(__FILE_
 define("JWPLAYER_FILES_DIR", $uploads["basedir"] . "/" . plugin_basename(dirname(__FILE__)));
 define("JWPLAYER_FILES_URL", $uploadsURL . "/" . plugin_basename(dirname(__FILE__)));
 
-if (!@is_dir(JWPLAYER_FILES_DIR)) {
-  add_action('admin_notices', create_function('', 'echo \'<div id="message" class="fade updated"><p><strong>' . __('Activation of the JW Player Plugin for WordPress could not complete successfully.  The following directories could not be created automatically: </p><ul><li>- ' . JWPLAYER_FILES_DIR . '</li><li>- ' . JWPLAYER_FILES_DIR . '/configs</li><li>- ' . JWPLAYER_FILES_DIR . '/player</li></ul><p>Please ensure these directories are writable.  ' . JW_FILE_PERMISSIONS) . '</strong></p></div>\';'));
-} else if (!file_exists(LongTailFramework::getPlayerPath())) {
-  // Error if the player doesn't exist
-  add_action('admin_notices', "jwplayer_install_notices");
+function jwplayer_deactivation() {
+  delete_option(LONGTAIL_KEY . "uninstalled");
 }
 
-function jwplayer_activation() {
+function jwplayer_init() {
   clearstatcache();
   if (!@is_dir(JWPLAYER_FILES_DIR)) {
     if (!@mkdir(JWPLAYER_FILES_DIR, 0755, true)) {
@@ -101,13 +97,12 @@ function jwplayer_activation() {
       }
     }
   }
-}
-
-function jwplayer_deactivation() {
-  delete_option(LONGTAIL_KEY . "uninstalled");
-}
-
-function jwplayer_init() {
+  if (!@is_dir(JWPLAYER_FILES_DIR)) {
+    add_action('admin_notices', create_function('', 'echo \'<div id="message" class="fade updated"><p><strong>' . __('Activation of the JW Player Plugin for WordPress could not complete successfully.  The following directories could not be created automatically: </p><ul><li>- ' . JWPLAYER_FILES_DIR . '</li><li>- ' . JWPLAYER_FILES_DIR . '/configs</li><li>- ' . JWPLAYER_FILES_DIR . '/player</li></ul><p>Please ensure these directories are writable.  ' . JW_FILE_PERMISSIONS) . '</strong></p></div>\';'));
+  } else if (!file_exists(LongTailFramework::getPlayerPath())) {
+    // Error if the player doesn't exist
+    add_action('admin_notices', "jwplayer_install_notices");
+  }
   if (file_exists(LongTailFramework::getEmbedderPath())) {
     if (get_option(LONGTAIL_KEY . "player_location_enable")) {
       wp_register_script("jw-embedder", get_option(LONGTAIL_KEY . "player_location") . "jwplayer.js", array(), false, true);
