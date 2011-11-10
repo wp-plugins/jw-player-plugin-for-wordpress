@@ -90,7 +90,6 @@ function jwplayer_tag_parser($matches) {
     return substr($matches[0], 1, -1);
   }
   $param_regex = '/([\w.]+)\s*=\s*"([^"]*)"(?:\s|$)|([\w.]+)\s*=\s*\'([^\']*)\'(?:\s|$)|([\w.]+)\s*=\s*([^\s\'"]+)(?:\s|$)|"([^"]*)"(?:\s|$)|(\S+)(?:\s|$)/';
-  $players = array();
   $text = preg_replace("/[\x{00a0}\x{200b}]+/u", " ", $matches[3]);
   $atts = array();
   if (preg_match_all($param_regex, $text, $match, PREG_SET_ORDER)) {
@@ -126,15 +125,12 @@ function jwplayer_tag_stripper($matches) {
 
 /**
  * The handler for replacing the [jwplayer] shortcode.
- * @global undefined $wpdb Reference to the WordPress database.
  * @param array $atts The parsed attributes.
  * @return string The script to replace the tag.
  */
 function jwplayer_handler($atts) {
   $version = version_compare(get_option(LONGTAIL_KEY . "version"), "5.3", ">=");
   $embedder = file_exists(LongTailFramework::getEmbedderPath());
-  $test = $atts;
-  global $wpdb;
   $config = "";
   $default = get_option(LONGTAIL_KEY . "default");
   $image = "";
@@ -148,6 +144,8 @@ function jwplayer_handler($atts) {
   LongTailFramework::setConfig($config);
   if (isset($atts["mediaid"])) {
     resolve_media_id($atts);
+  } else {
+    generateModeString($atts);
   }
   if (empty($image)) {
     $image = isset($atts["image"]) ? $atts["image"] : "";
@@ -225,7 +223,6 @@ function resolve_media_id(&$atts) {
 }
 
 function generate_embed_code($config, $atts) {
-  global $add_embedder;
   $version = version_compare(get_option(LONGTAIL_KEY . "version"), "5.3", ">=");
   $embedder = file_exists(LongTailFramework::getEmbedderPath());
   if (!$embedder && !$version && preg_match("/iP(od|hone|ad)/i", $_SERVER["HTTP_USER_AGENT"])) {
@@ -246,7 +243,9 @@ function generate_embed_code($config, $atts) {
     } else {
       $swf = LongTailFramework::generateSWFObject($atts, $version && $embedder);
     }
-    insert_embedder($embedder);
+    if (!get_option(LONGTAIL_KEY . "use_head_js")) {
+      insert_embedder($embedder);
+    }
     return $swf->generateEmbedScript();
   }
 }
@@ -296,7 +295,7 @@ function generate_playlist($playlist_id) {
   return "[" . implode(",\n", $output) . "]";
 }
 
-function generateModeString(&$atts, $id) {
+function generateModeString(&$atts, $id = null) {
   $html5 = array_key_exists("html5_file", $atts) ? $atts["html5_file"] : null;
   if (!isset($html5) || $html5 == null || $html5 == "") {
     $html5 = get_post_meta($id, LONGTAIL_KEY . "html5_file", true);

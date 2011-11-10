@@ -18,6 +18,7 @@ if (isset($_POST['Uninstall'])) {
   if (isset($_POST["facebook"])) update_option(LONGTAIL_KEY . "facebook", $_POST["facebook"]);
 
   if (isset($_POST["ssl"])) update_option(LONGTAIL_KEY . "use_ssl", $_POST["ssl"]);
+  if (isset($_POST["head_js"])) update_option(LONGTAIL_KEY . "use_head_js", $_POST["head_js"]);
 }
 
 function uninstall() {
@@ -196,6 +197,16 @@ function feedback_message ($message, $timeout = 0) { ?>
                     <label for="ssl_no">No</label>
                     <input id="ssl_no" type="radio" value="0" name="ssl" onclick="form.submit();" <?php checked(0, get_option(LONGTAIL_KEY . "use_ssl")); ?> />
                     <span class="description">Controls whether the plugin will load the player, configs and skins using https if your site is https.  <strong>Note:</strong>You will need to resave your players after making a change.</span>
+                  </td>
+                </tr>
+                <tr valign="top">
+                  <th>Load jwplayer.js/swfobject.js in page head:</th>
+                  <td>
+                    <label for="head_js_yes">Yes</label>
+                    <input id="head_js_yes" type="radio" value="1" name="head_js" onclick="form.submit();" <?php checked(true, get_option(LONGTAIL_KEY . "use_head_js")); ?> />
+                    <label for="head_js_no">No</label>
+                    <input id="head_js_no" type="radio" value="0" name="head_js" onclick="form.submit();" <?php checked(0, get_option(LONGTAIL_KEY . "use_head_js")); ?> />
+                    <span class="description">Controls whether the plugin will insert the jwplayer.js or swfobject.js files into the head of every page.  If set to No jwplayer.js or swfobject.js will only be included on pages where the jwplayer.js shortcode is used.</span>
                   </td>
                 </tr>
               </table>

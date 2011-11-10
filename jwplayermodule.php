@@ -105,10 +105,15 @@ function jwplayer_init() {
   }
   if (file_exists(LongTailFramework::getEmbedderPath())) {
     if (get_option(LONGTAIL_KEY . "player_location_enable")) {
-      wp_register_script("jw-embedder", get_option(LONGTAIL_KEY . "player_location") . "jwplayer.js", array(), false, true);
+      wp_register_script("jw-embedder", get_option(LONGTAIL_KEY . "player_location") . "jwplayer.js", array(), false);
     } else {
-      wp_register_script("jw-embedder", LongTailFramework::getEmbedderURL(), array(), false, true);
+      wp_register_script("jw-embedder", LongTailFramework::getEmbedderURL(), array(), false);
     }
+    if (get_option(LONGTAIL_KEY . "use_head_js")) {
+      wp_enqueue_script('jw-embedder');
+    }
+  } else if (get_option(LONGTAIL_KEY . "use_head_js")) {
+    wp_enqueue_script('swfobject');
   }
   if (!get_option(LONGTAIL_KEY . "uninstalled")) jwplayer_upgrade();
 }
@@ -150,6 +155,10 @@ function jwplayer_upgrade() {
   if (!$version || version_compare($version, '1.5.3', '<')) {
     update_option(LONGTAIL_KEY . "use_ssl", true);
     update_option(LONGTAIL_KEY . "plugin_version", "1.5.3");
+  }
+  if (!$version || version_compare($version, '1.5.4', '<')) {
+    update_option(LONGTAIL_KEY . "use_head_js", true);
+    update_option(LONGTAIL_KEY . "plugin_version", "1.5.4");
   }
 }
 

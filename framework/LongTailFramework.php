@@ -101,7 +101,8 @@ class LongTailFramework
     }
     $xml_handle = @fopen($xml_file, "w");
     if (!$xml_handle) return false;
-    fwrite($xml_handle, "<config>\n" . $xml_string . "</config>");
+    $configStr = "<?xml version='1.0' encoding='UTF-8' ?>\n<config>\n" . $xml_string . "</config>";
+    fwrite($xml_handle, $configStr);
     fclose($xml_handle);
     chmod($xml_file, 0755);
     return true;
@@ -209,7 +210,7 @@ class LongTailFramework
   }
 
   /**
-   * Get the complete path to the JW Embbeder javascript file.
+   * Get the complete path to the JW Embedder javascript file.
    * @return string The path to the JW Embedder.
    */
   public static function getEmbedderPath() {
@@ -217,7 +218,7 @@ class LongTailFramework
   }
 
   /**
-   * Get the complete path to the primary (and execpted) player location.
+   * Get the complete path to the primary (and excepted) player location.
    * @return string The path to the player.
    */
   public static function getPrimaryPlayerPath() {
@@ -295,7 +296,9 @@ class LongTailFramework
 
   /**
    * For the given Player configuration, returns the LTAS details.
-   * @param string $config The name of the Player configuration
+
+   *
+   * @internal param string $config The name of the Player configuration
    * @return array An array containing the enabled state and channel code.
    */
   public static function getLTASConfig() {
