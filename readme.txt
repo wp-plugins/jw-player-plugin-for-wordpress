@@ -63,6 +63,12 @@ You can perform the automatic update, download the plugin and upload, or FTP the
 
 == Changelog ==
 
+= 1.5.4 =
+
+* ENHANCEMENT: jwplayer.js and swfobject.js can now be configured to load on every page or only when there's a jwplayer shortcode.
+* BUG: Custom player config xml files are now saved with the XML namespace.
+* BUG: html5_file should now behave correctly in the shortcode.
+
 = 1.5.3 =
 
 * ENHANCEMENT: jwplayer.js and swfobject.js now only loaded if a player is embedded on the page
