@@ -273,6 +273,8 @@ function generate_playlist($playlist_id) {
       }
       $p_item[] = "\"title\": " . json_encode($playlist_item->post_title);
       $p_item[] = "\"creator\": \"" . esc_attr($creator) . "\"";
+      $p_item[] = "\"author\": \"" . esc_attr($creator) . "\"";
+      $p_item[] = "\"date\": \"" . esc_attr($playlist_item->post_date) . "\"";
       if (!empty($streamer)) {
         $p_item[] = "\"streamer\": \"" . esc_attr($streamer) . "\"";
         $p_item[] = "\"file\": \"" . esc_attr($file) . "\"";

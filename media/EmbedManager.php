@@ -97,6 +97,8 @@ function media_jwplayer_insert_form($errors) {
       playlistPreloaded.each(function(){preparePlaylistItem({id:this.id.replace(/[^0-9]/g, '')},'');});
       updatePlaylistForm();
     }
+    preloaded.removeClass("open");
+    $(".startclosed").hide();
     $('#playlist-items').sortable( {
 			items: 'div.playlist-item',
 			placeholder: 'sorthelper',
@@ -357,7 +359,7 @@ function get_playlist_items($post_id, $errors, $current_playlist) {
 function get_jw_playlist_item($attachment_id, $args, $current_playlist, $prefix = "") {
 	global $redir_tab, $p_items;
 
-	if ( ( $attachment_id = intval($attachment_id) ) && $thumb_url = get_attachment_icon_src( $attachment_id ) )
+	if ( ( $attachment_id = intval($attachment_id) ) && $thumb_url = wp_get_attachment_image_src( $attachment_id, "thumbnail", true ) )
 		$thumb_url = $thumb_url[0];
 	else
 		return false;

@@ -1,13 +1,9 @@
-#media-upload #playlist-items {
-  border-bottom: medium none;
-  border-style: solid solid none;
-  border-width: 1px 1px medium;
-}
-
 #media-upload .playlist-item {
-  border-bottom-style: solid;
-  border-bottom-width: 1px;
+  border-style: solid;
+  border-width: 1px;
   min-height: 36px;
+  position: relative;
+  margin-top: -1px;
   width: 100%;
 }
 
@@ -24,6 +20,12 @@
   margin: 2px;
   max-height: 32px;
   max-width: 40px;
+}
+
+.playlist-item .filename {
+  line-height: 36px;
+  overflow: hidden;
+  padding: 0 10px;
 }
 
 #media-upload .ui-sortable .playlist-item {

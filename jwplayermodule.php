@@ -26,7 +26,8 @@ Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 global $wp_version;
 
 define("JW_PLAYER_GA_VARS", "?utm_source=WordPress&utm_medium=Product&utm_campaign=WordPress");
-define("JW_FILE_PERMISSIONS", 'For tips on how to make sure this folder is writable please refer to <a href="http://codex.wordpress.org/Changing_File_Permissions">http://codex.wordpress.org/Changing_File_Permissions</a>.');
+define("JW_FILE_PERMISSIONS", 'For tips on how to make sure this folder is writable please refer to ' .
+  '<a href="http://codex.wordpress.org/Changing_File_Permissions">http://codex.wordpress.org/Changing_File_Permissions</a>.');
 
 // Check for WP2.7 installation
 if (!defined ('IS_WP27')) {
@@ -35,13 +36,15 @@ if (!defined ('IS_WP27')) {
 
 // This works only in WP2.7 or higher
 if (IS_WP27 == FALSE) {
-  add_action('admin_notices', create_function('', 'echo \'<div id="message" class="error fade"><p><strong>' . __('Sorry, the JWPlayer Plugin for WordPress works only under WordPress 2.7 or higher.') . '</strong></p></div>\';'));
+  add_action('admin_notices', create_function('', 'echo \'<div id="message" class="error fade"><p><strong>' .
+    __('Sorry, the JWPlayer Plugin for WordPress works only under WordPress 2.7 or higher.') . '</strong></p></div>\';'));
   return;
 }
 
 // The plugin is only compatible with PHP 5.0 or higher
 if (version_compare(phpversion(), "5.0", '<')) {
-  add_action('admin_notices', create_function('', 'echo \'<div id="message" class="error fade"><p><strong>' . __('Sorry, the JWPlayer Plugin for WordPress only works with PHP Version 5 or higher.') . '</strong></p></div>\';'));
+  add_action('admin_notices', create_function('', 'echo \'<div id="message" class="error fade"><p><strong>' .
+    __('Sorry, the JWPlayer Plugin for WordPress only works with PHP Version 5 or higher.') . '</strong></p></div>\';'));
   return;
 }
 
@@ -69,25 +72,37 @@ define("JWPLAYER_PLUGIN_URL", $pluginURL . "/" . plugin_basename(dirname(__FILE_
 define("JWPLAYER_FILES_DIR", $uploads["basedir"] . "/" . plugin_basename(dirname(__FILE__)));
 define("JWPLAYER_FILES_URL", $uploadsURL . "/" . plugin_basename(dirname(__FILE__)));
 
+if (is_admin()) {
+  add_action( 'plugins_loaded', create_function( '', 'global $adminContext; $adminContext = new AdminContext();' ) );
+  add_action("admin_menu", "jwplayer_plugin_menu");
+}
+
 function jwplayer_deactivation() {
   delete_option(LONGTAIL_KEY . "uninstalled");
 }
 
 function jwplayer_init() {
+  global $pluginURL;
   clearstatcache();
   if (!@is_dir(JWPLAYER_FILES_DIR)) {
     if (!@mkdir(JWPLAYER_FILES_DIR, 0755, true)) {
-      add_action('admin_notices', create_function('', 'echo \'<div id="message" class="fade updated"><p><strong>' . __('There was a problem completing activation of the plugin.  The wp-content/uploads/jw-player-plugin-for-wordpress directory could not be created.  Please ensure the WordPress uploads directory is writable.  ' . JW_FILE_PERMISSIONS) . '</strong></p></div>\';'));
+      add_action('admin_notices', create_function('', 'echo \'<div id="message" class="fade updated"><p><strong>' .
+        __('There was a problem completing activation of the plugin.  The wp-content/uploads/jw-player-plugin-for-wordpress directory could not be created.  ' .
+          'Please ensure the WordPress uploads directory is writable.  ' . JW_FILE_PERMISSIONS) . '</strong></p></div>\';'));
       return;
     }
     chmod(JWPLAYER_FILES_DIR, 0755);
     if (!@mkdir(JWPLAYER_FILES_DIR . "/player", 0755)) {
-      add_action('admin_notices', create_function('', 'echo \'<div id="message" class="fade updated"><p><strong>' . __('There was a problem completing activation of the plugin.  The wp-content/uploads/jw-player-plugin-for-wordpress/player directory could not be created.  Please ensure the WordPress uploads directory is writable.  ' . JW_FILE_PERMISSIONS) . '</strong></p></div>\';'));
+      add_action('admin_notices', create_function('', 'echo \'<div id="message" class="fade updated"><p><strong>' .
+        __('There was a problem completing activation of the plugin.  The wp-content/uploads/jw-player-plugin-for-wordpress/player directory could not be created.  ' .
+          'Please ensure the WordPress uploads directory is writable.  ' . JW_FILE_PERMISSIONS) . '</strong></p></div>\';'));
       return;
     }
     chmod(JWPLAYER_FILES_DIR . "/player", 0755);
     if (!@mkdir(JWPLAYER_FILES_DIR . "/configs", 0755)) {
-      add_action('admin_notices', create_function('', 'echo \'<div id="message" class="fade updated"><p><strong>' . __('There was a problem completing activation of the plugin.  The wp-content/uploads/jw-player-plugin-for-wordpress/configs directory could not be created.  Please ensure the WordPress uploads directory is writable.  ' . JW_FILE_PERMISSIONS) . '</strong></p></div>\';'));
+      add_action('admin_notices', create_function('', 'echo \'<div id="message" class="fade updated"><p><strong>' .
+        __('There was a problem completing activation of the plugin.  The wp-content/uploads/jw-player-plugin-for-wordpress/configs directory could not be created.  ' .
+          'Please ensure the WordPress uploads directory is writable.  ' . JW_FILE_PERMISSIONS) . '</strong></p></div>\';'));
       return;
     }
     chmod(JWPLAYER_FILES_DIR . "/configs", 0755);
@@ -98,7 +113,10 @@ function jwplayer_init() {
     }
   }
   if (!@is_dir(JWPLAYER_FILES_DIR)) {
-    add_action('admin_notices', create_function('', 'echo \'<div id="message" class="fade updated"><p><strong>' . __('Activation of the JW Player Plugin for WordPress could not complete successfully.  The following directories could not be created automatically: </p><ul><li>- ' . JWPLAYER_FILES_DIR . '</li><li>- ' . JWPLAYER_FILES_DIR . '/configs</li><li>- ' . JWPLAYER_FILES_DIR . '/player</li></ul><p>Please ensure these directories are writable.  ' . JW_FILE_PERMISSIONS) . '</strong></p></div>\';'));
+    add_action('admin_notices', create_function('', 'echo \'<div id="message" class="fade updated"><p><strong>' .
+      __('Activation of the JW Player Plugin for WordPress could not complete successfully.  The following directories could not be created automatically: </p><ul><li>- ' .
+        JWPLAYER_FILES_DIR . '</li><li>- ' . JWPLAYER_FILES_DIR . '/configs</li><li>- ' . JWPLAYER_FILES_DIR .
+        '/player</li></ul><p>Please ensure these directories are writable.  ' . JW_FILE_PERMISSIONS) . '</strong></p></div>\';'));
   } else if (!file_exists(LongTailFramework::getPlayerPath())) {
     // Error if the player doesn't exist
     add_action('admin_notices', "jwplayer_install_notices");
@@ -116,6 +134,17 @@ function jwplayer_init() {
     wp_enqueue_script('swfobject');
   }
   if (!get_option(LONGTAIL_KEY . "uninstalled")) jwplayer_upgrade();
+  add_filter("the_content", "jwplayer_tag_callback", 11);
+  add_filter("the_excerpt", "jwplayer_tag_excerpt_callback", 11);
+  add_filter("widget_text", "jwplayer_tag_widget_callback", 11);
+  // Player configuration and Media Management, limited to administrators.
+  if (is_admin()) {
+    wp_register_script('jquery-ui-jw', $pluginURL . '/' . plugin_basename(dirname(__FILE__)) . "/js/jquery.ui.jw.js");
+  }
+  // Parse the $_GET vars for callbacks
+  add_filter('query_vars', 'jwplayer_queryvars' );
+  add_action('parse_request',  'jwplayer_parse_request', 9 );
+  add_action("wp_ajax_verify_player", "verify_player");
 }
 
 function jwplayer_upgrade() {
@@ -162,23 +191,12 @@ function jwplayer_upgrade() {
   }
 }
 
-add_filter("the_content", "jwplayer_tag_callback", 11);
-add_filter("the_excerpt", "jwplayer_tag_excerpt_callback", 11);
-add_filter("widget_text", "jwplayer_tag_widget_callback", 11);
-
-// Player configuration and Media Management, limited to administrators.
-if (is_admin()) {
-  add_action( 'plugins_loaded', create_function( '', 'global $adminContext; $adminContext = new AdminContext();' ) );
-  add_action("admin_menu", "jwplayer_plugin_menu");
-  wp_register_script('jquery-ui-jw', $pluginURL . '/' . plugin_basename(dirname(__FILE__)) . "/js/jquery.ui.jw.js");
-}
-
 function jwplayer_install_notices() {
   if ($_GET["page"] == "jwplayer-update") {
     return;
   } ?>
   <div id="message" class="fade updated">
-    <form name="<?php echo LONGTAIL_KEY . "install"; ?>" method="post" action="admin.php?page=jwplayer-update">
+    <form name="<?php echo LONGTAIL_KEY . "install"; ?>" method="post" action="<?php echo "admin.php?page=jwplayer-update"; ?>">
       <p>
         <strong><?php echo "To complete installation of the JW Player Plugin for WordPress, please click install.  "; ?></strong>
         <input class="button-secondary" type="submit" name="Install" value="Install Latest JW Player" />
@@ -199,7 +217,8 @@ function jwplayer_plugin_menu() {
 // Add js for plugin tabs.
 function add_admin_js() {
   wp_enqueue_script("jquery-ui-jw");
-  echo '<link rel="stylesheet" href="'. WP_PLUGIN_URL . '/' . plugin_basename( dirname(__FILE__) ).'/' . 'css/smoothness/jquery.ui.jw.css" type="text/css" media="print, projection, screen" />'."\n";
+  echo '<link rel="stylesheet" href="'. WP_PLUGIN_URL . '/' . plugin_basename( dirname(__FILE__) ).'/' .
+    'css/smoothness/jquery.ui.jw.css" type="text/css" media="print, projection, screen" />'."\n";
 }
 
 // Entry point to the Player configuration wizard.
@@ -234,12 +253,6 @@ function jwplayer_parse_request($wp) {
     exit();
   }
 }
-
-// Parse the $_GET vars for callbacks
-add_filter('query_vars', 'jwplayer_queryvars' );
-add_action('parse_request',  'jwplayer_parse_request', 9 );
-
-add_action("wp_ajax_verify_player", "verify_player");
 
 // Handles Ajax call with submitted player version
 function verify_player() {
