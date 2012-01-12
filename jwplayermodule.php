@@ -60,7 +60,9 @@ add_action('init', 'jwplayer_init');
 //Define the plugin directory and url for file access.
 $uploads = wp_upload_dir();
 if (isset($uploads["error"]) && !empty($uploads["error"])) {
-  add_action('admin_notices', create_function('', 'echo \'<div id="message" class="fade updated"><p><strong>There was a problem completing activation of the JW Player Plugin for WordPress.  Please note that the JWPlayer Plugin for WordPress requires that the WordPress uploads directory exists and is writable.  ' . JW_FILE_PERMISSIONS . '</strong></p></div>\';'));
+  add_action('admin_notices', create_function('', 'echo \'<div id="message" class="fade updated"><p><strong>There was a ' .
+    'problem completing activation of the JW Player Plugin for WordPress.  Please note that the JWPlayer Plugin for ' .
+    'WordPress requires that the WordPress uploads directory exists and is writable.  ' . JW_FILE_PERMISSIONS . '</strong></p></div>\';'));
   return;
 }
 $use_ssl = get_option(LONGTAIL_KEY . "use_ssl");

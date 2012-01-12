@@ -1,6 +1,5 @@
 #media-upload .playlist-item {
-  border-style: solid;
-  border-width: 1px;
+  border: 1px solid;
   min-height: 36px;
   position: relative;
   margin-top: -1px;
