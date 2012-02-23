@@ -109,23 +109,28 @@ class PlayerState extends AdminState {
 
       <h2>JW Player Setup</h2>
       <p><span><?php echo JW_SETUP_DESC; ?></span><p>
-      <?php if (file_exists(LongTailFramework::getPrimaryPlayerPath())) {?>
+      <?php if (file_exists(LongTailFramework::getPrimaryPlayerPath())) { ?>
         <form name="<?php echo LONGTAIL_KEY . "upgrade_form" ?>" method="post" action="admin.php?page=jwplayer-update">
           <?php $version = get_option(LONGTAIL_KEY . "version"); ?>
           <?php $alternate = get_option(LONGTAIL_KEY . "player_location_enable"); ?>
           <?php $location = get_option(LONGTAIL_KEY . "player_location"); ?>
+          <?php $jwPlayer = file_exists(LongTailFramework::getPlayerPath()); ?>
+          <?php $jwEmbedder = file_exists(LongTailFramework::getEmbedderPath()); ?>
             <div id="poststuff">
               <div id="post-body">
                 <div id="post-body-content">
                   <div class="stuffbox">
-                    <h3 class="hndle"><span>JW Player Version</span></h3>
+                    <h3 class="hndle"><span>JW Player Status</span></h3>
                     <div class="inside" style="margin: 15px;">
                       <table>
                         <tr valign="top">
                           <td>
                             <div>
-                            <?php if (isset($version) && !empty($version) && !$alternate) { ?>
-                              <p><span><?php echo "<strong>Current Player:</strong> JW Player " . $version; ?></span></p>
+                            <?php if (!$alternate) { ?>
+                              <p>
+                                <span><strong>JW Player:</strong> <?php echo $jwPlayer ? "Installed" : "Not detected"; echo $version && $jwPlayer ? " (JW Player $version)" : ""; ?></span>
+                              </p>
+                              <p><span><strong>JW Embedder:</strong></span> <?php echo $jwEmbedder ? "Installed" : "Not detected"; ?></p>
                               <?php if (!strstr($version, "Licensed")) { ?>
                                 <p><span><?php echo JW_LICENSED; ?></span></p>
                                 <p><input class="button-secondary" type="submit" name="Update_Player" value="Click Here to Upgrade" /></p>

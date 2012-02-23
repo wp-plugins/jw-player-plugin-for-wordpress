@@ -44,13 +44,19 @@ class LongTailFramework
    * values.
    * @return array The array representation of config values.
    */
-  public static function getConfigValues() {
+  public static function getConfigValues($flat = false) {
     $target = array();
-    $target["Additional"] = array();
     if (LongTailFramework::$current_config_values != null) {
       foreach(LongTailFramework::$current_config_values as $flash_var) {
         if ($flash_var["type"] == "Additional") {
-          $target["Additional"][$flash_var->getName()] = (string) $flash_var;
+          if ($flat) {
+            $target[$flash_var->getName()] = (string) $flash_var;
+          } else {
+            if (!array_key_exists("Additional", $target)) {
+              $target["Additional"] = array();
+            }
+            $target["Additional"][$flash_var->getName()] = (string) $flash_var;
+          }
         } else {
           $target[$flash_var->getName()] = (string) $flash_var;
         }
@@ -188,7 +194,7 @@ class LongTailFramework
 
   /**
    * Checks if there are any custom Player configs available.
-   * @return boolean If there are any configs or not. 
+   * @return boolean If there are any configs or not.
    */
   public static function configsAvailable() {
     $configs = LongTailFramework::getConfigs();

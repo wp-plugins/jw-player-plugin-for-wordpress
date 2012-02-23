@@ -12,6 +12,7 @@ if (isset($_POST['Uninstall'])) {
 
   if (isset($_POST["player_location_enable"])) update_option(LONGTAIL_KEY . "player_location_enable", $_POST["player_location_enable"]);
   if (isset($_POST["player_location"])) update_option(LONGTAIL_KEY . "player_location", $_POST["player_location"]);
+  if (isset($_POST["player_mode"])) update_option(LONGTAIL_KEY . "player_mode", $_POST["player_mode"]);
 
   if (isset($_POST["image_duration"])) update_option(LONGTAIL_KEY . "image_duration", $_POST["image_duration"]);
   if (isset($_POST["image_insert"])) update_option(LONGTAIL_KEY . "image_insert", $_POST["image_insert"]);
@@ -131,6 +132,16 @@ function feedback_message ($message, $timeout = 0) { ?>
                   <td>
                     <input type="text" id="player_location" name="player_location" value="<?php echo get_option(LONGTAIL_KEY . "player_location"); ?>" onblur="form.submit();" style="width: 300px;"/>
                     <span class="description">Configure the location the player.swf and jwplayer.js files should be loaded from.</span>
+                  </td>
+                </tr>
+                <tr valign="top">
+                  <th>Select Primary Mode:</th>
+                  <td>
+                    <label for="player_mode_yes">Flash</label>
+                    <input id="player_mode_yes" type="radio" value="flash" name="player_mode" onclick="form.submit();" <?php checked("flash", get_option(LONGTAIL_KEY . "player_mode")); ?> />
+                    <label for="player_mode_no">HTML5</label>
+                    <input id="player_mode_no" type="radio" value="html5" name="player_mode" onclick="form.submit();" <?php checked("html5", get_option(LONGTAIL_KEY . "player_mode")); ?> />
+                    <span class="description">Select which mode the player will default to (Flash or HTML5).</span>
                   </td>
                 </tr>
               </table>

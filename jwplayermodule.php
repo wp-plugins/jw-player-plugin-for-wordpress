@@ -167,20 +167,6 @@ function jwplayer_upgrade() {
       if (!get_option(LONGTAIL_KEY . "tag_mode")) update_option(LONGTAIL_KEY . "tag_mode", "content");
     }
     if (!get_option(LONGTAIL_KEY . "home_mode")) update_option(LONGTAIL_KEY . "home_mode", "content");
-    if (!get_option(LONGTAIL_KEY . "skins_expanded")) {
-      $handler = opendir(LongTailFramework::getSkinPath());
-      while ($file = readdir($handler)) {
-        if ($file != "." && $file != ".." && (strstr($file, ".zip"))) {
-          if (skin_unzip(LongTailFramework::getSkinPath() . $file)) {
-            $info = preg_split("/\./", $file);
-            $src = LongTailFramework::getSkinPath() . $file;
-            $dest = LongTailFramework::getSkinPath() . $info[0] . "/$file";
-            copy($src, $dest);
-          }
-        }
-      }
-      update_option(LONGTAIL_KEY . "skins_expanded", true);
-    }
     update_option(LONGTAIL_KEY . "plugin_version", "1.5.1");
   }
   if (!$version || version_compare($version, '1.5.3', '<')) {
@@ -190,6 +176,10 @@ function jwplayer_upgrade() {
   if (!$version || version_compare($version, '1.5.4', '<')) {
     update_option(LONGTAIL_KEY . "use_head_js", true);
     update_option(LONGTAIL_KEY . "plugin_version", "1.5.4");
+  }
+  if (!$version || version_compare($version, '1.5.6', '<')) {
+    update_option(LONGTAIL_KEY . "player_mode", "flash");
+    update_option(LONGTAIL_KEY . "plugin_version", "1.5.6");
   }
 }
 

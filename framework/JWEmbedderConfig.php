@@ -84,29 +84,28 @@ class JWEmbedderConfig implements EmbedConfigInterface {
             "</div>\n";
   }
 
-  public function generateEmbedScript() {
+  private function generateSetup() {
     $events = array();
-    $script = $this->generateDiv();
-    $script .= "<script type=\"text/javascript\">";
-    $script .= "jwplayer(\"" . $this->id . "\").setup({";
-    $script .= "flashplayer: \"" . $this->path . "\", ";
-    $script .= "width: \"" . $this->dim["width"] . "\", ";
-    $script .= "height: \"" . $this->dim["height"] . "\", ";
-    $script .= "controlbar: \"" . $this->dim["controlbar"] . "\", ";
+    $config = array(
+      "flashplayer" => $this->path,
+      "width" => $this->dim["width"],
+      "height" => $this->dim["height"],
+      "controlbar" => $this->dim["controlbar"]
+    );
     foreach ($this->fvars as $key => $value) {
       if (isset (self::$events[$key])) {
-        $events[] = "\"" . $key . "\"" . ": " . urldecode(html_entity_decode($value));
-      } else if ($key == "playlist") {
-        $script .= "playlist: " . $value . ", "; 
-      } else if ($key == "modes") {
-        $script .= "modes: " . $value . ", "; 
+        $events[$key] = urldecode(html_entity_decode($value));
       } else {
-        $script .= "\"" . $key . "\"" . ": \"" . urldecode(html_entity_decode($value)) . "\", ";
+        $config[$key] = $value;
       }
     }
-    if ($events != "") $script .= "events: {" . implode(", ", $events) . "}, ";
-    $script .= "config: \"" . $this->conf . "\"";
-    $script .= "});</script>";
+    $config["events"] = $events;
+    return json_encode($config);
+  }
+
+  public function generateEmbedScript() {
+    $script = $this->generateDiv();
+    $script .= "<script type='text/javascript'>jwplayer('" . $this->id . "').setup(" . $this->generateSetup() . ")</script>";
     return $script;
   }
 

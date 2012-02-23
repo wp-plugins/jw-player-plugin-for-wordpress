@@ -129,7 +129,6 @@ function jwplayer_tag_stripper($matches) {
  * @return string The script to replace the tag.
  */
 function jwplayer_handler($atts) {
-  $version = version_compare(get_option(LONGTAIL_KEY . "version"), "5.3", ">=");
   $embedder = file_exists(LongTailFramework::getEmbedderPath());
   $config = "";
   $default = get_option(LONGTAIL_KEY . "default");
@@ -144,19 +143,22 @@ function jwplayer_handler($atts) {
   LongTailFramework::setConfig($config);
   if (isset($atts["mediaid"])) {
     resolve_media_id($atts);
-  } else {
-    generateModeString($atts);
+  }
+  if (!array_key_exists("file", $atts)) {
+    $atts["file"] = isset($atts["html5_file"]) ? $atts["html5_file"] : "";
   }
   if (empty($image)) {
     $image = isset($atts["image"]) ? $atts["image"] : "";
   }
+  if ($embedder) $atts["modes"] = create_mode_block($atts);
   if (isset($atts["playlistid"])) {
     $id = $atts["playlistid"];
+    $playlist = "";
     if (is_numeric($id)) {
       $playlist = get_post($id);
     }
     if (($playlist)) {
-      if ($version && $embedder) {
+      if ($embedder) {
         $atts["playlist"] = generate_playlist($id);
       } else {
         $atts["file"] = urlencode(get_option('siteurl') . '/' . 'index.php?xspf=true&id=' . $id);
@@ -166,11 +168,11 @@ function jwplayer_handler($atts) {
     }
     unset($atts["playlistid"]);
   }
-  $loaded_config = LongTailFramework::getConfigValues();
-  if (isset($loaded_config["wmode"]) && !isset($atts["wmode"])) $atts["wmode"] = $loaded_config["wmode"];
-  if (isset($loaded_config["skin"]) && !isset($atts["skin"])) $atts["skin"] = $loaded_config["skin"];
-  if (isset($loaded_config["playlist.position"]) && !isset($atts["playlist.position"])) $atts["playlist.position"] = $loaded_config["playlist.position"];
-  if (isset($loaded_config["playlistsize"]) && !isset($atts["playlistsize"])) $atts["playlistsize"] = $loaded_config["playlistsize"];
+  $loaded_config = LongTailFramework::getConfigValues(true);
+  $atts = array_merge($loaded_config, $atts);
+  unset($atts["config"]);
+  unset($atts["html5_file"]);
+  unset($atts["download_file"]);
   if (is_feed()) {
     $out = '';
     // remove media file from RSS feed
@@ -181,8 +183,7 @@ function jwplayer_handler($atts) {
     }
     return $out;
   }
-
-  return generate_embed_code($config, $atts);
+  return generate_embed_code($atts);
 }
 
 function resolve_media_id(&$atts) {
@@ -212,17 +213,24 @@ function resolve_media_id(&$atts) {
       $atts["controlbar"] = "bottom";
     }
   }
-  $rtmp = get_post_meta($id, LONGTAIL_KEY . "rtmp");
-  if (isset($rtmp) && $rtmp) {
-    $atts["streamer"] = get_post_meta($id, LONGTAIL_KEY . "streamer", true);
-    $atts["file"] = get_post_meta($id, LONGTAIL_KEY . "file", true);
-  } else {
-    $atts["file"] = $post->guid;
+  if (!isset($atts["file"])) {
+    $rtmp = get_post_meta($id, LONGTAIL_KEY . "rtmp");
+    if (isset($rtmp) && $rtmp) {
+      $atts["streamer"] = get_post_meta($id, LONGTAIL_KEY . "streamer", true);
+      $atts["file"] = get_post_meta($id, LONGTAIL_KEY . "file", true);
+    } else {
+      $atts["file"] = $post->guid;
+    }
   }
-  generateModeString($atts, $id);
+  if (!array_key_exists("html5_file", $atts)) {
+    if ($html5_file = retrieve_file("html5", $id)) $atts["html5_file"] = $html5_file;
+  }
+  if (!array_key_exists("download_file", $atts)) {
+    if ($download_file = retrieve_file("download", $id)) $atts["download_file"] = $download_file;
+  }
 }
 
-function generate_embed_code($config, $atts) {
+function generate_embed_code($atts) {
   $version = version_compare(get_option(LONGTAIL_KEY . "version"), "5.3", ">=");
   $embedder = file_exists(LongTailFramework::getEmbedderPath());
   if (!$embedder && !$version && preg_match("/iP(od|hone|ad)/i", $_SERVER["HTTP_USER_AGENT"])) {
@@ -239,9 +247,9 @@ function generate_embed_code($config, $atts) {
     return $output;
   } else {
     if (get_option(LONGTAIL_KEY . "player_location_enable")) {
-      $swf = LongTailFramework::generateSWFObject($atts, $version && $embedder, get_option(LONGTAIL_KEY . "player_location"));
+      $swf = LongTailFramework::generateSWFObject($atts, $embedder, get_option(LONGTAIL_KEY . "player_location"));
     } else {
-      $swf = LongTailFramework::generateSWFObject($atts, $version && $embedder);
+      $swf = LongTailFramework::generateSWFObject($atts, $embedder);
     }
     if (!get_option(LONGTAIL_KEY . "use_head_js")) {
       insert_embedder($embedder);
@@ -250,9 +258,37 @@ function generate_embed_code($config, $atts) {
   }
 }
 
+function create_mode_block($atts) {
+  $modes = array();
+  $playerMode = get_option(LONGTAIL_KEY . "player_mode", true);
+  $flashMode = new stdClass();
+  $flashMode->type = "flash";
+  $flashMode->src = LongTailFramework::getPlayerURL();
+  $html5Mode = new stdClass();
+  $html5Mode->type = "html5";
+  $html5Mode->streamer = "";
+  $html5Mode->provider = "";
+  if (array_key_exists("html5_file", $atts)) $html5Mode->file = $atts["html5_file"];
+  $downloadMode = new stdClass();
+  $downloadMode->type = "download";
+  $downloadMode->streamer = "";
+  $downloadMode->provider = "";
+  if (array_key_exists("download_file", $atts)) $html5Mode->file = $atts["download_file"];
+  if ($playerMode == "html5") {
+    $modes[] = $html5Mode;
+    $modes[] = $flashMode;
+  } else {
+    $modes[] = $flashMode;
+    $modes[] = $html5Mode;
+  }
+  $modes[] = $downloadMode;
+  return $modes;
+}
+
 function generate_playlist($playlist_id) {
   $output = array();
   $playlist = get_post($playlist_id);
+  $playlist_items = "";
   if ($playlist) {
     $playlist_items = explode(",", get_post_meta($playlist_id, LONGTAIL_KEY . "playlist_items", true));
   }
@@ -265,72 +301,67 @@ function generate_playlist($playlist_id) {
       $thumbnail = get_post_meta($playlist_item_id, LONGTAIL_KEY . "thumbnail_url", true);
       $streamer = get_post_meta($playlist_item_id, LONGTAIL_KEY . "streamer", true);
       $file = get_post_meta($playlist_item_id, LONGTAIL_KEY . "file", true);
+      $html5_file = retrieve_file("html5", $playlist_item_id);
+      $download_file = retrieve_file("download", $playlist_item_id);
       if (empty($thumbnail)) {
         $temp = get_post($image_id);
         $image = isset($temp) ? $temp->guid : "";
       } else {
         $image = $thumbnail;
       }
-      $p_item[] = "\"title\": " . json_encode($playlist_item->post_title);
-      $p_item[] = "\"creator\": \"" . esc_attr($creator) . "\"";
-      $p_item[] = "\"author\": \"" . esc_attr($creator) . "\"";
-      $p_item[] = "\"date\": \"" . esc_attr($playlist_item->post_date) . "\"";
+      $p_item["title"] = $playlist_item->post_title;
+      $p_item["creator"] = $creator;
+      $p_item["author"] = $creator;
+      $p_item["date"] = $playlist_item->post_date;
+      $p_item["levels"] = array();
+      $flashFile = new stdClass();
       if (!empty($streamer)) {
-        $p_item[] = "\"streamer\": \"" . esc_attr($streamer) . "\"";
-        $p_item[] = "\"file\": \"" . esc_attr($file) . "\"";
+        $p_item["streamer"] = $streamer;
+        $flashFile->file = $file;
+        $p_item["levels"][] = $flashFile;
       } else {
-        $p_item[] = "\"file\": \"" . esc_attr($playlist_item->guid) . "\"";
+        $flashFile->file = $playlist_item->guid;
+        $p_item["levels"][] = $flashFile;
+      }
+      if ($html5_file) {
+        $html5File = new stdClass();
+        $html5File->file = $html5_file;
+        $p_item["levels"][] = $html5File;
+      }
+      if ($download_file) {
+        $downloadFile = new stdClass();
+        $downloadFile->file = $download_file;
+        $p_item["levels"][] = $downloadFile;
       }
       $duration = get_post_meta($playlist_item_id, LONGTAIL_KEY . "duration", true);
-      if ($duration) $p_item[] = "\"duration\": \"" . $duration . "\"";
+      if ($duration) $p_item["duration"] = $duration;
       if (substr($playlist_item->post_mime_type, 0, 5) == "image") {
-        $p_item[] = "\"image\": \"" . esc_attr($playlist_item->guid) . "\"";
+        $p_item["image"] = $playlist_item->guid;
       } else {
-        $p_item[] = "\"image\": \"" . esc_attr($image) . "\"";
+        $p_item["image"] = $image;
       }
-      $p_item[] = "\"description\": " . json_encode($playlist_item->post_content);
-      $p_item[] = "\"mediaid\": \"" . $playlist_item_id . "\"";
-      $p_item[] = "\"id\": \"" . $playlist_item_id . "\"";
-      $output[] = "{" . implode(", ", $p_item) . "}";
+      $p_item["description"] = $playlist_item->post_content;
+      $p_item["mediaid"] = $playlist_item_id;
+      $p_item["id"] = $playlist_item_id;
+      $output[] = $p_item;
     }
   }
-  return "[" . implode(",\n", $output) . "]";
+  return $output;
 }
 
-function generateModeString(&$atts, $id = null) {
-  $html5 = array_key_exists("html5_file", $atts) ? $atts["html5_file"] : null;
-  if (!isset($html5) || $html5 == null || $html5 == "") {
-    $html5 = get_post_meta($id, LONGTAIL_KEY . "html5_file", true);
-  }
-  if (!isset($html5) || $html5 == null || $html5 == "") {
-    $html5_id = get_post_meta($id, LONGTAIL_KEY . "html5_file_selector", true);
-    if (isset($html5_id) && $html5_id > -1) {
-      $html5_attachment = get_post($html5_id);
-      $html5 = $html5_attachment->guid;
+function retrieve_file($fileType, $id) {
+  $file = get_post_meta($id, LONGTAIL_KEY . $fileType . "_file", true);
+  if (!isset($file) || $file == null || $file == "") {
+    $file_id = get_post_meta($id, LONGTAIL_KEY . $fileType . "_file_selector", true);
+    if (isset($file_id) && $file_id > -1) {
+      $file_attachment = get_post($file_id);
+      $file = $file_attachment->guid;
     }
   }
-  $download = array_key_exists("download_file", $atts) ? $atts["download_file"] : null;
-  if (!isset($download) || $download == null || $download == "") {
-    $download = get_post_meta($id, LONGTAIL_KEY . "download_file", true);
+  if (!isset($file) || $file == null || $file == "") {
+    return false;
   }
-  if (!isset($download) || $download == null || $download == "") {
-    $download_id = get_post_meta($id, LONGTAIL_KEY . "download_file_selector", true);
-    if (isset($download_id) && $download_id > -1) {
-      $download_attachment = get_post($download_id);
-      $download = $download_attachment->guid;
-    }
-  }
-  if (!empty($html5) || !empty($download)) {
-    $mode = "[{type: \"flash\", src: \"" . LongTailFramework::getPlayerURL() . "\"}";
-    if (!empty($html5)) {
-      $mode .= ", {type: \"html5\", config: {\"file\": \"$html5\", \"streamer\": \"\", \"provider\": \"\"}}";
-    }
-    if (!empty($download)) {
-      $mode .= ", {type: \"download\", config: {\"file\": \"$download\", \"streamer\": \"\", \"provider\": \"\"}}";
-    }
-    $mode .= "]";
-    $atts["modes"] = $mode;
-  }
+  return $file;
 }
 
 function insert_embedder($embedderExists) {
