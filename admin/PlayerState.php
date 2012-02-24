@@ -130,7 +130,7 @@ class PlayerState extends AdminState {
                               <p>
                                 <span><strong>JW Player:</strong> <?php echo $jwPlayer ? "Installed" : "Not detected"; echo $version && $jwPlayer ? " (JW Player $version)" : ""; ?></span>
                               </p>
-                              <p><span><strong>JW Embedder:</strong></span> <?php echo $jwEmbedder ? "Installed" : "Not detected"; ?></p>
+                              <p><span><strong>JW Embedder:</strong></span> <?php echo $jwEmbedder ? "Installed" : "Not detected (SWFObject will be used instead)"; ?></p>
                               <?php if (!strstr($version, "Licensed")) { ?>
                                 <p><span><?php echo JW_LICENSED; ?></span></p>
                                 <p><input class="button-secondary" type="submit" name="Update_Player" value="Click Here to Upgrade" /></p>

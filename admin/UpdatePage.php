@@ -147,13 +147,18 @@ function download_state() { ?>
     </table>
   </form>
   <?php } else if ($result == DOWNLOAD_ERROR) {
-    error_message("Not able to download JW Player.  Please check your internet connection. <br/> If you already have the JW Player then you can install it using the <a href='admin.php?page=jwplayer-update'>upgrade page</a>.  " . JW_FILE_PERMISSIONS);
+    error_message("Not able to download JW Player.  Please check your internet connection. <br/>
+    If you already have the JW Player then you can install it using the <a href='admin.php?page=jwplayer-update'>upgrade page</a>.<br/>
+    Alternatively you may FTP the player files directly to your site.  Place the player.swf and jwplayer.js files in " . JWPLAYER_FILES_DIR . "/player/. <br/> " . JW_FILE_PERMISSIONS);
   } else if ($result == WRITE_ERROR) {
-    error_message("Not able to install JW Player.  Please make sure the " . LongTailFramework::getPlayerPath() . " directory exists (and is writabe) and then visit the <a href='admin.php?page=jwplayer-update'>upgrade page</a>.  " . JW_FILE_PERMISSIONS);
+    error_message("Not able to install JW Player.
+    Please make sure the " . JWPLAYER_FILES_DIR . "/player/ directory exists (and is writabe) and then visit the <a href='admin.php?page=jwplayer-update'>upgrade page</a>.<br/>
+    Alternatively you may FTP the player.swf and jwplayer.js files directly to your site. <br/>" . JW_FILE_PERMISSIONS);
   } else if ($result == ZIP_ERROR) {
-    error_message("The necessary zip classes are missing.  Please upload the player manually instead using the <a href='admin.php?page=jwplayer-update'>upgrade page</a>.");
+    error_message("The necessary zip classes are missing.  Please FTP the player manually.  <br/>Place the player.swf and jwplayer.js files in " . JWPLAYER_FILES_DIR . "/player/.");
   } else if ($result == READ_ERROR) {
-    error_message("Could not find player.swf or yt.swf.  Either they are not present or the archive is invalid.");
+    error_message("Could not find player.swf or jwplayer.js.  Either they are not present or the archive is invalid.<br/>
+    Alternatively you may FTP the player files directly to your site.  Place the player.swf and jwplayer.js files in " . JWPLAYER_FILES_DIR . "/player/.");
   }
 }
 

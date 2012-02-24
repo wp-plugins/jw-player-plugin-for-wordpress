@@ -33,8 +33,24 @@ function uninstall() {
   $wpdb->query($option_query);
   $wpdb->query($post_query);
 
+  @unlink(LongTailFramework::getPlayerPath());
+  @unlink(LongTailFramework::getEmbedderPath());
+  @rmdir(JWPLAYER_FILES_DIR . "/player/");
+
+  $handler = @opendir(JWPLAYER_FILES_DIR . "/configs");
+  if ($handler) {
+    while ($file = readdir($handler)) {
+      if ($file != "." && $file != ".." && strstr($file, ".xml")) {
+        @unlink(JWPLAYER_FILES_DIR . "/configs/$file");
+      }
+    }
+    closedir($handler);
+  }
+  @rmdir(JWPLAYER_FILES_DIR . "/configs/");
+  @rmdir(JWPLAYER_FILES_DIR);
+
   update_option(LONGTAIL_KEY . "uninstalled", true);
-  feedback_message(__('Tables and settings deleted, deactivate the plugin now'));
+  feedback_message(__('Files and settings deleted.  The plugin can now be deactivated.'));
 }
 
 function feedback_message ($message, $timeout = 0) { ?>

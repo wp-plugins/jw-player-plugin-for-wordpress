@@ -184,7 +184,7 @@ function jwplayer_upgrade() {
 }
 
 function jwplayer_install_notices() {
-  if ($_GET["page"] == "jwplayer-update") {
+  if (isset($_GET["page"]) && $_GET["page"] == "jwplayer-update") {
     return;
   } ?>
   <div id="message" class="fade updated">
