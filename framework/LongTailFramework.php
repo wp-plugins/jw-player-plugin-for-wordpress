@@ -495,7 +495,7 @@ class LongTailFramework
     unset($config_values["plugins"]);
     unset($config_values["ltas.cc"]);
     LongTailFramework::getPlugins($config_values);
-    if ($config_values) {
+    if ($config_values && array_key_exists("Additional", $config_values)) {
       LongTailFramework::$loaded_additional_flash_vars = LongTailFramework::flattenAdditionalFlashVars($config_values["Additional"]);
     }
     LongTailFramework::$loaded_flash_vars = $f_vars;

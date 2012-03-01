@@ -66,7 +66,10 @@ class PluginState extends WizardState {
   public function render() {
     $plugins = LongTailFramework::getPlugins();
     $configValues = LongTailFramework::getConfigValues();
-    $pluginString = explode(",", $configValues["plugins"]);
+    $pluginString = array();
+    if (array_key_exists("plugins", $configValues)) {
+      $pluginString = explode(",", $configValues["plugins"]);
+    }
     $pluginList = array();
     foreach ($pluginString as $pluginStr) {
       $pluginList[$pluginStr] = $pluginStr;
