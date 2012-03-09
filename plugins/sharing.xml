@@ -1,8 +1,8 @@
 <plugin>
     <title>Sharing</title>
     <filename>sharing.swf</filename>
-    <repository>sharing-1</repository>
-    <version>1.0</version>
+    <repository>sharing-3</repository>
+    <version>3.0</version>
     <compatibility>Compatible with 4.3 or higher.</compatibility>
     <author>LongTail Video</author>
     <description>This plugin adds sharing functionalities to the player. Either through the dock or through the controlbar, the plugin offers links to two screens: In the embed screen, an embed code for the specific video can be copy-pasted.  In the share screen, a link to thesite for this specific video can be copy-pasted. This screen also offers shortcuts for posting this link to: Twitter, Facebook, Myspace, An email message.</description>

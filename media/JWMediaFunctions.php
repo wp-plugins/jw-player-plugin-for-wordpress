@@ -213,6 +213,7 @@ function jwplayer_attachment_fields($form_fields, $post) {
 /**
  * Generates the HTML for rendering the thumbnail image selector.
  * @param int $id The id of the current attachment.
+ * @param $attachments
  * @return string The HTML to render the image selector.
  */
 function generateImageSelectorHTML($id, $attachments) {

@@ -86,6 +86,8 @@ class JWEmbedderConfig implements EmbedConfigInterface {
 
   private function generateSetup() {
     $events = array();
+    $eventValues = array();
+    $eventKeys = array();
     $config = array(
       "flashplayer" => $this->path,
       "width" => $this->dim["width"],
@@ -94,18 +96,23 @@ class JWEmbedderConfig implements EmbedConfigInterface {
     );
     foreach ($this->fvars as $key => $value) {
       if (isset (self::$events[$key])) {
-        $events[$key] = urldecode(html_entity_decode($value));
+        $eventValues[] = urldecode(html_entity_decode($value));
+        $events[$key] = "%function_$key%";
+        $eventKeys[] = "\"%function_$key%\"";
       } else {
         $config[$key] = $value;
       }
     }
-    $config["events"] = $events;
-    return json_encode($config);
+    if (count($events) > 0) {
+      $config["events"] = $events;
+    }
+    $json = json_encode($config);
+    return str_replace($eventKeys, $eventValues, $json);
   }
 
   public function generateEmbedScript() {
     $script = $this->generateDiv();
-    $script .= "<script type='text/javascript'>jwplayer('" . $this->id . "').setup(" . $this->generateSetup() . ")</script>";
+    $script .= "<script type='text/javascript'>jwplayer('" . $this->id . "').setup(" . $this->generateSetup() . ");</script>";
     return $script;
   }
 
