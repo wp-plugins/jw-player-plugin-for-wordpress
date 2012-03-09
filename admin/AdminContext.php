@@ -187,7 +187,7 @@ class AdminContext {
 
   private function parseFlashvarString($fv_str, &$data) {
     $additional = array();
-    $regex = "~([a-zA-Z0-9.]+)=([a-zA-Z0-9:_\-./]+)~";
+    $regex = "~^([a-zA-Z0-9._]+)=(.+)~m";
     preg_match_all($regex, $fv_str, $matches);
     for ($i = 0; $i < count($matches[0]); $i++) {
       $additional[trim($matches[1][$i])] = trim($matches[2][$i]);

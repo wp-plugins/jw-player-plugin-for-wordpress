@@ -100,7 +100,7 @@ class JWEmbedderConfig implements EmbedConfigInterface {
         $events[$key] = "%function_$key%";
         $eventKeys[] = "\"%function_$key%\"";
       } else {
-        $config[$key] = $value;
+        $config[$key] = is_array($value) ? $value : urldecode(html_entity_decode($value));
       }
     }
     if (count($events) > 0) {

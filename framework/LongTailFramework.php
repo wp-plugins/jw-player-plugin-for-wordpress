@@ -442,7 +442,7 @@ class LongTailFramework
     foreach ($flashvars as $key => $value) {
       $output_array[] = $key . "=" . $value;
     }
-    $output = implode(",", $output_array);
+    $output = implode("\n", $output_array);
     return $output;
   }
 
