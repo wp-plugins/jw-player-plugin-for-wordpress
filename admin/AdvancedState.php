@@ -98,7 +98,7 @@ class AdvancedState extends FlashVarState {
               <?php unset($_POST[$name]); ?>
               <textarea name="<?php echo $name; ?>" cols="80" rows="2"><?php echo $value; ?></textarea>
               <br/>
-              <span class="description"><?php echo "Enter a comma delimited list of additional flashvars you would like to be used by this player.  <strong>Note:</strong> Overriding the standard flashvars could lead to unexpected behavior. "; ?></span>
+              <span class="description"><?php echo "Enter one additional flashvar (name=value) per line that you would like to be used by this player.  <strong>Note:</strong> Overriding the standard flashvars could lead to unexpected behavior. "; ?></span>
             </td>
           </tr>
         </table>
