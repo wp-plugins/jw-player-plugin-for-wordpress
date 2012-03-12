@@ -266,14 +266,16 @@ function create_mode_block($atts) {
   $flashMode->src = LongTailFramework::getPlayerURL();
   $html5Mode = new stdClass();
   $html5Mode->type = "html5";
-  $html5Mode->streamer = "";
-  $html5Mode->provider = "";
-  if (array_key_exists("html5_file", $atts)) $html5Mode->file = $atts["html5_file"];
+  $html5Mode->config = new stdClass();
+  $html5Mode->config->streamer = "";
+  $html5Mode->config->provider = "";
+  if (array_key_exists("html5_file", $atts)) $html5Mode->config->file = $atts["html5_file"];
   $downloadMode = new stdClass();
   $downloadMode->type = "download";
-  $downloadMode->streamer = "";
-  $downloadMode->provider = "";
-  if (array_key_exists("download_file", $atts)) $html5Mode->file = $atts["download_file"];
+  $downloadMode->config = new stdClass();
+  $downloadMode->config->streamer = "";
+  $downloadMode->config->provider = "";
+  if (array_key_exists("download_file", $atts)) $html5Mode->config->file = $atts["download_file"];
   if ($playerMode == "html5") {
     $modes[] = $html5Mode;
     $modes[] = $flashMode;
