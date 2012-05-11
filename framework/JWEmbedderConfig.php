@@ -106,7 +106,7 @@ class JWEmbedderConfig implements EmbedConfigInterface {
     if (count($events) > 0) {
       $config["events"] = $events;
     }
-    $json = json_encode($config);
+    $json = str_replace("\\/", "/", json_encode($config));
     return str_replace($eventKeys, $eventValues, $json);
   }
 
