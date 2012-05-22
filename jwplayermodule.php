@@ -139,10 +139,6 @@ function jwplayer_init() {
   add_filter("the_content", "jwplayer_tag_callback", 11);
   add_filter("the_excerpt", "jwplayer_tag_excerpt_callback", 11);
   add_filter("widget_text", "jwplayer_tag_widget_callback", 11);
-  // Player configuration and Media Management, limited to administrators.
-  if (is_admin()) {
-    wp_register_script('jquery-ui-jw', $pluginURL . '/' . plugin_basename(dirname(__FILE__)) . "/js/jquery.ui.jw.js");
-  }
   // Parse the $_GET vars for callbacks
   add_filter('query_vars', 'jwplayer_queryvars' );
   add_action('parse_request',  'jwplayer_parse_request', 9 );
@@ -203,12 +199,20 @@ function jwplayer_plugin_menu() {
   add_submenu_page("jwplayer", "JW Player Plugin Licensing", "Licensing", "administrator", "jwplayer-license", "jwplayer_plugin_pages");
   add_submenu_page("jwplayer", "JW Player Plugin Update", "Upgrade", "administrator", "jwplayer-update", "jwplayer_plugin_pages");
   add_submenu_page("jwplayer", "JW Player Plugin Settings", "Settings", "administrator", "jwplayer-settings", "jwplayer_plugin_pages");
+  add_media_page("JW Player Plugin Playlists", "Playlists", "read", "jwplayer-playlists", "jwplayer_media_pages");
   add_action("admin_print_scripts-$admin", "add_admin_js");
 }
 
 // Add js for plugin tabs.
 function add_admin_js() {
-  wp_enqueue_script("jquery-ui-jw");
+  wp_enqueue_script("jquery-ui-core");
+  wp_enqueue_script("jquery-ui-tabs");
+  wp_enqueue_script("jquery-ui-button");
+  wp_enqueue_script("jquery-ui-widget");
+  wp_enqueue_script("jquery-ui-mouse");
+  wp_enqueue_script("jqury-ui-draggable");
+  wp_enqueue_script("jqury-ui-droppable");
+  wp_enqueue_script("jqury-ui-sortable");
   echo '<link rel="stylesheet" href="'. WP_PLUGIN_URL . '/' . plugin_basename( dirname(__FILE__) ).'/' .
     'css/smoothness/jquery.ui.jw.css" type="text/css" media="print, projection, screen" />'."\n";
 }
@@ -230,6 +234,10 @@ function jwplayer_plugin_pages() {
       require_once (dirname(__FILE__) . "/admin/SettingsPage.php");
       break;
   }
+}
+
+function jwplayer_media_pages() {
+  require_once(dirname(__FILE__) . "/media/JWPlaylistManager.php");
 }
 
 // Process xspf playlist requests.

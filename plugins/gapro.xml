@@ -1,8 +1,8 @@
 <plugin>
     <title>Google Analytics Pro</title>
     <filename>gapro.swf</filename>
-    <repository>gapro-1</repository>
-    <version>1.0</version>
+    <repository>gapro-2</repository>
+    <version>2.0</version>
     <compatibility>Compatible with 4.5 and later.</compatibility>
     <author>mpoint</author>
     <description>The Google Analytics plugin for the JW Player is designed to help you understand how well your video content is performing online. It takes advantage of Google's new Flash API for Analytics so you can track events within the JW Player itself.
