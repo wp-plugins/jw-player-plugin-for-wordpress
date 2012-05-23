@@ -2,7 +2,40 @@
 
 $p_items = array();
 $playlists = jwplayer_get_playlists();
-$current_playlist = $playlists[0]->ID;
+$form_action_url = admin_url("upload.php?page=jwplayer-playlists");
+
+$new_playlist_id = -1;
+if (isset($_POST[LONGTAIL_KEY . "playlist_create"]) || isset($_POST["save"])) {
+  $post_title = $_POST[LONGTAIL_KEY . "playlist_name"];
+  $new_playlist = array();
+  $new_playlist["post_title"] = $post_title;
+  $new_playlist["post_type"] = "jw_playlist";
+  $new_playlist["post_status"] = null;
+  $new_playlist["post_parent"] = null;
+  if (isset($_POST["save"])) {
+    $new_playlist_id = isset($_POST[LONGTAIL_KEY . "playlist_select"]) ? $_POST[LONGTAIL_KEY . "playlist_select"] : $playlists[0]->ID;
+  } else {
+    $new_playlist_id = wp_insert_post($new_playlist);
+    $playlists = jwplayer_get_playlists();
+  }
+  $current_playlist = $new_playlist_id;
+} else if (isset($_POST["delete"])) {
+  wp_delete_post($_POST[LONGTAIL_KEY . "playlist_select"]);
+  $playlists = jwplayer_get_playlists();
+  $current_playlist = $playlists[0]->ID;
+}
+
+if (!isset($current_playlist)) {
+  if (isset($_POST[LONGTAIL_KEY . "playlist_select"])) {
+    $current_playlist = $_POST[LONGTAIL_KEY . "playlist_select"];
+  } else if (isset($_GET["playlist"])) {
+    $current_playlist = $_GET["playlist"];
+  } else if (!empty($playlists)) {
+    $current_playlist = $playlists[0]->ID;
+  } else {
+    $current_playlist = -1;
+  }
+}
 
 if (isset($_GET["p_items"])) {
   $p_items = json_decode(str_replace("\\", "", $_GET["p_items"]));
@@ -11,6 +44,8 @@ if (isset($_GET["p_items"])) {
 } else {
   $p_items = explode(",", get_post_meta($current_playlist, LONGTAIL_KEY . "playlist_items", true));
 }
+
+update_post_meta($new_playlist_id, LONGTAIL_KEY . "playlist_items", implode(",", $p_items));
 
 $playlist_items = get_jw_playlist_items($p_items);
 $media_items = get_jw_media_items(1, "date", "DESC", $p_items);
@@ -36,7 +71,17 @@ function get_jw_playlist_items($playlist_item_ids = array()) {
     'post_type' => 'attachment',
     'post__in' => $playlist_item_ids
   );
-  return new WP_Query($args);
+  $items = new WP_Query($args);
+  $ordered_items = array();
+  foreach ($playlist_item_ids as $playlist_item_id) {
+    while ($items->have_posts()) {
+      $item = $items->next_post();
+      if ($item->ID == $playlist_item_id) {
+        $ordered_items[$playlist_item_id] = $item;
+      }
+    }
+  }
+  return $ordered_items;
 }
 
 function jwplayer_get_playlists() {
@@ -55,28 +100,106 @@ function jwplayer_get_playlists() {
   <h2><?php echo "JW Player Plugin Playlist Manager"; ?></h2>
 
   <script type="text/javascript">
-    jQuery(function($) {
+    jQuery(document).ready(function() {
       jQuery("#playlist_the-list").sortable({
-        items: "tr:not(.placeholder)",
+        items: "tr:not(#no-posts)",
         axis: "y",
         sort: function() {
           jQuery(this).removeClass("ui-state-default");
+        },
+        stop: function(e, ui) {
+          updatePlaylist();
         }
       }).droppable({
-        activeClass: "ui-state-default",
-        hoverClass: "ui-state-hover",
-        accept: ":not(.ui-sortable-helper)",
-        drop: function(event, ui) {
-          jQuery(this).find(".placeholder").remove();
-          jQuery("<tr class='alternate author-self status-inherit'></tr>").html(ui.draggable.html()).appendTo(this);
-          jQuery(ui.draggable).remove();
-        }
-      });
+          activeClass: "ui-state-default",
+          hoverClass: "ui-state-hover",
+          accept: ":not(.ui-sortable-helper)",
+          drop: function(event, ui) {
+            jQuery(this).find(".placeholder").remove();
+            jQuery("<tr id='" + ui.draggable[0].id + "' class='alternate author-self status-inherit'></tr>").html(ui.draggable.html()).appendTo(this);
+            jQuery(ui.draggable).remove();
+            jQuery("#no-posts").remove();
+            updatePlaylist();
+          }
+        });
       jQuery("#the-list tr").draggable({
-        helper: "clone",
-        appendTo: "body"
+        helper: "clone"
       });
     });
+
+    function updatePlaylist() {
+      var desc = false;
+      var item_list = document.getElementById("playlist_items");
+      var p_items = new Array();
+      var old_p_items =  eval('(' + item_list.value + ')');
+      if (old_p_items[0] == "") {old_p_items = new Array();}
+      var all = jQuery('#playlist_the-list').sortable('toArray'), len = all.length;
+      jQuery.each(all, function(i, id) {
+        var order = desc ? (len - i) : (1 + i);
+        jQuery('#' + id + ' .menu_order input').val(order);
+        p_items.push(id.replace("post-", ""));
+      });
+      update_page_numbers(p_items, old_p_items);
+      document.getElementById("playlist_items").value = dump(p_items);
+    }
+
+    function update_page_numbers(p_items, old_p_items) {
+      var pages = jQuery(".page-numbers");
+      var j = 0;
+      for (j = 0; j < pages.length; j++) {
+        var page = pages[j];
+        if (page.href) {
+          page.href = page.href.replace(encodeURI("&p_items=" + dump(old_p_items)), "");
+          page.href = page.href + encodeURI("&p_items=" + dump(p_items));
+        }
+      }
+    }
+
+    function dump (object, depth) {
+      if (object == null) {
+        return 'null';
+      } else if (typeof(object) != 'object') {
+        if (typeof(object) == 'string'){
+          return"\""+object+"\"";
+        }
+        return object;
+      }
+      var type = typeOf(object);
+      (depth == undefined) ? depth = 1 : depth++;
+      var result = (type == "array") ? "[" : "{";
+      var loopRan = false;
+      if (type == "array") {
+        for (var i = 0; i < object.length; i++) {
+          loopRan = true;
+          result += dump(object[i], depth)+", ";
+        }
+      } else {
+        for (var j in object) {
+          loopRan = true;
+          if (type == "object") { result += "\""+j+"\": "};
+          result += dump(object[j], depth)+", ";
+        }
+      }
+      if (loopRan) {
+        result = result.substring(0, result.length-1-depth);
+      }
+      result  += (type == "array") ? "]" : "}";
+      return result;
+    }
+
+    function typeOf(value) {
+      var s = typeof value;
+      if (s === 'object') {
+        if (value) {
+          if (value instanceof Array) {
+            s = 'array';
+          }
+        } else {
+          s = 'null';
+        }
+      }
+      return s;
+    }
 
     function createPlaylistHandler() {
       var playlistName = document.forms[0]["<?php echo LONGTAIL_KEY . "playlist_name"; ?>"];
@@ -90,9 +213,18 @@ function jwplayer_get_playlists() {
     function deletePlaylistHandler() {
       return confirm("Are you sure wish to delete the Playlist?");
     }
+
+    function deletePlaylistItem(object) {
+      jQuery(object).parents("tr").appendTo("#the-list");
+      jQuery("#the-list tr").draggable({
+        helper: "clone"
+      });
+      updatePlaylist();
+    }
+
   </script>
 
-  <form action="">
+  <form action="<?php echo $form_action_url; ?>" method="post">
     <div>
       <div style="width: 1000px;">
         <p class="ml-submit">
@@ -113,8 +245,6 @@ function jwplayer_get_playlists() {
               </select>
               <input type="submit" class="button savebutton" name="save" id="save-all" value="<?php esc_attr_e( 'Save' ); ?>" />
               <input type="submit" class="button savebutton" name="delete" id="delete-all" value="<?php esc_attr_e( 'Delete' ); ?>" onclick="return deletePlaylistHandler()" />
-              <input type="hidden" name="type" value="<?php echo esc_attr( $GLOBALS['type'] ); ?>" />
-              <input type="hidden" name="tab" value="<?php echo esc_attr( $GLOBALS['tab'] ); ?>" />
               <input type="hidden" id="playlist_items" name="playlist_items" value='<?php echo json_encode($p_items); ?>' />
               <input type="hidden" id="old_playlist" name="old_playlist" value="<?php echo $current_playlist; ?>" />
             </div>
@@ -140,9 +270,8 @@ function jwplayer_get_playlists() {
             </thead>
 
             <tbody id="playlist_the-list">
-              <?php while ($playlist_items->have_posts()) { ?>
-                <?php $playlist_item = $playlist_items->next_post(); ?>
-                <tr id="post-<?php echo $playlist_item->ID; ?>" class="alternate author-self status-inherit" valign="top">
+              <?php foreach ($playlist_items as $key => $playlist_item) { ?>
+                <tr id="post-<?php echo $playlist_item->ID; ?>" class="alternate author-self status-inherit" valign="top" style="width: 475px;">
                   <td class="column-icon media-icon"><a
                     href="http://localhost/wordpress/wp-admin/media.php?attachment_id=<?php echo $playlist_item->ID; ?>&amp;action=edit"
                     title="Edit “<?php echo $playlist_item->post_title; ?>”">
@@ -157,7 +286,7 @@ function jwplayer_get_playlists() {
                   </strong>
                     <div class="row-actions"><span class="edit"><a
                       href="http://localhost/wordpress/wp-admin/media.php?attachment_id=<?php echo $playlist_item->ID; ?>&amp;action=edit">Edit</a> | </span><span
-                      class="delete"><a class="submitdelete" onclick="return showNotice.warn();" href="">Remove</a> | </span><span
+                      class="delete"><a class="submitdelete" style="cursor: pointer;" onclick="deletePlaylistItem(this);">Remove</a> | </span><span
                       class="view"><a href="http://localhost/wordpress/?attachment_id=<?php echo $playlist_item->ID; ?>" title="View “Test”" rel="permalink">View</a></span>
                     </div>
                   </td>
@@ -165,10 +294,15 @@ function jwplayer_get_playlists() {
                   <td class="date column-date"><?php echo mysql2date( __( 'Y/m/d' ), $playlist_item->post_date); ?></td>
                 </tr>
               <?php } ?>
+              <?php if (empty($playlist_items) && !empty($playlists)) { ?>
+                <tr id="no-posts" class="alternate author-self status-inherit">
+                  <td colspan="4" style="text-align: center; height: 50px;">The playlist does not have any items.</td>
+                </tr>
+              <?php } ?>
             </tbody>
           </table>
         </div>
-        <div style="padding-left: 50px;; width: 475px; float: left;">
+        <div style="padding-left: 50px; width: 475px; float: left;">
           <table class="wp-list-table widefat fixed media" cellspacing="0">
             <thead>
               <tr>
@@ -203,7 +337,6 @@ function jwplayer_get_playlists() {
                 </strong>
                   <div class="row-actions"><span class="edit"><a
                     href="http://localhost/wordpress/wp-admin/media.php?attachment_id=<?php echo $media_item->ID; ?>&amp;action=edit">Edit</a> | </span><span
-                    class="delete"><a class="submitdelete" onclick="return showNotice.warn();" href="">Remove</a> | </span><span
                     class="view"><a href="http://localhost/wordpress/?attachment_id=<?php echo $media_item->ID; ?>" title="View “Test”" rel="permalink">View</a></span>
                   </div>
                 </td>
