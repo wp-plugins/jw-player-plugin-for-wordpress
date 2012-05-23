@@ -55,6 +55,29 @@ function jwplayer_get_playlists() {
   <h2><?php echo "JW Player Plugin Playlist Manager"; ?></h2>
 
   <script type="text/javascript">
+    jQuery(function($) {
+      jQuery("#playlist_the-list").sortable({
+        items: "tr:not(.placeholder)",
+        axis: "y",
+        sort: function() {
+          jQuery(this).removeClass("ui-state-default");
+        }
+      }).droppable({
+        activeClass: "ui-state-default",
+        hoverClass: "ui-state-hover",
+        accept: ":not(.ui-sortable-helper)",
+        drop: function(event, ui) {
+          jQuery(this).find(".placeholder").remove();
+          jQuery("<tr class='alternate author-self status-inherit'></tr>").html(ui.draggable.html()).appendTo(this);
+          jQuery(ui.draggable).remove();
+        }
+      });
+      jQuery("#the-list tr").draggable({
+        helper: "clone",
+        appendTo: "body"
+      });
+    });
+
     function createPlaylistHandler() {
       var playlistName = document.forms[0]["<?php echo LONGTAIL_KEY . "playlist_name"; ?>"];
       if (playlistName.value == "") {
@@ -71,7 +94,7 @@ function jwplayer_get_playlists() {
 
   <form action="">
     <div>
-      <div style="width: 900px;">
+      <div style="width: 1000px;">
         <p class="ml-submit">
           <label for="<?php echo LONGTAIL_KEY . "playlist_name"; ?>"><?php _e("New Playlist:"); ?></label>
           <input type="text" value="" id="<?php echo LONGTAIL_KEY . "playlist_name"; ?>" name="<?php echo LONGTAIL_KEY . "playlist_name"; ?>" />
@@ -104,15 +127,15 @@ function jwplayer_get_playlists() {
         </div>
         <div style="clear: both;"></div>
       </div>
-      <div style="width: 900px;">
-        <div style="width: 425px; float: left;">
+      <div style="width: 1000px; padding-top: 10px;">
+        <div style="width: 475px; float: left;">
           <table class="wp-list-table widefat fixed media" cellspacing="0">
             <thead>
               <tr>
                 <th scope="col" id="playlist_icon" class="manage-column column-icon" style=""></th>
                 <th scope="col" id="playlist_title" class="manage-column column-title" style=""><span>File</span></th>
-                <th scope="col" id="playlist_author" class="manage-column column-author sortable desc" style="width: 20%;"><span>Author</span></th>
-                <th scope="col" id="playlist_date" class="manage-column column-date sortable asc" style="width: 20%;"><span>Date</span></th>
+                <th scope="col" id="playlist_author" class="manage-column column-author sortable desc" style="width: 20%; padding: 7px 7px 8px;"><span>Author</span></th>
+                <th scope="col" id="playlist_date" class="manage-column column-date sortable asc" style="width: 20%; padding: 7px 7px 8px;"><span>Date</span></th>
               </tr>
             </thead>
 
@@ -123,7 +146,7 @@ function jwplayer_get_playlists() {
                   <td class="column-icon media-icon"><a
                     href="http://localhost/wordpress/wp-admin/media.php?attachment_id=<?php echo $playlist_item->ID; ?>&amp;action=edit"
                     title="Edit “<?php echo $playlist_item->post_title; ?>”">
-                    <img width="46" height="60" src="http://localhost/wordpress/wp-includes/images/crystal/video.png"
+                    <img width="24" height="32" src="http://localhost/wordpress/wp-includes/images/crystal/video.png"
                          class="attachment-80x60" alt="<?php echo $playlist_item->post_title; ?>" title="<?php echo $playlist_item->post_title; ?>"> </a>
 
                   </td>
@@ -132,10 +155,6 @@ function jwplayer_get_playlists() {
                        title="Edit “<?php echo $playlist_item->post_title; ?>”">
                       <?php echo $playlist_item->post_title; ?></a>
                   </strong>
-
-                    <p>
-                      <?php echo get_post_mime_type($playlist_item->ID); ?> </p>
-
                     <div class="row-actions"><span class="edit"><a
                       href="http://localhost/wordpress/wp-admin/media.php?attachment_id=<?php echo $playlist_item->ID; ?>&amp;action=edit">Edit</a> | </span><span
                       class="delete"><a class="submitdelete" onclick="return showNotice.warn();" href="">Remove</a> | </span><span
@@ -149,7 +168,7 @@ function jwplayer_get_playlists() {
             </tbody>
           </table>
         </div>
-        <div style="padding-left: 50px;; width: 425px; float: left;">
+        <div style="padding-left: 50px;; width: 475px; float: left;">
           <table class="wp-list-table widefat fixed media" cellspacing="0">
             <thead>
               <tr>
@@ -169,11 +188,11 @@ function jwplayer_get_playlists() {
             <tbody id="the-list">
               <?php while ($media_items->have_posts()) { ?>
               <?php $media_item = $media_items->next_post(); ?>
-              <tr id="post-<?php echo $media_item->ID; ?>" class="alternate author-self status-inherit" valign="top">
+              <tr id="post-<?php echo $media_item->ID; ?>" class="alternate author-self status-inherit" valign="top" style="width: 475px;">
                 <td class="column-icon media-icon"><a
                   href="http://localhost/wordpress/wp-admin/media.php?attachment_id=<?php echo $media_item->ID; ?>&amp;action=edit"
                   title="Edit “<?php echo $media_item->post_title; ?>”">
-                  <img width="46" height="60" src="http://localhost/wordpress/wp-includes/images/crystal/video.png"
+                  <img width="24" height="32" src="http://localhost/wordpress/wp-includes/images/crystal/video.png"
                        class="attachment-80x60" alt="<?php echo $media_item->post_title; ?>" title="<?php echo $media_item->post_title; ?>"> </a>
 
                 </td>
@@ -182,10 +201,6 @@ function jwplayer_get_playlists() {
                      title="Edit “<?php echo $media_item->post_title; ?>”">
                     <?php echo $media_item->post_title; ?></a>
                 </strong>
-
-                  <p>
-                    <?php echo get_post_mime_type($media_item->ID); ?> </p>
-
                   <div class="row-actions"><span class="edit"><a
                     href="http://localhost/wordpress/wp-admin/media.php?attachment_id=<?php echo $media_item->ID; ?>&amp;action=edit">Edit</a> | </span><span
                     class="delete"><a class="submitdelete" onclick="return showNotice.warn();" href="">Remove</a> | </span><span

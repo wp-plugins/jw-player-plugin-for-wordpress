@@ -199,8 +199,9 @@ function jwplayer_plugin_menu() {
   add_submenu_page("jwplayer", "JW Player Plugin Licensing", "Licensing", "administrator", "jwplayer-license", "jwplayer_plugin_pages");
   add_submenu_page("jwplayer", "JW Player Plugin Update", "Upgrade", "administrator", "jwplayer-update", "jwplayer_plugin_pages");
   add_submenu_page("jwplayer", "JW Player Plugin Settings", "Settings", "administrator", "jwplayer-settings", "jwplayer_plugin_pages");
-  add_media_page("JW Player Plugin Playlists", "Playlists", "read", "jwplayer-playlists", "jwplayer_media_pages");
+  $media = add_media_page("JW Player Plugin Playlists", "Playlists", "read", "jwplayer-playlists", "jwplayer_media_pages");
   add_action("admin_print_scripts-$admin", "add_admin_js");
+  add_action("admin_print_scripts-$media", "add_admin_js");
 }
 
 // Add js for plugin tabs.
@@ -210,9 +211,9 @@ function add_admin_js() {
   wp_enqueue_script("jquery-ui-button");
   wp_enqueue_script("jquery-ui-widget");
   wp_enqueue_script("jquery-ui-mouse");
-  wp_enqueue_script("jqury-ui-draggable");
-  wp_enqueue_script("jqury-ui-droppable");
-  wp_enqueue_script("jqury-ui-sortable");
+  wp_enqueue_script("jquery-ui-draggable");
+  wp_enqueue_script("jquery-ui-droppable");
+  wp_enqueue_script("jquery-ui-sortable");
   echo '<link rel="stylesheet" href="'. WP_PLUGIN_URL . '/' . plugin_basename( dirname(__FILE__) ).'/' .
     'css/smoothness/jquery.ui.jw.css" type="text/css" media="print, projection, screen" />'."\n";
 }
