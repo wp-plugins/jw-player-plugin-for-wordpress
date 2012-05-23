@@ -48,7 +48,23 @@ if (isset($_GET["p_items"])) {
 update_post_meta($new_playlist_id, LONGTAIL_KEY . "playlist_items", implode(",", $p_items));
 
 $playlist_items = get_jw_playlist_items($p_items);
-$media_items = get_jw_media_items(1, "date", "DESC", $p_items);
+$paged = isset($_GET['paged']) ? $_GET['paged'] : 1;
+$media_items = get_jw_media_items($paged, "date", "DESC", $p_items);
+if ($paged > 1 && !$media_items->have_posts()) {
+  $paged = 1;
+  $media_items = get_jw_media_items($paged, "date", "DESC", $p_items);
+}
+$total = ceil($media_items->found_posts / 10);
+
+$page_links = paginate_links( array(
+  'base' => add_query_arg( 'paged', '%#%' ),
+  'format' => '',
+  'prev_text' => __('&laquo;'),
+  'next_text' => __('&raquo;'),
+  'total' => $total,
+  'current' => $paged,
+  'add_args' => array('playlist' => $current_playlist)
+));
 
 function get_jw_media_items($page, $column = "date", $sort = "DESC", $playlist_items = array()) {
   $args = array(
@@ -346,6 +362,14 @@ function jwplayer_get_playlists() {
               <?php } ?>
             </tbody>
           </table>
+          <?php if ($page_links) { ?>
+              <div class="tablenav">
+                <div class='tablenav-pages'>
+                  <span style="font-size: 13px;"><?php _e("Available Media:"); ?></span>
+                  <?php echo $page_links; ?>
+                </div>
+              </div>
+          <?php }?>
         </div>
         <div style="clear: both;"></div>
       </div>
