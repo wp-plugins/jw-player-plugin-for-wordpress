@@ -49,10 +49,11 @@ update_post_meta($new_playlist_id, LONGTAIL_KEY . "playlist_items", implode(",",
 
 $playlist_items = get_jw_playlist_items($p_items);
 $paged = isset($_GET['paged']) ? $_GET['paged'] : 1;
-$media_items = get_jw_media_items($paged, "date", "DESC", $p_items);
+$search = isset($_POST["s"]) ? $_POST["s"] : "";
+$media_items = get_jw_media_items($paged, "date", "DESC", $search, $p_items);
 if ($paged > 1 && !$media_items->have_posts()) {
   $paged = 1;
-  $media_items = get_jw_media_items($paged, "date", "DESC", $p_items);
+  $media_items = get_jw_media_items($paged, "date", "DESC", $search, $p_items);
 }
 $total = ceil($media_items->found_posts / 10);
 
@@ -66,7 +67,7 @@ $page_links = paginate_links( array(
   'add_args' => array('playlist' => $current_playlist)
 ));
 
-function get_jw_media_items($page, $column = "date", $sort = "DESC", $playlist_items = array()) {
+function get_jw_media_items($page, $column = "date", $sort = "DESC", $search="", $playlist_items = array()) {
   $args = array(
     'post_parent' => null,
     'posts_per_page' => 10,
@@ -77,7 +78,9 @@ function get_jw_media_items($page, $column = "date", $sort = "DESC", $playlist_i
     'order' => $sort,
     'post__not_in' => $playlist_items
   );
-  return new WP_Query($args);
+  $query = new WP_Query($args);
+  return $query;
+//  return $query->query("s=$search");
 }
 
 function get_jw_playlist_items($playlist_item_ids = array()) {
