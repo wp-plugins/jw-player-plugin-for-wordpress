@@ -47,13 +47,39 @@ if (isset($_GET["p_items"])) {
 
 update_post_meta($new_playlist_id, LONGTAIL_KEY . "playlist_items", implode(",", $p_items));
 
+$file_order = "asc";
+$file_class = "sortable asc";
+$author_order = "asc";
+$author_class = "sortable asc";
+$date_order = "asc";
+$date_class = "sortable asc";
+$order_by = "date";
+$order = "desc";
+if (isset($_GET["orderby"]) && isset($_GET["order"])) {
+  $order_by = $_GET["orderby"];
+  $order = $_GET["order"];
+  if ($order_by == "title") {
+    $file_order = $order == "desc" ? "asc" : "desc";
+    $file_class = "sorted $order";
+  } else if ($order_by == "post_author") {
+    $author_order = $order == "desc" ? "asc" : "desc";
+    $author_class = "sorted $order";
+  } else if ($order_by == "date") {
+    $date_order = $order == "desc" ? "asc" : "desc";
+    $date_class = "sorted $order";
+  }
+} else {
+  $date_order = "desc";
+  $date_class = "sortable desc";
+}
+
 $playlist_items = get_jw_playlist_items($p_items);
 $paged = isset($_GET['paged']) ? $_GET['paged'] : 1;
 $search = isset($_POST["s"]) ? $_POST["s"] : "";
-$media_items = get_jw_media_items($paged, "date", "DESC", $search, $p_items);
+$media_items = get_jw_media_items($paged, $order_by, $order, $search, $p_items);
 if ($paged > 1 && !$media_items->have_posts()) {
   $paged = 1;
-  $media_items = get_jw_media_items($paged, "date", "DESC", $search, $p_items);
+  $media_items = get_jw_media_items($paged, $order_by, $order, $search, $p_items);
 }
 $total = ceil($media_items->found_posts / 10);
 
@@ -64,7 +90,7 @@ $page_links = paginate_links( array(
   'next_text' => __('&raquo;'),
   'total' => $total,
   'current' => $paged,
-  'add_args' => array('playlist' => $current_playlist)
+  'add_args' => array('playlist' => $current_playlist, 'orderby' => $order_by, 'order' => $order)
 ));
 
 function get_jw_media_items($page, $column = "date", $sort = "DESC", $search="", $playlist_items = array()) {
@@ -76,11 +102,11 @@ function get_jw_media_items($page, $column = "date", $sort = "DESC", $search="",
     'post_type' => 'attachment',
     'orderby' => $column,
     'order' => $sort,
-    'post__not_in' => $playlist_items
+    'post__not_in' => $playlist_items,
+    's' => $search
   );
   $query = new WP_Query($args);
   return $query;
-//  return $query->query("s=$search");
 }
 
 function get_jw_playlist_items($playlist_item_ids = array()) {
@@ -144,6 +170,7 @@ function jwplayer_get_playlists() {
       jQuery("#the-list tr").draggable({
         helper: "clone"
       });
+      updatePlaylist();
     });
 
     function updatePlaylist() {
@@ -170,6 +197,15 @@ function jwplayer_get_playlists() {
         if (page.href) {
           page.href = page.href.replace(encodeURI("&p_items=" + dump(old_p_items)), "");
           page.href = page.href + encodeURI("&p_items=" + dump(p_items));
+        }
+      }
+      var sort_links = jQuery(".sort-links");
+      var k = 0;
+      for (k = 0; k < sort_links.length; k++) {
+        var sort_link = sort_links[k];
+        if (sort_link.href) {
+          sort_link.href = sort_link.href.replace(encodeURI("&p_items=" + dump(old_p_items)), "");
+          sort_link.href = sort_link.href + encodeURI("&p_items=" + dump(p_items));
         }
       }
     }
@@ -326,15 +362,24 @@ function jwplayer_get_playlists() {
             <thead>
               <tr>
                 <th scope="col" id="icon" class="manage-column column-icon" style=""></th>
-                <th scope="col" id="title" class="manage-column column-title sortable desc" style=""><a
-                  href="http://localhost/wordpress/wp-admin/upload.php?orderby=title&amp;order=asc"><span>File</span><span
-                  class="sorting-indicator"></span></a></th>
-                <th scope="col" id="author" class="manage-column column-author sortable desc" style="width: 20%;"><a
-                  href="http://localhost/wordpress/wp-admin/upload.php?orderby=author&amp;order=asc"><span>Author</span><span
-                  class="sorting-indicator"></span></a></th>
-                <th scope="col" id="date" class="manage-column column-date sortable asc" style="width: 20%;"><a
-                  href="http://localhost/wordpress/wp-admin/upload.php?orderby=date&amp;order=desc"><span>Date</span><span
-                  class="sorting-indicator"></span></a></th>
+                <th scope="col" id="title" class="manage-column column-title <?php echo $file_class; ?>" style="">
+                  <a class="sort-links" href="http://localhost/wordpress/wp-admin/upload.php?page=jwplayer-playlists&orderby=title&amp;order=<?php echo $file_order; ?>">
+                    <span>File</span>
+                    <span class="sorting-indicator"></span>
+                  </a>
+                </th>
+                <th scope="col" id="author" class="manage-column column-author <?php echo $author_class; ?>" style="width: 20%;">
+                  <a class="sort-links" href="http://localhost/wordpress/wp-admin/upload.php?page=jwplayer-playlists&orderby=post_author&amp;order=<?php echo $author_order; ?>">
+                    <span>Author</span>
+                    <span class="sorting-indicator"></span>
+                  </a>
+                </th>
+                <th scope="col" id="date" class="manage-column column-date <?php echo $date_class; ?>" style="width: 20%;">
+                  <a class="sort-links" href="http://localhost/wordpress/wp-admin/upload.php?page=jwplayer-playlists&orderby=date&amp;order=<?php echo $date_order; ?>">
+                    <span>Date</span>
+                    <span class="sorting-indicator"></span>
+                  </a>
+                </th>
               </tr>
             </thead>
 
