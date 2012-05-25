@@ -375,7 +375,7 @@ function jwplayer_render() {
     }
   }
   wp_enqueue_script('admin-gallery');
-  require_once (dirname (__FILE__) . "/EmbedManager.php");
+  require_once (dirname(__FILE__) . "/JWPlaylistImportManager.php");
   return wp_iframe("media_jwplayer_insert_form", $errors);
 }
 

@@ -176,7 +176,7 @@ class LongTailFramework
 
   /**
    * Get the list of currently saved Player configurations.
-   * @return string The list of configurations.
+   * @return array The list of configurations.
    */
   public static function getConfigs() {
     $results = array();
