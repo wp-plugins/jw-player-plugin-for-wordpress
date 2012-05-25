@@ -3,7 +3,7 @@
 include "SWFObjectConfig.php";
 include "JWEmbedderConfig.php";
 include "FlashVar.php";
-include "Plugin.php";
+include "PlayerPlugin.php";
 
 define("LONGTAIL_KEY", "jwplayermodule_");
 
