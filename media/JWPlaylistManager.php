@@ -162,7 +162,6 @@ function jwplayer_get_playlists() {
         hoverClass: "ui-state-hover",
         accept: ":not(.ui-sortable-helper,.playlist-item)",
         drop: function(event, ui) {
-          alert("Dropped");
           jQuery(this).find(".placeholder").remove();
           jQuery("<tr id='" + ui.draggable[0].id + "' class='alternate author-self status-inherit playlist-item'></tr>").html(ui.draggable.html()).appendTo(this);
           jQuery(ui.draggable).remove();
