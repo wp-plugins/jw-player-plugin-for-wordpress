@@ -149,26 +149,31 @@ function jwplayer_get_playlists() {
       jQuery("#playlist_the-list").sortable({
         items: "tr:not(#no-posts)",
         axis: "y",
+        revert: "true",
         sort: function() {
           jQuery(this).removeClass("ui-state-default");
         },
         stop: function(e, ui) {
           updatePlaylist();
-        }
+        },
+        cursor: "move"
       }).droppable({
-          activeClass: "ui-state-default",
-          hoverClass: "ui-state-hover",
-          accept: ":not(.ui-sortable-helper)",
-          drop: function(event, ui) {
-            jQuery(this).find(".placeholder").remove();
-            jQuery("<tr id='" + ui.draggable[0].id + "' class='alternate author-self status-inherit'></tr>").html(ui.draggable.html()).appendTo(this);
-            jQuery(ui.draggable).remove();
-            jQuery("#no-posts").remove();
-            updatePlaylist();
-          }
-        });
+        activeClass: "ui-state-default",
+        hoverClass: "ui-state-hover",
+        accept: ":not(.ui-sortable-helper,.playlist-item)",
+        drop: function(event, ui) {
+          alert("Dropped");
+          jQuery(this).find(".placeholder").remove();
+          jQuery("<tr id='" + ui.draggable[0].id + "' class='alternate author-self status-inherit playlist-item'></tr>").html(ui.draggable.html()).appendTo(this);
+          jQuery(ui.draggable).remove();
+          jQuery("#no-posts").remove();
+          updatePlaylist();
+        }
+      });
       jQuery("#the-list tr").draggable({
-        helper: "clone"
+        helper: "clone",
+        revert: "invalid",
+        cursor: "move"
       });
       updatePlaylist();
     });
@@ -326,7 +331,7 @@ function jwplayer_get_playlists() {
 
             <tbody id="playlist_the-list">
               <?php foreach ($playlist_items as $key => $playlist_item) { ?>
-                <tr id="post-<?php echo $playlist_item->ID; ?>" class="alternate author-self status-inherit" valign="top" style="width: 475px;">
+                <tr id="post-<?php echo $playlist_item->ID; ?>" class="alternate author-self status-inherit playlist-item" valign="top" style="width: 475px;">
                   <td class="column-icon media-icon"><a
                     href="http://localhost/wordpress/wp-admin/media.php?attachment_id=<?php echo $playlist_item->ID; ?>&amp;action=edit"
                     title="Edit “<?php echo $playlist_item->post_title; ?>”">
@@ -339,10 +344,8 @@ function jwplayer_get_playlists() {
                        title="Edit “<?php echo $playlist_item->post_title; ?>”">
                       <?php echo $playlist_item->post_title; ?></a>
                   </strong>
-                    <div class="row-actions"><span class="edit"><a
-                      href="http://localhost/wordpress/wp-admin/media.php?attachment_id=<?php echo $playlist_item->ID; ?>&amp;action=edit">Edit</a> | </span><span
-                      class="delete"><a class="submitdelete" style="cursor: pointer;" onclick="deletePlaylistItem(this);">Remove</a> | </span><span
-                      class="view"><a href="http://localhost/wordpress/?attachment_id=<?php echo $playlist_item->ID; ?>" title="View “Test”" rel="permalink">View</a></span>
+                    <div class="row-actions">
+                      <span class="delete"><a class="submitdelete" style="cursor: pointer;" onclick="deletePlaylistItem(this);">Remove</a></span>
                     </div>
                   </td>
                   <td class="author column-author"><?php echo get_post_meta($playlist_item->ID, LONGTAIL_KEY . "creator", true); ?></td>
@@ -399,10 +402,6 @@ function jwplayer_get_playlists() {
                      title="Edit “<?php echo $media_item->post_title; ?>”">
                     <?php echo $media_item->post_title; ?></a>
                 </strong>
-                  <div class="row-actions"><span class="edit"><a
-                    href="http://localhost/wordpress/wp-admin/media.php?attachment_id=<?php echo $media_item->ID; ?>&amp;action=edit">Edit</a> | </span><span
-                    class="view"><a href="http://localhost/wordpress/?attachment_id=<?php echo $media_item->ID; ?>" title="View “Test”" rel="permalink">View</a></span>
-                  </div>
                 </td>
                 <td class="author column-author"><?php echo get_post_meta($media_item->ID, LONGTAIL_KEY . "creator", true); ?></td>
                 <td class="date column-date"><?php echo mysql2date( __( 'Y/m/d' ), $media_item->post_date); ?></td>

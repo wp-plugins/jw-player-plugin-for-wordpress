@@ -43,8 +43,8 @@ function jwplayer_wp_head() {
     LongTailFramework::setConfig(get_option(LONGTAIL_KEY . "default"));
   }
   $config_values = LongTailFramework::getConfigValues();
-  $width = $config_values["width"];
-  $height = $config_values["height"];
+  $width = isset($config_values["width"]) ? $config_values["width"] : "";
+  $height = isset($config_values["height"]) ? $config_values["height"] : "";
   foreach ($config_values as $key => $value) {
     $settings[] = "$key=$value";
   }
@@ -224,7 +224,7 @@ function generateImageSelectorHTML($id, $attachments) {
     $output .= "<link rel='stylesheet' type='text/css' href='" . WP_PLUGIN_URL . '/' . plugin_basename(dirname(__FILE__)) . "/msdropdown/dd.css' />\n";
     $output .= "<script language='javascript'>jQuery(document).ready(function(e) {jQuery(\"#imageselector$id\").msDropDown({visibleRows:3, rowHeight:50});});</script>\n";
     $output .= "<select name='attachments[$id][" . LONGTAIL_KEY . "thumbnail]' id='imageselector$id' width='200' style='width:200px;'>\n";
-    $output .= "<option value='-1' title='None'>None</option>\n";
+    $output .= "<option value='-1' title='" . JWPLAYER_PLUGIN_URL . "/video_noimage.png'>None</option>\n";
     $image_id = get_post_meta($id, LONGTAIL_KEY . "thumbnail", true);
     $thumbnail_url = get_post_meta($id, LONGTAIL_KEY . "thumbnail_url", true);
     foreach($attachments as $post) {
@@ -255,7 +255,7 @@ function generateVideoSelectorHTML($id, $field, $attachments) {
     $output .= "<link rel='stylesheet' type='text/css' href='" . WP_PLUGIN_URL . '/' . plugin_basename(dirname(__FILE__)) . "/msdropdown/dd.css' />\n";
     $output .= "<script language='javascript'>jQuery(document).ready(function(e) {jQuery(\"#" . $field . "_selector$id\").msDropDown({visibleRows:3, rowHeight:50});});</script>\n";
     $output .= "<select name='attachments[$id][" . LONGTAIL_KEY . "$field]' id='" . $field . "_selector$id' width='200' style='width:200px;'>\n";
-    $output .= "<option value='-1' title='None'>None</option>\n";
+    $output .= "<option value='-1' title='" . JWPLAYER_PLUGIN_URL . "/video_noimage.png'>None</option>\n";
     $video_id = get_post_meta($id, LONGTAIL_KEY . $field, true);
     foreach($attachments as $post) {
       if (substr($post->post_mime_type, 0, 5) == "video") {
@@ -267,10 +267,10 @@ function generateVideoSelectorHTML($id, $field, $attachments) {
         }
         $thumbnail = get_post_meta($post->ID, LONGTAIL_KEY . "thumbnail_url", true);
         if (!isset($thumbnail) || $thumbnail == null || $thumbnail == "") {
-          $thumbnail_id = get_post_meta($id, LONGTAIL_KEY . "thumbnail", true);
+          $thumbnail_id = get_post_meta($post->ID, LONGTAIL_KEY . "thumbnail", true);
           if (isset($thumbnail_id)) {
             $image_attachment = get_post($thumbnail_id);
-            $thumbnail = isset($image_attachment) ? $image_attachment->guid : "";
+            $thumbnail = isset($image_attachment) ? $image_attachment->guid : JWPLAYER_PLUGIN_URL . "/video_noimage.png";
           }
         }
         $title = $post->post_title ? $post->post_title : $post->guid;

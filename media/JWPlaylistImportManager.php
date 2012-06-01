@@ -57,7 +57,7 @@ function media_jwplayer_insert_form($errors) {
       <div class="alignleft actions" style="margin: 1em;">
         <div class="hide-if-no-js">
           <label for="<?php echo LONGTAIL_KEY . "playlist_select"; ?>"><strong><?php _e("Select Playlist:"); ?></strong></label>
-          <select onchange="this.form.submit()" id="<?php echo LONGTAIL_KEY . "playlist_select"; ?>" name="<?php echo LONGTAIL_KEY . "playlist_select"; ?>">
+          <select id="<?php echo LONGTAIL_KEY . "playlist_select"; ?>" name="<?php echo LONGTAIL_KEY . "playlist_select"; ?>">
             <?php foreach ($playlists as $playlist_list) { ?>
             <option value="<?php echo $playlist_list->ID; ?>" <?php selected($playlist_list->ID, $current_playlist); ?>>
               <?php echo $playlist_list->post_title; ?>
