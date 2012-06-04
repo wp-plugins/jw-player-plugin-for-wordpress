@@ -112,6 +112,7 @@ function get_jw_media_items($page, $column = "date", $sort = "DESC", $search="",
 function get_jw_playlist_items($playlist_item_ids = array()) {
   $args = array(
     'post_parent' => null,
+    'posts_per_page'=>-1,
     'post_status' => 'inherit',
     'post_type' => 'attachment',
     'post__in' => $playlist_item_ids
@@ -156,6 +157,12 @@ function jwplayer_get_playlists() {
             jQuery("#no-posts").hide();
           } else {
             jQuery("#no-posts").show();
+          }
+          var media = jQuery("#the-list tr:not(#no-media)");
+          if (media.length > 0) {
+            jQuery("#no-media").hide();
+          } else {
+            jQuery("#no-media").show();
           }
           updatePlaylist();
         }
@@ -309,31 +316,31 @@ function jwplayer_get_playlists() {
             <tbody id="playlist_the-list">
               <?php foreach ($playlist_items as $key => $playlist_item) { ?>
                 <tr id="post-<?php echo $playlist_item->ID; ?>" class="alternate author-self status-inherit playlist-item" valign="top" style="width: 475px;">
-                  <td class="column-icon media-icon"><a
-                    href="http://localhost/wordpress/wp-admin/media.php?attachment_id=<?php echo $playlist_item->ID; ?>&amp;action=edit"
+                  <td class="column-icon media-icon">
+                    <?php $mime_type = substr($playlist_item->post_mime_type, 0, 5); ?>
+                    <?php $image = $mime_type == "image" ? $playlist_item->guid : "http://localhost/wordpress/wp-includes/images/crystal/video.png"; ?>
+                    <?php $width = $mime_type == "image" ? "32" : "24"; ?>
+                    <a href="http://localhost/wordpress/wp-admin/media.php?attachment_id=<?php echo $playlist_item->ID; ?>&amp;action=edit"
                     title="Edit “<?php echo $playlist_item->post_title; ?>”">
-                    <img width="24" height="32" src="http://localhost/wordpress/wp-includes/images/crystal/video.png"
+                    <img width="<?php echo $width; ?>" height="32" src="<?php echo $image; ?>"
                          class="attachment-80x60" alt="<?php echo $playlist_item->post_title; ?>" title="<?php echo $playlist_item->post_title; ?>"> </a>
 
                   </td>
                   <td class="title column-title"><strong>
+                    <?php $title = $playlist_item->post_title ? $playlist_item->post_title : $playlist_item->guid ?>
                     <a href="http://localhost/wordpress/wp-admin/media.php?attachment_id=<?php echo $playlist_item->ID; ?>&amp;action=edit"
-                       title="Edit “<?php echo $playlist_item->post_title; ?>”">
-                      <?php echo $playlist_item->post_title; ?></a>
+                       title="Edit “<?php echo $title; ?>”">
+                      <?php echo $title; ?></a>
                   </strong>
-                    <div class="row-actions">
-                      <span class="delete"><a class="submitdelete" style="cursor: pointer;" onclick="deletePlaylistItem(this);">Remove</a></span>
-                    </div>
                   </td>
                   <td class="author column-author"><?php echo get_post_meta($playlist_item->ID, LONGTAIL_KEY . "creator", true); ?></td>
                   <td class="date column-date"><?php echo mysql2date( __( 'Y/m/d' ), $playlist_item->post_date); ?></td>
                 </tr>
               <?php } ?>
-              <?php if (empty($playlist_items) && !empty($playlists)) { ?>
-                <tr id="no-posts" class="alternate author-self status-inherit">
-                  <td colspan="4" style="text-align: center; height: 50px;">Drag items from the Media List to start building your playlist.</td>
-                </tr>
-              <?php } ?>
+              <?php $style = empty($playlist_item) ? "" : "style='display: none;'"; ?>
+              <tr id="no-posts" class="alternate author-self status-inherit" <?php echo $style; ?>>
+                <td colspan="4" style="text-align: center; height: 50px;">Drag items from the Media List to start building your playlist.</td>
+              </tr>
             </tbody>
           </table>
         </div>
@@ -367,23 +374,31 @@ function jwplayer_get_playlists() {
               <?php while ($media_items->have_posts()) { ?>
               <?php $media_item = $media_items->next_post(); ?>
               <tr id="post-<?php echo $media_item->ID; ?>" class="alternate author-self status-inherit" valign="top" style="width: 475px;">
-                <td class="column-icon media-icon"><a
-                  href="http://localhost/wordpress/wp-admin/media.php?attachment_id=<?php echo $media_item->ID; ?>&amp;action=edit"
+                <td class="column-icon media-icon">
+                  <?php $mime_type = substr($media_item->post_mime_type, 0, 5); ?>
+                  <?php $image = $mime_type == "image" ? $media_item->guid : "http://localhost/wordpress/wp-includes/images/crystal/video.png"; ?>
+                  <?php $width = $mime_type == "image" ? "32" : "24"; ?>
+                  <a href="http://localhost/wordpress/wp-admin/media.php?attachment_id=<?php echo $media_item->ID; ?>&amp;action=edit"
                   title="Edit “<?php echo $media_item->post_title; ?>”">
-                  <img width="24" height="32" src="http://localhost/wordpress/wp-includes/images/crystal/video.png"
+                  <img width="<?php echo $width; ?>" height="32" src="<?php echo $image; ?>"
                        class="attachment-80x60" alt="<?php echo $media_item->post_title; ?>" title="<?php echo $media_item->post_title; ?>"> </a>
 
                 </td>
                 <td class="title column-title"><strong>
+                  <?php $title = $media_item->post_title ? $media_item->post_title : $media_item->guid ?>
                   <a href="http://localhost/wordpress/wp-admin/media.php?attachment_id=<?php echo $media_item->ID; ?>&amp;action=edit"
-                     title="Edit “<?php echo $media_item->post_title; ?>”">
-                    <?php echo $media_item->post_title; ?></a>
+                     title="Edit “<?php echo $title; ?>”">
+                    <?php echo $title; ?></a>
                 </strong>
                 </td>
                 <td class="author column-author"><?php echo get_post_meta($media_item->ID, LONGTAIL_KEY . "creator", true); ?></td>
                 <td class="date column-date"><?php echo mysql2date( __( 'Y/m/d' ), $media_item->post_date); ?></td>
               </tr>
               <?php } ?>
+              <?php $style = $media_items->found_posts > 0 ? "style='display: none;'" : ""; ?>
+              <tr id="no-media" class="alternate author-self status-inherit" <?php echo $style; ?>>
+                <td colspan="4" style="text-align: center; height: 50px;">No Results</td>
+              </tr>
             </tbody>
           </table>
           <?php if ($page_links) { ?>
