@@ -320,17 +320,13 @@ function jwplayer_get_playlists() {
                     <?php $mime_type = substr($playlist_item->post_mime_type, 0, 5); ?>
                     <?php $image = $mime_type == "image" ? $playlist_item->guid : "http://localhost/wordpress/wp-includes/images/crystal/video.png"; ?>
                     <?php $width = $mime_type == "image" ? "32" : "24"; ?>
-                    <a href="http://localhost/wordpress/wp-admin/media.php?attachment_id=<?php echo $playlist_item->ID; ?>&amp;action=edit"
-                    title="Edit “<?php echo $playlist_item->post_title; ?>”">
                     <img width="<?php echo $width; ?>" height="32" src="<?php echo $image; ?>"
-                         class="attachment-80x60" alt="<?php echo $playlist_item->post_title; ?>" title="<?php echo $playlist_item->post_title; ?>"> </a>
+                         class="attachment-80x60" alt="<?php echo $playlist_item->post_title; ?>" title="<?php echo $playlist_item->post_title; ?>">
 
                   </td>
-                  <td class="title column-title"><strong>
+                  <td class="title column-title" style="color: #21759B;"><strong>
                     <?php $title = $playlist_item->post_title ? $playlist_item->post_title : $playlist_item->guid ?>
-                    <a href="http://localhost/wordpress/wp-admin/media.php?attachment_id=<?php echo $playlist_item->ID; ?>&amp;action=edit"
-                       title="Edit “<?php echo $title; ?>”">
-                      <?php echo $title; ?></a>
+                    <?php echo $title; ?>
                   </strong>
                   </td>
                   <td class="author column-author"><?php echo get_post_meta($playlist_item->ID, LONGTAIL_KEY . "creator", true); ?></td>
@@ -378,17 +374,13 @@ function jwplayer_get_playlists() {
                   <?php $mime_type = substr($media_item->post_mime_type, 0, 5); ?>
                   <?php $image = $mime_type == "image" ? $media_item->guid : "http://localhost/wordpress/wp-includes/images/crystal/video.png"; ?>
                   <?php $width = $mime_type == "image" ? "32" : "24"; ?>
-                  <a href="http://localhost/wordpress/wp-admin/media.php?attachment_id=<?php echo $media_item->ID; ?>&amp;action=edit"
-                  title="Edit “<?php echo $media_item->post_title; ?>”">
                   <img width="<?php echo $width; ?>" height="32" src="<?php echo $image; ?>"
-                       class="attachment-80x60" alt="<?php echo $media_item->post_title; ?>" title="<?php echo $media_item->post_title; ?>"> </a>
+                       class="attachment-80x60" alt="<?php echo $media_item->post_title; ?>" title="<?php echo $media_item->post_title; ?>">
 
                 </td>
-                <td class="title column-title"><strong>
+                <td class="title column-title" style="color: #21759B;"><strong>
                   <?php $title = $media_item->post_title ? $media_item->post_title : $media_item->guid ?>
-                  <a href="http://localhost/wordpress/wp-admin/media.php?attachment_id=<?php echo $media_item->ID; ?>&amp;action=edit"
-                     title="Edit “<?php echo $title; ?>”">
-                    <?php echo $title; ?></a>
+                  <?php echo $title; ?>
                 </strong>
                 </td>
                 <td class="author column-author"><?php echo get_post_meta($media_item->ID, LONGTAIL_KEY . "creator", true); ?></td>
