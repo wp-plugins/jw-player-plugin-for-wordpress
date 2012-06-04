@@ -146,35 +146,20 @@ function jwplayer_get_playlists() {
 
   <script type="text/javascript">
     jQuery(document).ready(function() {
-      jQuery("#playlist_the-list").sortable({
+      jQuery("#playlist_the-list, #the-list").sortable({
+        connectWith: "#playlist_the-list, #the-list",
+        revert: true,
         items: "tr:not(#no-posts)",
-        axis: "y",
-        revert: "true",
-        sort: function() {
-          jQuery(this).removeClass("ui-state-default");
-        },
         stop: function(e, ui) {
-          updatePlaylist();
-        },
-        cursor: "move"
-      }).droppable({
-        activeClass: "ui-state-default",
-        hoverClass: "ui-state-hover",
-        accept: ":not(.ui-sortable-helper,.playlist-item)",
-        drop: function(event, ui) {
-          jQuery(this).find(".placeholder").remove();
-          jQuery("<tr id='" + ui.draggable[0].id + "' class='alternate author-self status-inherit playlist-item'></tr>").html(ui.draggable.html()).appendTo(this);
-          jQuery(ui.draggable).remove();
-          jQuery("#no-posts").remove();
+          var posts = jQuery("#playlist_the-list tr:not(#no-posts)");
+          if (posts.length > 0) {
+            jQuery("#no-posts").hide();
+          } else {
+            jQuery("#no-posts").show();
+          }
           updatePlaylist();
         }
       });
-      jQuery("#the-list tr").draggable({
-        helper: "clone",
-        revert: "invalid",
-        cursor: "move"
-      });
-      updatePlaylist();
     });
 
     function updatePlaylist() {
@@ -273,14 +258,6 @@ function jwplayer_get_playlists() {
       return confirm("Are you sure wish to delete the Playlist?");
     }
 
-    function deletePlaylistItem(object) {
-      jQuery(object).parents("tr").appendTo("#the-list");
-      jQuery("#the-list tr").draggable({
-        helper: "clone"
-      });
-      updatePlaylist();
-    }
-
   </script>
 
   <form action="<?php echo $form_action_url; ?>" method="post">
@@ -306,6 +283,7 @@ function jwplayer_get_playlists() {
               <input type="submit" class="button savebutton" name="delete" id="delete-all" value="<?php esc_attr_e( 'Delete' ); ?>" onclick="return deletePlaylistHandler()" />
               <input type="hidden" id="playlist_items" name="playlist_items" value='<?php echo json_encode($p_items); ?>' />
               <input type="hidden" id="old_playlist" name="old_playlist" value="<?php echo $current_playlist; ?>" />
+              <span style="margin-left: 230px;">Media List</span>
             </div>
           </div>
         </div>
@@ -353,7 +331,7 @@ function jwplayer_get_playlists() {
               <?php } ?>
               <?php if (empty($playlist_items) && !empty($playlists)) { ?>
                 <tr id="no-posts" class="alternate author-self status-inherit">
-                  <td colspan="4" style="text-align: center; height: 50px;">The playlist does not have any items.</td>
+                  <td colspan="4" style="text-align: center; height: 50px;">Drag items from the Media List to start building your playlist.</td>
                 </tr>
               <?php } ?>
             </tbody>
