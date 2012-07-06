@@ -474,7 +474,7 @@ class LongTailFramework
             $default = str_replace(LongTailFramework::getSkinURL(), "", $default);
             $default = preg_replace("/(\.swf|\.zip)/", "", $default);
             $parts = explode("/", $default);
-            $default = empty($parts) ? $default : $parts[0];
+            $default = empty($parts) || $flash_var->name != "skin" ? $default : $parts[0];
           }
           $values = (array) $flash_var->select;
           $val = isset($values["option"]) ? $values["option"] : "";
