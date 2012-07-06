@@ -143,7 +143,7 @@ class AdminContext {
           $this->parseFlashvarString($new_val, $data);
         } else if ($new_name == "plugins") {
           $additional_plugins = $new_val;
-        } else if (!empty($new_val)) {
+        } else if (isset($new_val)) {
           $data[$new_name] = $new_val;
         } else {
           unset($data[$new_name]);

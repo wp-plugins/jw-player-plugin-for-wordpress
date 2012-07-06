@@ -275,7 +275,7 @@ function create_mode_block($atts) {
   $downloadMode->config = new stdClass();
   $downloadMode->config->streamer = "";
   $downloadMode->config->provider = "";
-  if (array_key_exists("download_file", $atts)) $html5Mode->config->file = $atts["download_file"];
+  if (array_key_exists("download_file", $atts)) $downloadMode->config->file = $atts["download_file"];
   if ($playerMode == "html5") {
     $modes[] = $html5Mode;
     $modes[] = $flashMode;
