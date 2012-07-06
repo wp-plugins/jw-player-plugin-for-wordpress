@@ -228,6 +228,12 @@ function resolve_media_id(&$atts) {
   if (!array_key_exists("download_file", $atts)) {
     if ($download_file = retrieve_file("download", $id)) $atts["download_file"] = $download_file;
   }
+  $creator = get_post_meta($id, LONGTAIL_KEY . "creator", true);
+  $atts["title"] = $atts["title"] ? $atts["title"] : $post->post_title;
+  $atts["creator"] = $atts["creator"] ? $atts["creator"] : $creator;
+  $atts["author"] = $atts["creator"] ? $atts["creator"] : $creator;
+  $atts["date"] = $atts["date"] ? $atts["date"] : $post->post_date;
+  $atts["description"] = $atts["description"] ? $atts["description"] : $post->post_content;
 }
 
 function generate_embed_code($atts) {
