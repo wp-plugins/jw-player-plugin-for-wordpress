@@ -143,7 +143,7 @@ function jwplayer_get_playlists() {
 ?>
 
 <div class="wrap">
-  <h2><?php echo "JW Player Plugin Playlist Manager"; ?></h2>
+  <h2><?php _e("JW Player Plugin Playlist Manager"); ?></h2>
 
   <script type="text/javascript">
     jQuery(document).ready(function() {
@@ -255,14 +255,14 @@ function jwplayer_get_playlists() {
     function createPlaylistHandler() {
       var playlistName = document.forms[0]["<?php echo LONGTAIL_KEY . "playlist_name"; ?>"];
       if (playlistName.value == "") {
-        alert("Your playlist must have a valid name.");
+        alert("<?php _e("Your playlist must have a valid name."); ?>");
         return false;
       }
       return true;
     }
 
     function deletePlaylistHandler() {
-      return confirm("Are you sure wish to delete the Playlist?");
+      return confirm("<?php _e("Are you sure wish to delete the Playlist?"); ?>");
     }
 
   </script>
@@ -290,14 +290,14 @@ function jwplayer_get_playlists() {
               <input type="submit" class="button savebutton" name="delete" id="delete-all" value="<?php esc_attr_e( 'Delete' ); ?>" onclick="return deletePlaylistHandler()" />
               <input type="hidden" id="playlist_items" name="playlist_items" value='<?php echo json_encode($p_items); ?>' />
               <input type="hidden" id="old_playlist" name="old_playlist" value="<?php echo $current_playlist; ?>" />
-              <span style="margin-left: 230px;">Media List</span>
+              <span style="margin-left: 230px;"><?php _e("Media List"); ?></span>
             </div>
           </div>
         </div>
         <div style="float: right;">
-          <label class="screen-reader-text" for="media-search-input">Search Media:</label>
+          <label class="screen-reader-text" for="media-search-input"><?php _e("Search Media:"); ?></label>
           <input type="text" id="media-search-input" name="s" value="">
-          <input type="submit" name="" id="search-submit" class="button" value="Search Media">
+          <input type="submit" name="" id="search-submit" class="button" value="<?php _e("Search Media"); ?>">
         </div>
         <div style="clear: both;"></div>
       </div>
@@ -307,9 +307,9 @@ function jwplayer_get_playlists() {
             <thead>
               <tr>
                 <th scope="col" id="playlist_icon" class="manage-column column-icon" style=""></th>
-                <th scope="col" id="playlist_title" class="manage-column column-title" style=""><span>File</span></th>
-                <th scope="col" id="playlist_author" class="manage-column column-author sortable desc" style="width: 20%; padding: 7px 7px 8px;"><span>Author</span></th>
-                <th scope="col" id="playlist_date" class="manage-column column-date sortable asc" style="width: 20%; padding: 7px 7px 8px;"><span>Date</span></th>
+                <th scope="col" id="playlist_title" class="manage-column column-title" style=""><span><?php _e("File"); ?></span></th>
+                <th scope="col" id="playlist_author" class="manage-column column-author sortable desc" style="width: 20%; padding: 7px 7px 8px;"><span><?php _e("Author"); ?></span></th>
+                <th scope="col" id="playlist_date" class="manage-column column-date sortable asc" style="width: 20%; padding: 7px 7px 8px;"><span><?php _e("Date"); ?></span></th>
               </tr>
             </thead>
 
@@ -335,7 +335,7 @@ function jwplayer_get_playlists() {
               <?php } ?>
               <?php $style = empty($playlist_item) ? "" : "style='display: none;'"; ?>
               <tr id="no-posts" class="alternate author-self status-inherit" <?php echo $style; ?>>
-                <td colspan="4" style="text-align: center; height: 50px;">Drag items from the Media List to start building your playlist.</td>
+                <td colspan="4" style="text-align: center; height: 50px;"><?php _e("Drag items from the Media List to start building your playlist."); ?></td>
               </tr>
             </tbody>
           </table>

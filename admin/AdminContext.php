@@ -67,11 +67,11 @@ class AdminContext {
         }
         $state = new PlayerState($_POST[LONGTAIL_KEY . "config"]);
         $del_player = $_POST[LONGTAIL_KEY . "config"];
-        $this->feedback_message("The '$del_player' Player was successfully deleted.");
+        $this->feedback_message(sprintf(__("The '%s' Player was successfully deleted."), $del_player));
         $state->render();
       } else {
-        if ($_POST["Next"] == "Create Custom Player") {
-          $_POST[LONGTAIL_KEY . "new_player"] = "Custom Player";
+        if ($_POST["Next"] == __("Create Custom Player")) {
+          $_POST[LONGTAIL_KEY . "new_player"] = __("Custom Player");
         }
         $state->getNextState()->render();
       }
@@ -91,9 +91,9 @@ class AdminContext {
       }
       $save_player = $_POST[LONGTAIL_KEY . "new_player"] ? $_POST[LONGTAIL_KEY . "new_player"] : $config;
       if ($success) {
-        $this->feedback_message("The '$save_player' Player was successfully saved.");
+        $this->feedback_message(sprintf(__("The '%s' Player was successfully saved."), $save_player));
       } else {
-        $this->error_message("The '$save_player' failed to save.  Please make sure the " . LongTailFramework::getConfigPath() . " exists and is writable.  " . JW_FILE_PERMISSIONS);
+        $this->error_message(sprintf(__('The \'%1$s\' failed to save.  Please make sure the %2$s exists and is writable.  ' . JW_FILE_PERMISSIONS), $save_player, LongTailFramework::getConfigPath()));
       }
       $state->getSaveState()->render();
     } else {

@@ -42,6 +42,7 @@ class LongTailFramework
   /**
    * Returns an array representation of the current config's configuration
    * values.
+   * @param bool $flat
    * @return array The array representation of config values.
    */
   public static function getConfigValues($flat = false) {
@@ -136,7 +137,7 @@ class LongTailFramework
    * Given a Player config name, return the associated xml file.
    * @param string $conf The name of the Player configuration.  Default is null,
    * in which case it uses the currently loaded config.
-   * @return A reference to the xml file.
+   * @return bool|object
    */
   public static function getConfigFile($conf = "") {
     $config = $conf != "" ? $conf : LongTailFramework::$current_config;
@@ -150,7 +151,7 @@ class LongTailFramework
    * Get the complete URL for a given Player configuration.
    * @param string $conf The name of the Player configuration.  Default is null,
    * in which case it uses the currently loaded config.
-   * @return The complete URL.
+   * @return string
    */
   public static function getConfigURL($conf = "") {
     $config = $conf != "" ? $conf : LongTailFramework::$current_config;
@@ -164,7 +165,7 @@ class LongTailFramework
    * Get the relative path for a given Player configuration.
    * @param string $conf The name of the Player configuration.  Default is null,
    * in which case it uses the currently loaded config.
-   * @return The relative path.
+   * @return string
    */
   public static function getConfigPath($conf = "") {
     $config = $conf != "" ? $conf : LongTailFramework::$current_config;
@@ -423,7 +424,7 @@ class LongTailFramework
    * Generates the SWFObjectConfig object which acts as a wrapper for the SWFObject javascript library.
    * This will embed the temporary swf file uploaded by a plugin.
    * @param array $flash_vars The array of flashvars to be used in the embedding
-   * @return SWFObjectConfig The configured SWFOjbectConfig object to be used for embedding
+   * @return SWFObjectConfig The configured SWFObjectConfig object to be used for embedding
    */
   public static function generateTempSWFObject($flash_vars) {
     return new SWFObjectConfig(LongTailFramework::$div_id++, LongTailFramework::getTempPlayerURL(), LongTailFramework::getConfigURL(), LongTailFramework::getEmbedParameters(), $flash_vars);
@@ -449,7 +450,6 @@ class LongTailFramework
   /**
    * Generates the list of flashvars supported by this version of the player along with
    * their defaults.
-   * @return A structured array of the flashvars.
    */
   private static function loadPlayerFlashVars() {
     $f_vars = array();
@@ -503,10 +503,10 @@ class LongTailFramework
 
   /**
    * Creates a Plugin object which represents a given Player plugin.
-   * @param file $file The xml file which represents the Plugin
-   * @param &$config_values The currently loaded config values.  Used to
+   * @param object $file The xml file which represents the Plugin
+   * @param &$config_values array currently loaded config values.  Used to
    * distinguish between standard flashvars and additional flashvars.
-   * @return A new Plugin object
+   * @return Plugin new Plugin object
    */
   private static function processPlugin($file, &$config_values = null) {
     $plugin_xml = simplexml_load_file(LongTailFramework::getPluginPath() . $file);

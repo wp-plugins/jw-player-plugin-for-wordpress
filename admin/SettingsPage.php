@@ -62,62 +62,62 @@ function feedback_message ($message, $timeout = 0) { ?>
 ?>
  
 <div class="wrap">
-  <h2><?php echo "JW Player Plugin Settings"; ?></h2>
+  <h2><?php _e("JW Player Plugin Settings"); ?></h2>
   <form name="<?php echo LONGTAIL_KEY . "form" ?>" method="post" action="">
     <div id="poststuff">
       <div id="post-body">
         <div id="post-body-content">
           <div class="stuffbox">
-            <h3 class="hndle"><span>Shortcode Settings</span></h3>
+            <h3 class="hndle"><span><?php _e("Shortcode Settings"); ?></span></h3>
             <div class="inside" style="margin: 15px;">
-              <p><em>Configure the source for each page type.  This is dependent on your theme which can either pull from <strong>the_content</strong> or <strong>the_excerpt</strong>.  Optionally you can disable embedding on a specific page type.  This will strip out the shortcode.</em></p>
+              <p><em><?php _e("Configure the source for each page type.  This is dependent on your theme which can either pull from <strong>the_content</strong> or <strong>the_excerpt</strong>.  Optionally you can disable embedding on a specific page type.  This will strip out the shortcode."); ?></em></p>
               <table class="form-table">
                 <tr valign="top">
-                  <th>Category Pages:</th>
+                  <th><?php _e("Category Pages:"); ?></th>
                   <td>
-                    <label for="category_excerpt">Excerpt</label>
+                    <label for="category_excerpt"><?php _e("Excerpt"); ?></label>
                     <input id="category_excerpt" type="radio" value="excerpt" name="category_config" onclick="form.submit();" <?php checked("excerpt", get_option(LONGTAIL_KEY . "category_mode")); ?> />
-                    <label for="category_content">Content</label>
+                    <label for="category_content"><?php _e("Content"); ?></label>
                     <input id="category_content" type="radio" value="content" name="category_config" onclick="form.submit();" <?php checked("content", get_option(LONGTAIL_KEY . "category_mode")); ?> />
-                    <label for="category_disable">Disable</label>
+                    <label for="category_disable"><?php _e("Disable"); ?></label>
                     <input id="category_disable" type="radio" value="disable" name="category_config" onclick="form.submit();" <?php checked("disable", get_option(LONGTAIL_KEY . "category_mode")); ?> />
-                    <span class="description">Configure JW Player shortcode behavior on category pages.</span>
+                    <span class="description"><?php _e("Configure JW Player shortcode behavior on category pages."); ?></span>
                   </td>
                 </tr>
                 <tr>
-                  <th>Search Pages:</th>
+                  <th><?php _e("Search Pages:"); ?></th>
                   <td>
-                    <label for="search_excerpt">Excerpt</label>
+                    <label for="search_excerpt"><?php _e("Excerpt"); ?></label>
                     <input id="search_excerpt" type="radio" value="excerpt" name="search_config" onclick="form.submit();" <?php checked("excerpt", get_option(LONGTAIL_KEY . "search_mode")); ?> />
-                    <label for="search_content">Content</label>
+                    <label for="search_content"><?php _e("Content"); ?></label>
                     <input id="search_content" type="radio" value="content" name="search_config" onclick="form.submit();" <?php checked("content", get_option(LONGTAIL_KEY . "search_mode")); ?> />
-                    <label for="search_disable">Disable</label>
+                    <label for="search_disable"><?php _e("Disable"); ?></label>
                     <input id="search_disable" type="radio" value="disable" name="search_config" onclick="form.submit();" <?php checked("disable", get_option(LONGTAIL_KEY . "search_mode")); ?> />
-                    <span class="description">Confgiure JW Player shortcode behavior on search result pages.</span>
+                    <span class="description"><?php _e("Confgiure JW Player shortcode behavior on search result pages."); ?></span>
                   </td>
                 </tr>
                 <tr>
                   <th>Tag Pages:</th>
                   <td>
-                    <label for="tag_excerpt">Excerpt</label>
+                    <label for="tag_excerpt"><?php _e("Excerpt"); ?></label>
                     <input id="tag_excerpt" type="radio" value="excerpt" name="tag_config" onclick="form.submit();" <?php checked("excerpt", get_option(LONGTAIL_KEY . "tag_mode")); ?> />
-                    <label for="tag_content">Content</label>
+                    <label for="tag_content"><?php _e("Content"); ?></label>
                     <input id="tag_content" type="radio" value="content" name="tag_config" onclick="form.submit();" <?php checked("content", get_option(LONGTAIL_KEY . "tag_mode")); ?> />
-                    <label for="tag_disable">Disable</label>
+                    <label for="tag_disable"><?php _e("Disable"); ?></label>
                     <input id="tag_disable" type="radio" value="disable" name="tag_config" onclick="form.submit();" <?php checked("disable", get_option(LONGTAIL_KEY . "tag_mode")); ?> />
-                    <span class="description">Confgiure JW Player shortcode behavior on tag pages.</span>
+                    <span class="description"><?php _e("Confgiure JW Player shortcode behavior on tag pages."); ?></span>
                   </td>
                 </tr>
                 <tr>
                   <th>Home Page:</th>
                   <td>
-                    <label for="home_excerpt">Excerpt</label>
+                    <label for="home_excerpt"><?php _e("Excerpt"); ?></label>
                     <input id="home_excerpt" type="radio" value="excerpt" name="home_config" onclick="form.submit();" <?php checked("excerpt", get_option(LONGTAIL_KEY . "home_mode")); ?> />
-                    <label for="home_content">Content</label>
+                    <label for="home_content"><?php _e("Content"); ?></label>
                     <input id="home_content" type="radio" value="content" name="home_config" onclick="form.submit();" <?php checked("content", get_option(LONGTAIL_KEY . "home_mode")); ?> />
-                    <label for="home_disable">Disable</label>
+                    <label for="home_disable"><?php _e("Disable"); ?></label>
                     <input id="home_disable" type="radio" value="disable" name="home_config" onclick="form.submit();" <?php checked("disable", get_option(LONGTAIL_KEY . "home_mode")); ?> />
-                    <span class="description">Confgiure JW Player shortcode behavior on the home page.</span>
+                    <span class="description"><?php _e("Confgiure JW Player shortcode behavior on the home page."); ?></span>
                   </td>
                 </tr>
               </table>
@@ -130,34 +130,34 @@ function feedback_message ($message, $timeout = 0) { ?>
       <div id="post-body">
         <div id="post-body-content">
           <div class="stuffbox">
-            <h3 class="hndle"><span>Player Settings</span></h3>
+            <h3 class="hndle"><span><?php _e("Player Settings"); ?></span></h3>
             <div class="inside" style="margin: 15px;">
               <table class="form-table">
                 <tr valign="top">
-                  <th>Enable Alternative Player Location:</th>
+                  <th><?php _e("Enable Alternative Player Location:"); ?></th>
                   <td>
-                    <label for="player_location_yes">Yes</label>
+                    <label for="player_location_yes"><?php _e("Yes"); ?></label>
                     <input id="player_location_yes" type="radio" value="1" name="player_location_enable" onclick="form.submit();" <?php checked(true, get_option(LONGTAIL_KEY . "player_location_enable")); ?> />
-                    <label for="player_location_no">No</label>
+                    <label for="player_location_no"><?php _e("No"); ?></label>
                     <input id="player_location_no" type="radio" value="0" name="player_location_enable" onclick="form.submit();" <?php checked(0, get_option(LONGTAIL_KEY . "player_location_enable")); ?> />
-                    <span class="description">When enabled the plugin will load the player from the specified location.</span>
+                    <span class="description"><?php _e("When enabled the plugin will load the player from the specified location."); ?></span>
                   </td>
                 </tr>
                 <tr valign="top">
-                  <th>Player Location:</th>
+                  <th><?php _e("Player Location:"); ?></th>
                   <td>
                     <input type="text" id="player_location" name="player_location" value="<?php echo get_option(LONGTAIL_KEY . "player_location"); ?>" onblur="form.submit();" style="width: 300px;"/>
-                    <span class="description">Configure the location the player.swf and jwplayer.js files should be loaded from.</span>
+                    <span class="description"><?php _e("Configure the location the player.swf and jwplayer.js files should be loaded from."); ?></span>
                   </td>
                 </tr>
                 <tr valign="top">
-                  <th>Select Primary Mode:</th>
+                  <th><?php _e("Select Primary Mode:") ?></th>
                   <td>
-                    <label for="player_mode_yes">Flash</label>
+                    <label for="player_mode_yes"><?php _e("Flash"); ?></label>
                     <input id="player_mode_yes" type="radio" value="flash" name="player_mode" onclick="form.submit();" <?php checked("flash", get_option(LONGTAIL_KEY . "player_mode")); ?> />
-                    <label for="player_mode_no">HTML5</label>
+                    <label for="player_mode_no"><?php _e("HTML5"); ?></label>
                     <input id="player_mode_no" type="radio" value="html5" name="player_mode" onclick="form.submit();" <?php checked("html5", get_option(LONGTAIL_KEY . "player_mode")); ?> />
-                    <span class="description">Select which mode the player will default to (Flash or HTML5).</span>
+                    <span class="description"><?php _e("Select which mode the player will default to (Flash or HTML5)."); ?></span>
                   </td>
                 </tr>
               </table>
@@ -170,37 +170,37 @@ function feedback_message ($message, $timeout = 0) { ?>
       <div id="post-body">
         <div id="post-body-content">
           <div class="stuffbox">
-            <h3 class="hndle"><span>Content Settings</span></h3>
+            <h3 class="hndle"><span><?php _e("Content Settings"); ?></span></h3>
             <div class="inside" style="margin: 15px;">
               <table class="form-table">
                 <tr valign="top">
-                  <th>Show Duration on Images:</th>
+                  <th><?php _e("Show Duration on Images:"); ?></th>
                   <td>
-                    <label for="image_duration_yes">Yes</label>
+                    <label for="image_duration_yes"><?php _e("Yes"); ?></label>
                     <input id="image_duration_yes" type="radio" value="1" name="image_duration" onclick="form.submit();" <?php checked(true, get_option(LONGTAIL_KEY . "image_duration")); ?> />
-                    <label for="image_duration_no">No</label>
+                    <label for="image_duration_no"><?php _e("No"); ?></label>
                     <input id="image_duration_no" type="radio" value="0" name="image_duration" onclick="form.submit();" <?php checked(0, get_option(LONGTAIL_KEY . "image_duration")); ?> />
-                    <span class="description">Controls whether the duration field is visible when editing the meta data for images.</span>
+                    <span class="description"><?php _e("Controls whether the duration field is visible when editing the meta data for images."); ?></span>
                   </td>
                 </tr>
                 <tr valign="top">
-                  <th>Show Insert Button on Images:</th>
+                  <th><?php _e("Show Insert Button on Images:"); ?></th>
                   <td>
-                    <label for="image_insert_yes">Yes</label>
+                    <label for="image_insert_yes"><?php _e("Yes"); ?></label>
                     <input id="image_insert_yes" type="radio" value="1" name="image_insert" onclick="form.submit();" <?php checked(true, get_option(LONGTAIL_KEY . "image_insert")); ?> />
-                    <label for="image_insert_no">No</label>
+                    <label for="image_insert_no"><?php _e("No"); ?></label>
                     <input id="image_insert_no" type="radio" value="0" name="image_insert" onclick="form.submit();" <?php checked(0, get_option(LONGTAIL_KEY . "image_insert")); ?> />
-                    <span class="description">Controls whether the insert button is visible when editing the meta data for images.</span>
+                    <span class="description"><?php _e("Controls whether the insert button is visible when editing the meta data for images."); ?></span>
                   </td>
                 </tr>
                 <tr valign="top">
-                  <th>Enable Facebook Open Graph Data:</th>
+                  <th><?php _e("Enable Facebook Open Graph Data:"); ?></th>
                   <td>
-                    <label for="facebook_yes">Yes</label>
+                    <label for="facebook_yes"><?php _e("Yes"); ?></label>
                     <input id="facebook_yes" type="radio" value="1" name="facebook" onclick="form.submit();" <?php checked(true, get_option(LONGTAIL_KEY . "facebook")); ?> />
-                    <label for="facebook_no">No</label>
+                    <label for="facebook_no"><?php _e("No"); ?></label>
                     <input id="facebook_no" type="radio" value="0" name="facebook" onclick="form.submit();" <?php checked(0, get_option(LONGTAIL_KEY . "facebook")); ?> />
-                    <span class="description">Whether or not Facebook Open Graph information should be inserted into the page for sharing on Facebook.</span>
+                    <span class="description"><?php _e("Whether or not Facebook Open Graph information should be inserted into the page for sharing on Facebook."); ?></span>
                   </td>
                 </tr>
               </table>
@@ -213,27 +213,27 @@ function feedback_message ($message, $timeout = 0) { ?>
       <div id="post-body">
         <div id="post-body-content">
           <div class="stuffbox">
-            <h3 class="hndle"><span>Site Settings</span></h3>
+            <h3 class="hndle"><span><?php _e("Site Settings"); ?></span></h3>
             <div class="inside" style="margin: 15px;">
               <table class="form-table">
                 <tr valign="top">
-                  <th>Use SSL when loading the player:</th>
+                  <th><?php _e("Use SSL when loading the player:"); ?></th>
                   <td>
-                    <label for="ssl_yes">Yes</label>
+                    <label for="ssl_yes"><?php _e("Yes"); ?></label>
                     <input id="ssl_yes" type="radio" value="1" name="ssl" onclick="form.submit();" <?php checked(true, get_option(LONGTAIL_KEY . "use_ssl")); ?> />
-                    <label for="ssl_no">No</label>
+                    <label for="ssl_no"><?php _e("No"); ?></label>
                     <input id="ssl_no" type="radio" value="0" name="ssl" onclick="form.submit();" <?php checked(0, get_option(LONGTAIL_KEY . "use_ssl")); ?> />
-                    <span class="description">Controls whether the plugin will load the player, configs and skins using https if your site is https.  <strong>Note:</strong>You will need to resave your players after making a change.</span>
+                    <span class="description"><?php _e("Controls whether the plugin will load the player, configs and skins using https if your site is https.  <strong>Note:</strong>You will need to resave your players after making a change."); ?></span>
                   </td>
                 </tr>
                 <tr valign="top">
-                  <th>Load jwplayer.js/swfobject.js in page head:</th>
+                  <th><?php _e("Load jwplayer.js/swfobject.js in page head:"); ?></th>
                   <td>
-                    <label for="head_js_yes">Yes</label>
+                    <label for="head_js_yes"><?php _e("Yes"); ?></label>
                     <input id="head_js_yes" type="radio" value="1" name="head_js" onclick="form.submit();" <?php checked(true, get_option(LONGTAIL_KEY . "use_head_js")); ?> />
-                    <label for="head_js_no">No</label>
+                    <label for="head_js_no"><?php _e("No"); ?></label>
                     <input id="head_js_no" type="radio" value="0" name="head_js" onclick="form.submit();" <?php checked(0, get_option(LONGTAIL_KEY . "use_head_js")); ?> />
-                    <span class="description">Controls whether the plugin will insert the jwplayer.js or swfobject.js files into the head of every page.  If set to No jwplayer.js or swfobject.js will only be included on pages where the jwplayer.js shortcode is used.</span>
+                    <span class="description"><?php _e("Controls whether the plugin will insert the jwplayer.js or swfobject.js files into the head of every page.  If set to No jwplayer.js or swfobject.js will only be included on pages where the jwplayer.js shortcode is used."); ?></span>
                   </td>
                 </tr>
               </table>
@@ -246,7 +246,7 @@ function feedback_message ($message, $timeout = 0) { ?>
       <div id="post-body">
         <div id="post-body-content">
           <div class="stuffbox">
-            <h3 class="hndle"><span>Uninstall</span></h3>
+            <h3 class="hndle"><span><?php _e("Uninstall"); ?></span></h3>
             <div class="inside" style="margin: 15px;">
               <table>
                 <tr valign="top">

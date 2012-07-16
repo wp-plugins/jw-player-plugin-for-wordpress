@@ -1,16 +1,16 @@
 <?php
 
 define("JW_SETUP_DESC",
-  "The JW Player&trade; is used to deliver video content through your WordPress website.  " .
+  __("The JW Player&trade; is used to deliver video content through your WordPress website.  " .
   "For more information please visit <a href=http://www.longtailvideo.com/" . JW_PLAYER_GA_VARS . " target=_blank>LongTail Video</a>."
-);
+));
 
 define("JW_SETUP_EDIT_PLAYERS", 
-  "<strong>Optional:</strong> This section allows you to create custom players. It is possible to configure flashvars, skins and plugins."
+  __("<strong>Optional:</strong> This section allows you to create custom players. It is possible to configure flashvars, skins and plugins.")
 );
 
 define("JW_LICENSED",
-  "To obtain a licensed player, please purchase a license from LongTail Video."
+  __("To obtain a licensed player, please purchase a license from LongTail Video.")
 );
 
 /**
@@ -73,7 +73,7 @@ class PlayerState extends AdminState {
    */
   public function render() {
     $players = LongTailFramework::getConfigs();
-    if (!$players) $this->infoMessage("If you wish to create custom players please make sure the " . JWPLAYER_FILES_DIR . "/configs/" . " directory exists and is writable.  This directory is necessary for creating custom players.  " . JW_FILE_PERMISSIONS)?>
+    if (!$players) $this->infoMessage(sprintf(__("If you wish to create custom players please make sure the %s/configs/" . " directory exists and is writable.  This directory is necessary for creating custom players.  " . JW_FILE_PERMISSIONS), JWPLAYER_FILES_DIR)); ?>
     <div class="wrap">
 
       <script type="text/javascript">
@@ -97,7 +97,7 @@ class PlayerState extends AdminState {
         }
 
         function deleteHandler(button) {
-          var result = confirm("Are you sure wish to delete the Player?");
+          var result = confirm(__("Are you sure wish to delete the Player?"));
           if (result) {
             selectionHandler(button);
             return true;
@@ -120,7 +120,7 @@ class PlayerState extends AdminState {
               <div id="post-body">
                 <div id="post-body-content">
                   <div class="stuffbox">
-                    <h3 class="hndle"><span>JW Player Status</span></h3>
+                    <h3 class="hndle"><span><?php _e("JW Player Status"); ?></span></h3>
                     <div class="inside" style="margin: 15px;">
                       <table>
                         <tr valign="top">
@@ -128,19 +128,19 @@ class PlayerState extends AdminState {
                             <div>
                             <?php if (!$alternate) { ?>
                               <p>
-                                <span><strong>JW Player:</strong> <?php echo $jwPlayer ? "Installed" : "Not detected"; echo $version && $jwPlayer ? " (JW Player $version)" : ""; ?></span>
+                                <span><strong>JW Player:</strong> <?php echo $jwPlayer ? __("Installed") : __("Not detected"); echo $version && $jwPlayer ? " (JW Player $version)" : ""; ?></span>
                               </p>
-                              <p><span><strong>JW Embedder:</strong></span> <?php echo $jwEmbedder ? "Installed" : "Not detected (SWFObject will be used instead)"; ?></p>
+                              <p><span><strong>JW Embedder:</strong></span> <?php echo $jwEmbedder ? __("Installed") : __("Not detected (SWFObject will be used instead)"); ?></p>
                               <?php if (!strstr($version, "Licensed")) { ?>
                                 <p><span><?php echo JW_LICENSED; ?></span></p>
-                                <p><input class="button-secondary" type="submit" name="Update_Player" value="Click Here to Upgrade" /></p>
+                                <p><input class="button-secondary" type="submit" name="Update_Player" value="<?php _e("Click Here to Upgrade"); ?>" /></p>
                               <?php } ?>
                             <?php } else if ($alternate) { ?>
-                              <p><span><?php echo "<strong>Current Player:</strong> Version Unknown"; ?></span></p>
-                              <p><span>The player is being loaded from an alternate location (<strong><?php echo $location; ?></strong>) and is not being managed by the plugin.</span></p>
+                              <p><span><?php echo "<strong>" . __("Current Player") . ":</strong> " . __("Version Unknown"); ?></span></p>
+                              <p><span><?php printf(__("The player is being loaded from an alternate location (<strong>%s</strong>) and is not being managed by the plugin."), $location); ?></span></p>
                             <?php } else { ?>
-                              <p><span><?php echo "<strong>Current Player:</strong> Version Unknown"; ?></span></p>
-                              <p><input class="button-secondary" type="submit" name="Update_Player" value="Click Here to Reinstall" /></p>
+                              <p><span><?php _e("<strong>Current Player:</strong> Version Unknown"); ?></span></p>
+                              <p><input class="button-secondary" type="submit" name="Update_Player" value="<?php _e("Click Here to Reinstall"); ?>" /></p>
                             <?php } ?>
                           </div>
                         </td>
@@ -155,7 +155,7 @@ class PlayerState extends AdminState {
       <?php } else if (file_exists(LongTailFramework::getSecondaryPlayerPath())) { ?>
         <form name="<?php echo LONGTAIL_KEY . "upgrade_form" ?>" method="post" action="admin.php?page=jwplayer-update">
           <span><?php echo "<strong>Current Player:</strong> Version Unknown "; ?></span>
-          <input class="button-secondary" type="submit" name="Update_Player" value="Click Here to Reinstall" />
+          <input class="button-secondary" type="submit" name="Update_Player" value="<?php _e("Click Here to Reinstall"); ?>" />
         </form>
       <?php } ?>
       <form name="<?php echo LONGTAIL_KEY . "form" ?>" method="post" action="">
@@ -187,7 +187,7 @@ class PlayerState extends AdminState {
                             <tbody>
                               <tr>
                                 <td style="vertical-align: middle">
-                                  <input onchange="updateHandler(this);" type="radio" id="<?php echo LONGTAIL_KEY . "default_Out-of-the-Box"; ?>" name="<?php echo LONGTAIL_KEY . "default"; ?>" value="Out-of-the-Box" <?php checked("Out-of-the-Box", get_option(LONGTAIL_KEY . "default")); ?>/>
+                                  <input onchange="updateHandler(this);" type="radio" id="<?php echo LONGTAIL_KEY . "default_Out-of-the-Box"; ?>" name="<?php echo LONGTAIL_KEY . "default"; ?>" value="<?php _e("Out-of-the-Box"); ?> <?php checked("Out-of-the-Box", get_option(LONGTAIL_KEY . "default")); ?>"/>
                                 </td>
                                 <td style="vertical-align: middle;"><span><?php echo "Out-of-the-Box"; ?></span></td>
                                 <td style="vertical-align: middle;"><span><?php echo "bottom"; ?></span></td>
@@ -196,12 +196,12 @@ class PlayerState extends AdminState {
                                 <td style="vertical-align: middle;"><span><?php echo "false"; ?></span></td>
                                 <td style="vertical-align: middle;"><span><?php echo "300"; ?></span></td>
                                 <td style="vertical-align: middle;"><span><?php echo "400"; ?></span></td>
-                                <td style="vertical-align: middle;"><input class="button-secondary action" id="<?php echo LONGTAIL_KEY . "player_Out-of-the-Box"; ?>" type="submit" name="Next" value="Copy" onclick="copyHandler(this)"/></td>
+                                <td style="vertical-align: middle;"><input class="button-secondary action" id="<?php echo LONGTAIL_KEY . "player_Out-of-the-Box"; ?>" type="submit" name="Next" value="<?php _e("Copy"); ?>" onclick="copyHandler(this)"/></td>
                               </tr>
                               <?php $alternate = false; ?>
                               <?php if ($players) { ?>
                                 <?php foreach ($players as $player) { ?>
-                                  <?php if ($player != "New Player") { ?>
+                                  <?php if ($player != __("New Player")) { ?>
                                     <?php $alternate = !$alternate; ?>
                                     <?php LongTailFramework::setConfig($player); ?>
                                     <?php $details = LongTailFramework::getPlayerFlashVars(LongTailFramework::BASIC); ?>
@@ -216,9 +216,9 @@ class PlayerState extends AdminState {
                                         <?php } ?>
                                       <?php } ?>
                                       <td>
-                                        <input class="button-secondary action" id="<?php echo LONGTAIL_KEY . "player_" . $player; ?>" type="submit" name="Next" value="Copy" onclick="copyHandler(this)"/>
-                                        <input class="button-secondary action" id="<?php echo LONGTAIL_KEY . "player_" . $player; ?>" type="submit" name="Next" value="Edit" onclick="selectionHandler(this)"/>
-                                        <input class="button-secondary action" id="<?php echo LONGTAIL_KEY . "player_" . $player; ?>" type="submit" name="Next" value="Delete" onclick="return deleteHandler(this)"/>
+                                        <input class="button-secondary action" id="<?php echo LONGTAIL_KEY . "player_" . $player; ?>" type="submit" name="Next" value="<?php _e("Copy"); ?>" onclick="copyHandler(this)"/>
+                                        <input class="button-secondary action" id="<?php echo LONGTAIL_KEY . "player_" . $player; ?>" type="submit" name="Next" value="<?php _e("Edit"); ?>" onclick="selectionHandler(this)"/>
+                                        <input class="button-secondary action" id="<?php echo LONGTAIL_KEY . "player_" . $player; ?>" type="submit" name="Next" value="<?php _e("Delete"); ?>" onclick="return deleteHandler(this)"/>
                                       </td>
                                     </tr>
                                   <?php } ?>
@@ -227,7 +227,7 @@ class PlayerState extends AdminState {
                             </tbody>
                           </table>
                           <br/>
-                          <input class="button-secondary action" type="submit" name="Next" value="Create Custom Player"/>
+                          <input class="button-secondary action" type="submit" name="Next" value="<?php _e("Create Custom Player"); ?>"/>
                           <input id="<?php echo LONGTAIL_KEY . "new_player"; ?>" type="hidden" name="<?php echo LONGTAIL_KEY . "new_player"; ?>" value=""/>
                           <input id="<?php echo LONGTAIL_KEY . "player"; ?>" type="hidden" name="<?php echo LONGTAIL_KEY . "config" ?>" value=""/>
                           <input type="hidden" name="<?php echo LONGTAIL_KEY . "state" ?>" value=<?php echo PlayerState::getID(); ?> />

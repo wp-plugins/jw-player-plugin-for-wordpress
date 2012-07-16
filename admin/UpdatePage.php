@@ -121,21 +121,21 @@ function player_upload() {
 }
 
 function default_state() { ?>
-  <h2><?php echo "JW Player Upgrade"; ?></h2>
+  <h2><?php _e("JW Player Upgrade"); ?></h2>
   <p/> <?php
   upload_section();
   download_section();
 }
 
 function download_state() { ?>
-  <h2><?php echo "JW Player Install"; ?></h2>
+  <h2><?php _e("JW Player Install"); ?></h2>
   <p/>
   <?php
   $result = player_download();
   if ($result == SUCCESS) { ?>
   <div id="info" class="fade updated">
-    <p><strong><span id="player_version"><?php echo "Successfully downloaded and installed the latest player version, JW Player "; ?></span></strong></p>
-    <p><?php echo "If you have a specific version of the JW Player you wish to install (eg. licensed version), then you can install it using the <a href='admin.php?page=jwplayer-update'>upgrade page</a>."; ?></p>
+    <p><strong><span id="player_version"><?php _e("Successfully downloaded and installed the latest player version, JW Player "); ?></span></strong></p>
+    <p><?php _e("If you have a specific version of the JW Player you wish to install (eg. licensed version), then you can install it using the <a href='admin.php?page=jwplayer-update'>upgrade page</a>."); ?></p>
   </div>
   <form name="<?php echo LONGTAIL_KEY . "form"; ?>" method="post" action="">
     <table class="form-table">
@@ -147,31 +147,31 @@ function download_state() { ?>
     </table>
   </form>
   <?php } else if ($result == DOWNLOAD_ERROR) {
-    error_message("Not able to download JW Player.  Please check your internet connection. <br/>
+    error_message(sprintf(__("Not able to download JW Player.  Please check your internet connection. <br/>
     If you already have the JW Player then you can install it using the <a href='admin.php?page=jwplayer-update'>upgrade page</a>.<br/>
-    Alternatively you may FTP the player files directly to your site.  Place the player.swf and jwplayer.js files in " . JWPLAYER_FILES_DIR . "/player/. <br/> " . JW_FILE_PERMISSIONS);
+    Alternatively you may FTP the player files directly to your site.  Place the player.swf and jwplayer.js files in %s/player/. <br/> " . JW_FILE_PERMISSIONS), JWPLAYER_FILES_DIR));
   } else if ($result == WRITE_ERROR) {
-    error_message("Not able to install JW Player.
-    Please make sure the " . JWPLAYER_FILES_DIR . "/player/ directory exists (and is writabe) and then visit the <a href='admin.php?page=jwplayer-update'>upgrade page</a>.<br/>
-    Alternatively you may FTP the player.swf and jwplayer.js files directly to your site. <br/>" . JW_FILE_PERMISSIONS);
+    error_message(sprintf(__("Not able to install JW Player.
+    Please make sure the %s/player/ directory exists (and is writabe) and then visit the <a href='admin.php?page=jwplayer-update'>upgrade page</a>.<br/>
+    Alternatively you may FTP the player.swf and jwplayer.js files directly to your site. <br/>" . JW_FILE_PERMISSIONS), JWPLAYER_FILES_DIR));
   } else if ($result == ZIP_ERROR) {
-    error_message("The necessary zip classes are missing.  Please FTP the player manually.  <br/>Place the player.swf and jwplayer.js files in " . JWPLAYER_FILES_DIR . "/player/.");
+    error_message(sprintf(__("The necessary zip classes are missing.  Please FTP the player manually.  <br/>Place the player.swf and jwplayer.js files in %s/player/."), JWPLAYER_FILES_DIR));
   } else if ($result == READ_ERROR) {
-    error_message("Could not find player.swf or jwplayer.js.  Either they are not present or the archive is invalid.<br/>
-    Alternatively you may FTP the player files directly to your site.  Place the player.swf and jwplayer.js files in " . JWPLAYER_FILES_DIR . "/player/.");
+    error_message(sprintf(__("Could not find player.swf or jwplayer.js.  Either they are not present or the archive is invalid.<br/>
+    Alternatively you may FTP the player files directly to your site.  Place the player.swf and jwplayer.js files in %s/player/."), JWPLAYER_FILES_DIR));
   }
 }
 
 function upload_state() { ?>
-  <h2><?php echo "JW Player Install"; ?></h2>
+  <h2><?php _e("JW Player Install"); ?></h2>
   <p/>
   <?php $result = player_upload() ?>
   <?php if ($result == SUCCESS) { ?>
   <div id="info" class="fade updated" style="display: none;">
-    <p><strong><span id="player_version"><?php echo "Successfully installed your player, JW Player "; ?></span></strong></p>
+    <p><strong><span id="player_version"><?php _e("Successfully installed your player, JW Player "); ?></span></strong></p>
   </div>
   <div id="error" class="error fade" style="display: none;">
-    <p><strong><?php echo "JW Player was not detected."; ?></strong></p>
+    <p><strong><?php _e("JW Player was not detected."); ?></strong></p>
   </div>
   <form name="<?php echo LONGTAIL_KEY . "form"; ?>" method="post" action="">
     <table class="form-table">
@@ -183,16 +183,16 @@ function upload_state() { ?>
     </table>
   </form>
   <?php } else if ($result == WRITE_ERROR) {
-    error_message("Not able to install JW Player.  Please make sure the " . LongTailFramework::getPlayerPath() . " directory exists (and is writabe) and then visit the <a href='admin.php?page=jwplayer-update'>upgrade page</a>.  " . JW_FILE_PERMISSIONS);
+    error_message(sprintf(__("Not able to install JW Player.  Please make sure the %s directory exists (and is writabe) and then visit the <a href='admin.php?page=jwplayer-update'>upgrade page</a>.  " . JW_FILE_PERMISSIONS), LongTailFramework::getPlayerPath()));
     default_state();
   } else if ($result == ZIP_ERROR) {
-    error_message("The necessary zip classes are missing.  Please upload the player manually instead using the <a href='admin.php?page=jwplayer-update'>upgrade page</a>.");
+    error_message(__("The necessary zip classes are missing.  Please upload the player manually instead using the <a href='admin.php?page=jwplayer-update'>upgrade page</a>."));
     default_state();
   } else if ($result == READ_ERROR) {
-    error_message("Could not find player.swf or yt.swf.  Either they are not present or the archive is invalid.");
+    error_message(__("Could not find player.swf or yt.swf.  Either they are not present or the archive is invalid."));
     default_state();
   } else {
-    error_message("Not a valid zip archive.");
+    error_message(__("Not a valid zip archive."));
     default_state();
   }
 }
@@ -274,7 +274,7 @@ function upload_section() { ?>
                   if (extension === ".zip") {
                     return true;
                   } else {
-                    alert("File must be a Zip.")
+                    alert("File must be a Zip.");
                     return false;
                   }
                 }
@@ -283,12 +283,12 @@ function upload_section() { ?>
                 <tr>
                   <td colspan="2">
                     <p>
-                      <span><?php echo "Upload your own zip package. Use this to upgrade to the licensed version or to install a specific version of the player.  To obtain a licensed player, please purchase a license from <a href=\"https://www.longtailvideo.com/order/" . JW_PLAYER_GA_VARS . "\" target=_blank>LongTail Video</a>."; ?></span>
+                      <span><?php _e("Upload your own zip package. Use this to upgrade to the licensed version or to install a specific version of the player.  To obtain a licensed player, please purchase a license from <a href=\"https://www.longtailvideo.com/order/" . JW_PLAYER_GA_VARS . "\" target=_blank>LongTail Video</a>."); ?></span>
                     </p>
                     <p>
-                      <label for="file"><?php echo "Install JW Player:"; ?></label>
+                      <label for="file"><?php _("Install JW Player:"); ?></label>
                       <input id="file" type="file" name="file" />
-                      <input class="button-secondary" type="submit" name="Commercial" value="Upload" />
+                      <input class="button-secondary" type="submit" name="Commercial" value="<?php _e("Upload"); ?>" />
                     </p>
                   </td>
                 </tr>
@@ -307,16 +307,16 @@ function download_section() { ?>
       <div id="post-body">
         <div id="post-body-content">
           <div class="stuffbox">
-            <h3 class="hndle"><span><?php echo "Automatically Upgrade"; ?></span></h3>
+            <h3 class="hndle"><span><?php _e("Automatically Upgrade"); ?></span></h3>
             <div class="inside" style="margin: 10px;">
               <table class="form-table">
                 <tr>
                   <td colspan="2">
                     <p>
-                      <span><?php echo "Automatically download the latest Non-commercial version of the JW Player to your web server."; ?></span>
+                      <span><?php _e("Automatically download the latest Non-commercial version of the JW Player to your web server."); ?></span>
                     </p>
                     <p>
-                      <input class="button-secondary" type="submit" name="Non_commercial" value="Install Latest JW Player" />
+                      <input class="button-secondary" type="submit" name="Non_commercial" value="<?php _e("Install Latest JW Player"); ?>" />
                     </p>
                   </td>
                 </tr>
