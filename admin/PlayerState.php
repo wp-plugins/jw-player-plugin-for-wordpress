@@ -1,17 +1,8 @@
 <?php
 
-define("JW_SETUP_DESC",
-  sprintf(__("The JW Player&trade; is used to deliver video content through your WordPress website.  " .
-  "For more information please visit <a href=http://www.longtailvideo.com/%s target=_blank>LongTail Video</a>."
-), JW_PLAYER_GA_VARS));
-
-define("JW_SETUP_EDIT_PLAYERS", 
-  __("<strong>Optional:</strong> This section allows you to create custom players. It is possible to configure flashvars, skins and plugins.")
-);
-
-define("JW_LICENSED",
-  __("To obtain a licensed player, please purchase a license from LongTail Video.")
-);
+define("JW_SETUP_DESC", sprintf(__("The JW Player&trade; is used to deliver video content through your WordPress website.  For more information please visit <a href=http://www.longtailvideo.com/%s target=_blank>LongTail Video</a>."), JW_PLAYER_GA_VARS));
+define("JW_SETUP_EDIT_PLAYERS", __("<strong>Optional:</strong> This section allows you to create custom players. It is possible to configure flashvars, skins and plugins."));
+define("JW_LICENSED", __("To obtain a licensed player, please purchase a license from LongTail Video."));
 
 /**
  * Responsible for the display of the Player management page.

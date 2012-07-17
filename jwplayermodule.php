@@ -26,8 +26,7 @@ Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 global $wp_version;
 
 define("JW_PLAYER_GA_VARS", "?utm_source=WordPress&utm_medium=Product&utm_campaign=WordPress");
-define("JW_FILE_PERMISSIONS", __('For tips on how to make sure this folder is writable please refer to ' .
-  '<a href="http://codex.wordpress.org/Changing_File_Permissions">http://codex.wordpress.org/Changing_File_Permissions</a>.'));
+define("JW_FILE_PERMISSIONS", __('For tips on how to make sure this folder is writable please refer to <a href="http://codex.wordpress.org/Changing_File_Permissions">http://codex.wordpress.org/Changing_File_Permissions</a>.'));
 
 // Check for WP2.7 installation
 if (!defined ('IS_WP27')) {
