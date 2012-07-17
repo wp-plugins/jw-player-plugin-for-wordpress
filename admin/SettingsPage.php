@@ -93,7 +93,7 @@ function feedback_message ($message, $timeout = 0) { ?>
                     <input id="search_content" type="radio" value="content" name="search_config" onclick="form.submit();" <?php checked("content", get_option(LONGTAIL_KEY . "search_mode")); ?> />
                     <label for="search_disable"><?php _e("Disable"); ?></label>
                     <input id="search_disable" type="radio" value="disable" name="search_config" onclick="form.submit();" <?php checked("disable", get_option(LONGTAIL_KEY . "search_mode")); ?> />
-                    <span class="description"><?php _e("Confgiure JW Player shortcode behavior on search result pages."); ?></span>
+                    <span class="description"><?php _e("Configure JW Player shortcode behavior on search result pages."); ?></span>
                   </td>
                 </tr>
                 <tr>
@@ -105,7 +105,7 @@ function feedback_message ($message, $timeout = 0) { ?>
                     <input id="tag_content" type="radio" value="content" name="tag_config" onclick="form.submit();" <?php checked("content", get_option(LONGTAIL_KEY . "tag_mode")); ?> />
                     <label for="tag_disable"><?php _e("Disable"); ?></label>
                     <input id="tag_disable" type="radio" value="disable" name="tag_config" onclick="form.submit();" <?php checked("disable", get_option(LONGTAIL_KEY . "tag_mode")); ?> />
-                    <span class="description"><?php _e("Confgiure JW Player shortcode behavior on tag pages."); ?></span>
+                    <span class="description"><?php _e("Configure JW Player shortcode behavior on tag pages."); ?></span>
                   </td>
                 </tr>
                 <tr>
@@ -117,7 +117,7 @@ function feedback_message ($message, $timeout = 0) { ?>
                     <input id="home_content" type="radio" value="content" name="home_config" onclick="form.submit();" <?php checked("content", get_option(LONGTAIL_KEY . "home_mode")); ?> />
                     <label for="home_disable"><?php _e("Disable"); ?></label>
                     <input id="home_disable" type="radio" value="disable" name="home_config" onclick="form.submit();" <?php checked("disable", get_option(LONGTAIL_KEY . "home_mode")); ?> />
-                    <span class="description"><?php _e("Confgiure JW Player shortcode behavior on the home page."); ?></span>
+                    <span class="description"><?php _e("Configure JW Player shortcode behavior on the home page."); ?></span>
                   </td>
                 </tr>
               </table>

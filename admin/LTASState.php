@@ -1,11 +1,11 @@
 <?php
 
 define("JW_PLAYER_LTAS_DESC",
-  __("The LongTail AdSolution (LTAS) is a service which allows you to monetize your content through pre-roll, post-roll and overlay ads from premium video advertisers.  " .
-  "To use this service you must have an account.  For more information visit <a href=http://www.longtailvideo.com/adsolution" . JW_PLAYER_GA_VARS . " target=_blank>http://www.longtailvideo.com/adsolution</a>." .
-  "<br/><br/><strong>To sign up for this service, <a href=https://dashboard.longtailvideo.com/signup.aspx" . JW_PLAYER_GA_VARS . " target=_blank>click here to create an account</a>.</strong>")
-);
-define("JW_PLAYER_LTAS_LINK", __("<a href=https://dashboard.longtailvideo.com/" . JW_PLAYER_GA_VARS . " target=_blank>AdSolution Dashboard.</a>"));
+  sprintf(__("The LongTail AdSolution (LTAS) is a service which allows you to monetize your content through pre-roll, post-roll and overlay ads from premium video advertisers.  " .
+  "To use this service you must have an account.  For more information visit <a href=http://www.longtailvideo.com/adsolution%s target=_blank>http://www.longtailvideo.com/adsolution</a>." .
+  "<br/><br/><strong>To sign up for this service, <a href=https://dashboard.longtailvideo.com/signup.aspx%s target=_blank>click here to create an account</a>.</strong>"),
+JW_PLAYER_GA_VARS, JW_PLAYER_GA_VARS));
+define("JW_PLAYER_LTAS_LINK", sprintf(__("<a href=https://dashboard.longtailvideo.com/%s target=_blank>AdSolution Dashboard.</a>"), JW_PLAYER_GA_VARS));
 
 /**
  * Responsible for the display of LTAS configuration.
@@ -87,7 +87,7 @@ class LTASState extends WizardState {
                       </td>
                     </tr>
                     <tr>
-                      <td colspan="2"><span class="description"><?php _e(JW_PLAYER_LTAS_DESC); ?></span></td>
+                      <td colspan="2"><span class="description"><?php echo JW_PLAYER_LTAS_DESC; ?></span></td>
                     </tr>
                     <tr>
                       <?php $value = isset($_POST["jwplayermodule_plugin_ltas_cc"]) ? $_POST["jwplayermodule_plugin_ltas_cc"] : $ltas["channel_code"]; ?>

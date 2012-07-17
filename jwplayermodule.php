@@ -60,9 +60,7 @@ add_action('init', 'jwplayer_init');
 //Define the plugin directory and url for file access.
 $uploads = wp_upload_dir();
 if (isset($uploads["error"]) && !empty($uploads["error"])) {
-  add_action('admin_notices', create_function('', 'echo \'<div id="message" class="fade updated"><p><strong>There was a ' .
-    'problem completing activation of the JW Player Plugin for WordPress.  Please note that the JWPlayer Plugin for ' .
-    'WordPress requires that the WordPress uploads directory exists and is writable.  ' . JW_FILE_PERMISSIONS . '</strong></p></div>\';'));
+  add_action('admin_notices', 'jwplayer_uploads_error');
   return;
 }
 $use_ssl = get_option(LONGTAIL_KEY . "use_ssl");
@@ -171,28 +169,33 @@ function jwplayer_upgrade() {
   }
 }
 
+function jwplayer_uploads_error() {
+  $message = __('There was a problem completing activation of the JW Player Plugin for WordPress.  Please note that the JWPlayer Plugin for ' .
+    'WordPress requires that the WordPress uploads directory exists and is writable.  ') . JW_FILE_PERMISSIONS;
+  echo "<div id='message' class='fade updated'><p><strong>$message</strong></p></div>";
+}
+
 function jwplayer_directory_error() {
   $message = __('There was a problem completing activation of the plugin.  The wp-content/uploads/jw-player-plugin-for-wordpress directory could not be created.  ' .
-    'Please ensure the WordPress uploads directory is writable.  ' . JW_FILE_PERMISSIONS);
+    'Please ensure the WordPress uploads directory is writable.  ') . JW_FILE_PERMISSIONS;
   echo "<div id='message' class='fade updated'><p><strong>$message</strong></p></div>";
 }
 
 function jwplayer_player_error() {
   $message = __('There was a problem completing activation of the plugin.  The wp-content/uploads/jw-player-plugin-for-wordpress/player directory could not be created.  ' .
-    'Please ensure the WordPress uploads directory is writable.  ' . JW_FILE_PERMISSIONS);
+    'Please ensure the WordPress uploads directory is writable.  ') . JW_FILE_PERMISSIONS;
   echo "<div id='message' class='fade updated'><p><strong>$message</strong></p></div>";
 }
 
 function jwplayer_configs_error() {
   $message = __('There was a problem completing activation of the plugin.  The wp-content/uploads/jw-player-plugin-for-wordpress/configs directory could not be created.  ' .
-    'Please ensure the WordPress uploads directory is writable.  ' . JW_FILE_PERMISSIONS);
+    'Please ensure the WordPress uploads directory is writable.  ') . JW_FILE_PERMISSIONS;
   echo "<div id='message' class='fade updated'><p><strong>$message</strong></p></div>";
 }
 
 function jwplayer_total_error() {
-  $message = __('Activation of the JW Player Plugin for WordPress could not complete successfully.  The following directories could not be created automatically: </p><ul><li>- ' .
-    JWPLAYER_FILES_DIR . '</li><li>- ' . JWPLAYER_FILES_DIR . '/configs</li><li>- ' . JWPLAYER_FILES_DIR .
-    '/player</li></ul><p>Please ensure these directories are writable.  ' . JW_FILE_PERMISSIONS);
+  $message = sprintf(__('Activation of the JW Player Plugin for WordPress could not complete successfully.  The following directories could not be created automatically: </p><ul><li>-
+     %s</li><li>- %s/configs</li><li>- %s/player</li></ul><p>Please ensure these directories are writable.  '), JWPLAYER_FILES_DIR, JWPLAYER_FILES_DIR, JWPLAYER_FILES_DIR) . JW_FILE_PERMISSIONS;
   echo "<div id='message' class='fade updated'><p><strong>$message</strong></p></div>";
 }
 
