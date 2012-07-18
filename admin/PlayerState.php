@@ -178,7 +178,7 @@ class PlayerState extends AdminState {
                             <tbody>
                               <tr>
                                 <td style="vertical-align: middle">
-                                  <input onchange="updateHandler(this);" type="radio" id="<?php echo LONGTAIL_KEY . "default_Out-of-the-Box"; ?>" name="<?php echo LONGTAIL_KEY . "default"; ?>" value="<?php _e("Out-of-the-Box, 'jw-player-plugin-for-wordpress'"); ?> <?php checked("Out-of-the-Box", get_option(LONGTAIL_KEY . "default")); ?>"/>
+                                  <input onchange="updateHandler(this);" type="radio" id="<?php echo LONGTAIL_KEY . "default_Out-of-the-Box"; ?>" name="<?php echo LONGTAIL_KEY . "default"; ?>" value="<?php _e("Out-of-the-Box", 'jw-player-plugin-for-wordpress'); ?> <?php checked("Out-of-the-Box", get_option(LONGTAIL_KEY . "default")); ?>"/>
                                 </td>
                                 <td style="vertical-align: middle;"><span><?php echo "Out-of-the-Box"; ?></span></td>
                                 <td style="vertical-align: middle;"><span><?php echo "bottom"; ?></span></td>
