@@ -67,11 +67,11 @@ class AdminContext {
         }
         $state = new PlayerState($_POST[LONGTAIL_KEY . "config"]);
         $del_player = $_POST[LONGTAIL_KEY . "config"];
-        $this->feedback_message(sprintf(__("The '%s' Player was successfully deleted."), $del_player));
+        $this->feedback_message(sprintf(__("The '%s' Player was successfully deleted.", 'jw-player-plugin-for-wordpress'), $del_player));
         $state->render();
       } else {
-        if ($_POST["Next"] == __("Create Custom Player")) {
-          $_POST[LONGTAIL_KEY . "new_player"] = __("Custom Player");
+        if ($_POST["Next"] == __("Create Custom Player", 'jw-player-plugin-for-wordpress')) {
+          $_POST[LONGTAIL_KEY . "new_player"] = __("Custom Player", 'jw-player-plugin-for-wordpress');
         }
         $state->getNextState()->render();
       }
@@ -91,9 +91,9 @@ class AdminContext {
       }
       $save_player = $_POST[LONGTAIL_KEY . "new_player"] ? $_POST[LONGTAIL_KEY . "new_player"] : $config;
       if ($success) {
-        $this->feedback_message(sprintf(__("The '%s' Player was successfully saved."), $save_player));
+        $this->feedback_message(sprintf(__("The '%s' Player was successfully saved.", 'jw-player-plugin-for-wordpress'), $save_player));
       } else {
-        $this->error_message(sprintf(__('The \'%1$s\' failed to save.  Please make sure the %2$s exists and is writable.  ' . JW_FILE_PERMISSIONS), $save_player, LongTailFramework::getConfigPath()));
+        $this->error_message(sprintf(__('The \'%1$s\' failed to save.  Please make sure the %2$s exists and is writable.  ', 'jw-player-plugin-for-wordpress') . JW_FILE_PERMISSIONS, $save_player, LongTailFramework::getConfigPath()));
       }
       $state->getSaveState()->render();
     } else {

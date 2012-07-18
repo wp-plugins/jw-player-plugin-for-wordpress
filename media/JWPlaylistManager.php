@@ -86,8 +86,8 @@ $total = ceil($media_items->found_posts / 10);
 $page_links = paginate_links( array(
   'base' => add_query_arg( 'paged', '%#%' ),
   'format' => '',
-  'prev_text' => __('&laquo;'),
-  'next_text' => __('&raquo;'),
+  'prev_text' => __('&laquo;', 'jw-player-plugin-for-wordpress'),
+  'next_text' => __('&raquo;', 'jw-player-plugin-for-wordpress'),
   'total' => $total,
   'current' => $paged,
   'add_args' => array('playlist' => $current_playlist, 'orderby' => $order_by, 'order' => $order)
@@ -143,7 +143,7 @@ function jwplayer_get_playlists() {
 ?>
 
 <div class="wrap">
-  <h2><?php _e("JW Player Plugin Playlist Manager"); ?></h2>
+  <h2><?php _e("JW Player Plugin Playlist Manager", 'jw-player-plugin-for-wordpress'); ?></h2>
 
   <script type="text/javascript">
     jQuery(document).ready(function() {
@@ -255,14 +255,14 @@ function jwplayer_get_playlists() {
     function createPlaylistHandler() {
       var playlistName = document.forms[0]["<?php echo LONGTAIL_KEY . "playlist_name"; ?>"];
       if (playlistName.value == "") {
-        alert("<?php _e("Your playlist must have a valid name."); ?>");
+        alert("<?php _e("Your playlist must have a valid name.", 'jw-player-plugin-for-wordpress'); ?>");
         return false;
       }
       return true;
     }
 
     function deletePlaylistHandler() {
-      return confirm("<?php _e("Are you sure wish to delete the Playlist?"); ?>");
+      return confirm("<?php _e("Are you sure wish to delete the Playlist?", 'jw-player-plugin-for-wordpress'); ?>");
     }
 
   </script>
@@ -271,14 +271,14 @@ function jwplayer_get_playlists() {
     <div>
       <div style="width: 1000px;">
         <p class="ml-submit">
-          <label for="<?php echo LONGTAIL_KEY . "playlist_name"; ?>"><?php _e("New Playlist:"); ?></label>
+          <label for="<?php echo LONGTAIL_KEY . "playlist_name"; ?>"><?php _e("New Playlist:", 'jw-player-plugin-for-wordpress'); ?></label>
           <input type="text" value="" id="<?php echo LONGTAIL_KEY . "playlist_name"; ?>" name="<?php echo LONGTAIL_KEY . "playlist_name"; ?>" />
-          <input type="submit" class="button savebutton" style="" name="<?php echo LONGTAIL_KEY . "playlist_create"; ?>" id="<?php echo LONGTAIL_KEY . "playlist_create"; ?>" value="<?php esc_attr_e("Create Playlist"); ?>" onclick="return createPlaylistHandler()" />
+          <input type="submit" class="button savebutton" style="" name="<?php echo LONGTAIL_KEY . "playlist_create"; ?>" id="<?php echo LONGTAIL_KEY . "playlist_create"; ?>" value="<?php esc_attr_e("Create Playlist", 'jw-player-plugin-for-wordpress'); ?>" onclick="return createPlaylistHandler()" />
         </p>
         <div class="ml-submit" style="padding: 0 0; float: left;">
           <div class="alignleft actions">
             <div class="hide-if-no-js">
-              <label for="<?php echo LONGTAIL_KEY . "playlist_select"; ?>"><?php _e("Playlist:"); ?></label>
+              <label for="<?php echo LONGTAIL_KEY . "playlist_select"; ?>"><?php _e("Playlist:", 'jw-player-plugin-for-wordpress'); ?></label>
               <select onchange="this.form.submit()" id="<?php echo LONGTAIL_KEY . "playlist_select"; ?>" name="<?php echo LONGTAIL_KEY . "playlist_select"; ?>">
                 <?php foreach ($playlists as $playlist_list) { ?>
                 <option value="<?php echo $playlist_list->ID; ?>" <?php selected($playlist_list->ID, $current_playlist); ?>>
@@ -286,18 +286,18 @@ function jwplayer_get_playlists() {
                 </option>
                 <?php } ?>
               </select>
-              <input type="submit" class="button savebutton" name="save" id="save-all" value="<?php esc_attr_e( 'Save' ); ?>" />
-              <input type="submit" class="button savebutton" name="delete" id="delete-all" value="<?php esc_attr_e( 'Delete' ); ?>" onclick="return deletePlaylistHandler()" />
+              <input type="submit" class="button savebutton" name="save" id="save-all" value="<?php esc_attr_e('Save', 'jw-player-plugin-for-wordpress'); ?>" />
+              <input type="submit" class="button savebutton" name="delete" id="delete-all" value="<?php esc_attr_e('Delete', 'jw-player-plugin-for-wordpress'); ?>" onclick="return deletePlaylistHandler()" />
               <input type="hidden" id="playlist_items" name="playlist_items" value='<?php echo json_encode($p_items); ?>' />
               <input type="hidden" id="old_playlist" name="old_playlist" value="<?php echo $current_playlist; ?>" />
-              <span style="margin-left: 230px;"><?php _e("Media List"); ?></span>
+              <span style="margin-left: 230px;"><?php _e("Media List", 'jw-player-plugin-for-wordpress'); ?></span>
             </div>
           </div>
         </div>
         <div style="float: right;">
-          <label class="screen-reader-text" for="media-search-input"><?php _e("Search Media:"); ?></label>
+          <label class="screen-reader-text" for="media-search-input"><?php _e("Search Media:", 'jw-player-plugin-for-wordpress'); ?></label>
           <input type="text" id="media-search-input" name="s" value="">
-          <input type="submit" name="" id="search-submit" class="button" value="<?php _e("Search Media"); ?>">
+          <input type="submit" name="" id="search-submit" class="button" value="<?php _e("Search Media", 'jw-player-plugin-for-wordpress'); ?>">
         </div>
         <div style="clear: both;"></div>
       </div>
@@ -307,9 +307,9 @@ function jwplayer_get_playlists() {
             <thead>
               <tr>
                 <th scope="col" id="playlist_icon" class="manage-column column-icon" style=""></th>
-                <th scope="col" id="playlist_title" class="manage-column column-title" style=""><span><?php _e("File"); ?></span></th>
-                <th scope="col" id="playlist_author" class="manage-column column-author sortable desc" style="width: 20%; padding: 7px 7px 8px;"><span><?php _e("Author"); ?></span></th>
-                <th scope="col" id="playlist_date" class="manage-column column-date sortable asc" style="width: 20%; padding: 7px 7px 8px;"><span><?php _e("Date"); ?></span></th>
+                <th scope="col" id="playlist_title" class="manage-column column-title" style=""><span><?php _e("File", 'jw-player-plugin-for-wordpress'); ?></span></th>
+                <th scope="col" id="playlist_author" class="manage-column column-author sortable desc" style="width: 20%; padding: 7px 7px 8px;"><span><?php _e("Author", 'jw-player-plugin-for-wordpress'); ?></span></th>
+                <th scope="col" id="playlist_date" class="manage-column column-date sortable asc" style="width: 20%; padding: 7px 7px 8px;"><span><?php _e("Date", 'jw-player-plugin-for-wordpress'); ?></span></th>
               </tr>
             </thead>
 
@@ -330,12 +330,12 @@ function jwplayer_get_playlists() {
                   </strong>
                   </td>
                   <td class="author column-author"><?php echo get_post_meta($playlist_item->ID, LONGTAIL_KEY . "creator", true); ?></td>
-                  <td class="date column-date"><?php echo mysql2date( __( 'Y/m/d' ), $playlist_item->post_date); ?></td>
+                  <td class="date column-date"><?php echo mysql2date(__('Y/m/d', 'jw-player-plugin-for-wordpress'), $playlist_item->post_date); ?></td>
                 </tr>
               <?php } ?>
               <?php $style = empty($playlist_item) ? "" : "style='display: none;'"; ?>
               <tr id="no-posts" class="alternate author-self status-inherit" <?php echo $style; ?>>
-                <td colspan="4" style="text-align: center; height: 50px;"><?php _e("Drag items from the Media List to start building your playlist."); ?></td>
+                <td colspan="4" style="text-align: center; height: 50px;"><?php _e("Drag items from the Media List to start building your playlist.", 'jw-player-plugin-for-wordpress'); ?></td>
               </tr>
             </tbody>
           </table>
@@ -384,7 +384,7 @@ function jwplayer_get_playlists() {
                 </strong>
                 </td>
                 <td class="author column-author"><?php echo get_post_meta($media_item->ID, LONGTAIL_KEY . "creator", true); ?></td>
-                <td class="date column-date"><?php echo mysql2date( __( 'Y/m/d' ), $media_item->post_date); ?></td>
+                <td class="date column-date"><?php echo mysql2date(__('Y/m/d', 'jw-player-plugin-for-wordpress'), $media_item->post_date); ?></td>
               </tr>
               <?php } ?>
               <?php $style = $media_items->found_posts > 0 ? "style='display: none;'" : ""; ?>
@@ -396,7 +396,7 @@ function jwplayer_get_playlists() {
           <?php if ($page_links) { ?>
               <div class="tablenav">
                 <div class='tablenav-pages'>
-                  <span style="font-size: 13px;"><?php _e("Available Media:"); ?></span>
+                  <span style="font-size: 13px;"><?php _e("Available Media:", 'jw-player-plugin-for-wordpress'); ?></span>
                   <?php echo $page_links; ?>
                 </div>
               </div>

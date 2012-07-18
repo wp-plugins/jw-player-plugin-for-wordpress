@@ -129,7 +129,7 @@ function jwplayer_attachment_fields($form_fields, $post) {
     case "image":
       if (get_option(LONGTAIL_KEY . "image_duration")) {
         $form_fields[LONGTAIL_KEY . "duration"] = array(
-          "label" => __("Duration"),
+          "label" => __("Duration", 'jw-player-plugin-for-wordpress'),
           "input" => "text",
           "value" => get_post_meta($post->ID, LONGTAIL_KEY . "duration", true)
         );
@@ -138,42 +138,42 @@ function jwplayer_attachment_fields($form_fields, $post) {
     case "audio":
     case "video":
       $form_fields[LONGTAIL_KEY . 'thumbnail_url'] = array(
-        "label" => __("Thumbnail URL"),
+        "label" => __("Thumbnail URL", 'jw-player-plugin-for-wordpress'),
         "input" => "text",
         "value" => get_post_meta($post->ID, LONGTAIL_KEY . "thumbnail_url", true)
       );
       $form_fields[LONGTAIL_KEY . "thumbnail"] = array(
-        "label" => __("Thumbnail"),
+        "label" => __("Thumbnail", 'jw-player-plugin-for-wordpress'),
         "input" => "html",
         "html" => generateImageSelectorHTML($post->ID, $image_attachments)
       );
       $form_fields[LONGTAIL_KEY . "creator"] = array(
-        "label" => __("Creator"),
+        "label" => __("Creator", 'jw-player-plugin-for-wordpress'),
         "input" => "text",
         "value" => get_post_meta($post->ID, LONGTAIL_KEY . "creator", true)
       );
       $form_fields[LONGTAIL_KEY . "duration"] = array(
-        "label" => __("Duration"),
+        "label" => __("Duration", 'jw-player-plugin-for-wordpress'),
         "input" => "text",
         "value" => get_post_meta($post->ID, LONGTAIL_KEY . "duration", true)
       );
       $form_fields[LONGTAIL_KEY . 'html5_file'] = array(
-        "label" => __("HTML5 file"),
+        "label" => __("HTML5 file", 'jw-player-plugin-for-wordpress'),
         "input" => "text",
         "value" => get_post_meta($post->ID, LONGTAIL_KEY . "html5_file", true)
       );
       $form_fields[LONGTAIL_KEY . 'html5_file_selector'] = array(
-        "label" => __(""),
+        "label" => __("", 'jw-player-plugin-for-wordpress'),
         "input" => "html",
         "html" => generateVideoSelectorHTML($post->ID, "html5_file_selector", $video_attachments)
       );
       $form_fields[LONGTAIL_KEY . 'download_file'] = array(
-        "label" => __("Download file"),
+        "label" => __("Download file", 'jw-player-plugin-for-wordpress'),
         "input" => "text",
         "value" => get_post_meta($post->ID, LONGTAIL_KEY . "download_file", true)
       );
       $form_fields[LONGTAIL_KEY . 'download_file_selector'] = array(
-        "label" => __(""),
+        "label" => __("", 'jw-player-plugin-for-wordpress'),
         "input" => "html",
         "html" => generateVideoSelectorHTML($post->ID, "download_file_selector", $video_attachments)
       );
@@ -183,25 +183,25 @@ function jwplayer_attachment_fields($form_fields, $post) {
   if ($mime_type == "video" && isset($rtmp) && $rtmp) {
     unset($form_fields["url"]);
     $form_fields[LONGTAIL_KEY . "streamer"] = array(
-        "label" => __("Streamer"),
+        "label" => __("Streamer", 'jw-player-plugin-for-wordpress'),
         "input" => "text",
         "value" => get_post_meta($post->ID, LONGTAIL_KEY . "streamer", true)
     );
     $form_fields[LONGTAIL_KEY . "file"] = array(
-        "label" => __("File"),
+        "label" => __("File", 'jw-player-plugin-for-wordpress'),
         "input" => "text",
         "value" => get_post_meta($post->ID, LONGTAIL_KEY . "file", true)
     );
     $form_fields[LONGTAIL_KEY . "provider"] = array(
-        "label" => __("Provider"),
+        "label" => __("Provider", 'jw-player-plugin-for-wordpress'),
         "input" => "text",
         "value" => get_post_meta($post->ID, LONGTAIL_KEY . "provider", true)
     );
   }
   if (isset($_GET["post_id"]) && ($mime_type == "video" || $mime_type == "audio" || ($mime_type == "image" && get_option(LONGTAIL_KEY . "image_duration")))) {
-    $insert = "<input type='submit' class='button-primary' name='send[$post->ID]' value='" . esc_attr__( 'Insert JW Player' ) . "' />";
+    $insert = "<input type='submit' class='button-primary' name='send[$post->ID]' value='" . esc_attr__('Insert JW Player', 'jw-player-plugin-for-wordpress') . "' />";
     $form_fields[LONGTAIL_KEY . "player_select"] = array(
-      "label" => __("Select Player"),
+      "label" => __("Select Player", 'jw-player-plugin-for-wordpress'),
       "input" => "html",
       "html" => generatePlayerSelectorHTML($post->ID)
     );

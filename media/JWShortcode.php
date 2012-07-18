@@ -164,7 +164,7 @@ function jwplayer_handler($atts) {
         $atts["file"] = urlencode(get_option('siteurl') . '/' . 'index.php?xspf=true&id=' . $id);
       }
     } else {
-      return __("[PLAYLIST not found]");
+      return __("[PLAYLIST not found]", 'jw-player-plugin-for-wordpress');
     }
     unset($atts["playlistid"]);
   }

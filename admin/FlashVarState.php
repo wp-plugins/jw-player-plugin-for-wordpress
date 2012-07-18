@@ -86,7 +86,7 @@ class FlashVarState extends WizardState {
                             <?php } else { ?>
                               <input type="text" value="<?php echo $value; ?>" name="<?php echo $name; ?>" />
                             <?php } ?>
-                            <span class="description"><?php _e($fvar->getDescription()); ?></span>
+                            <span class="description"><?php _e($fvar->getDescription(), 'jw-player-plugin-for-wordpress'); ?></span>
                           </td>
                         </tr>
                       <?php } ?>
@@ -127,7 +127,7 @@ class FlashVarState extends WizardState {
    * @return string The title of the page.
    */
   public static function getTitle() {
-    return __("Player Settings");
+    return __("Player Settings", 'jw-player-plugin-for-wordpress');
   }
 
   /**
