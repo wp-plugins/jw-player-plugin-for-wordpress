@@ -39,7 +39,7 @@ if (is_array ($playlist_items)) {
     }
 
 		echo "\n\t\t".'<track>';
-		echo "\n\t\t\t".'<title>' . esc_attr(stripslashes($playlist_item->post_title)) . '</title>';
+		echo "\n\t\t\t".'<title>' . esc_attr(stripslashes(__($playlist_item->post_title))) . '</title>';
 		echo "\n\t\t\t".'<creator>' . esc_attr($creator) . '</creator>';
     if (!empty($streamer)) {
       echo "\n\t\t\t".'<jwplayer:streamer>' . esc_attr($streamer) . '</jwplayer:streamer>';
@@ -54,7 +54,7 @@ if (is_array ($playlist_items)) {
     } else {
       echo "\n\t\t\t".'<image>' . esc_attr($image) . '</image>';
     }
-		echo "\n\t\t\t".'<annotation>' . esc_attr( stripslashes($playlist_item->post_content) ) .  '</annotation>';
+		echo "\n\t\t\t".'<annotation>' . esc_attr(stripslashes($playlist_item->post_content)) .  '</annotation>';
     echo "\n\t\t\t".'<jwplayer:mediaid>' . $playlist_item_id . '</jwplayer:mediaid>';
 		echo "\n\t\t\t".'<id>' . $playlist_item_id . '</id>';
 		echo "\n\t\t".'</track>';

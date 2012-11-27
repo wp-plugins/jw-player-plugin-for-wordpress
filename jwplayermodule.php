@@ -81,7 +81,6 @@ function jwplayer_deactivation() {
 }
 
 function jwplayer_init() {
-  global $pluginURL;
   clearstatcache();
   load_plugin_textdomain("jw-player-plugin-for-wordpress", false, basename(dirname(__FILE__)));
   if (!@is_dir(JWPLAYER_FILES_DIR)) {
