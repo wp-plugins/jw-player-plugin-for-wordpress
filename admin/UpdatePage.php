@@ -122,6 +122,7 @@ function player_upload() {
 
 function default_state() { ?>
   <h2><?php _e("JW Player Upgrade", 'jw-player-plugin-for-wordpress'); ?></h2>
+  <p><?php _e("Please note that the JW Player Plugin for WordPress currently supports only JW Player 5X versions of the player.  We are working hard to update the plugin to JW Player 6, and will notify you as soon as the plugin is updated.  In the meantime, we recommend sticking with JW Player 5.", 'jw-player-plugin-for-wordpress'); ?></p>
   <p/> <?php
   upload_section();
   download_section();

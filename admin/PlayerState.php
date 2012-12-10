@@ -123,8 +123,24 @@ class PlayerState extends AdminState {
                               </p>
                               <p><span><strong>JW Embedder:</strong></span> <?php echo $jwEmbedder ? __("Installed", 'jw-player-plugin-for-wordpress') : __("Not detected (SWFObject will be used instead)", 'jw-player-plugin-for-wordpress'); ?></p>
                               <?php if (!strstr($version, "Licensed")) { ?>
-                                <p><span><?php echo JW_LICENSED; ?></span></p>
-                                <p><input class="button-secondary" type="submit" name="Update_Player" value="<?php _e("Click Here to Upgrade", 'jw-player-plugin-for-wordpress'); ?>" /></p>
+                                <p><span><strong><?php _e("Please Note:", 'jw-player-plugin-for-wordpress');?></strong> <?php _e("The JW Player Plugin for WordPress does not yet support JW Player 6.  We are working quickly to update the plugin over the next few weeks. By early 2013, you will be able to use WordPress with JW Player 6.  For now, we recommend sticking with JW Player 5. Please stay tuned!", 'jw-player-plugin-for-wordpress'); ?></span></p>
+                                <p><strong><?php _e("Supported Versions:", 'jw-player-plugin-for-wordpress'); ?></strong></p>
+                                <table style="border: 1px solid gray;">
+                                  <tr>
+                                    <td style="border: 1px solid gray; width: 30px; text-align: center">5.0</td>
+                                    <td style="border: 1px solid gray; width: 30px; text-align: center">5.1</td>
+                                    <td style="border: 1px solid gray; width: 30px; text-align: center">5.2</td>
+                                    <td style="border: 1px solid gray; width: 30px; text-align: center">5.3</td>
+                                    <td style="border: 1px solid gray; width: 30px; text-align: center">5.4</td>
+                                    <td style="border: 1px solid gray; width: 30px; text-align: center">5.5</td>
+                                    <td style="border: 1px solid gray; width: 30px; text-align: center">5.6</td>
+                                    <td style="border: 1px solid gray; width: 30px; text-align: center">5.7</td>
+                                    <td style="border: 1px solid gray; width: 30px; text-align: center">5.8</td>
+                                    <td style="border: 1px solid gray; width: 30px; text-align: center">5.9</td>
+                                    <td style="border: 1px solid gray; width: 30px; text-align: center">5.10</td>
+                                  </tr>
+                                </table>
+                                <p><em><?php _e("If you have already purchased a commercial upgrade for JW6, we can either process a refund, or you can keep your commercial license until the plugin is updated.  We apologize for the inconvenience.");?></em></p>
                               <?php } ?>
                             <?php } else if ($alternate) { ?>
                               <p><span><?php echo "<strong>" . __("Current Player", 'jw-player-plugin-for-wordpress') . ":</strong> " . __("Version Unknown", 'jw-player-plugin-for-wordpress'); ?></span></p>
