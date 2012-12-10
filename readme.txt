@@ -69,6 +69,13 @@ You can perform the automatic update, download the plugin and upload, or FTP the
 
 == Changelog ==
 
+= 1.6.1 =
+
+* FEATURE: i18n support has been added to the plugin.  Feel free to submit translations.
+* ENHANCEMENT: Content Metadata is now included in embeds.
+* BUG: Fixed a bug related to the Download File content setting
+* BUG: Fixed a bug when saving the Advanced Settings streamer option
+
 = 1.6.0 =
 
 * FEATURE: Brand new Playlist Manager now found in the Media section of the Dashboard.  Now supports drag and drop, sorting and searching of your content.
