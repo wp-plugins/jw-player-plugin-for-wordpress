@@ -385,7 +385,12 @@ function track_features($atts) {
   $host = "http://i.n.jwpltx.com/v1/wordpress/ping.gif";
   $url = $host . "?e=features&s=" . urlencode(add_query_arg($wp->query_string, '', home_url($wp->request))) .
     "&" . http_build_query($features);
-  wp_remote_get($url);
+  $fsock = new WP_Http_Fsockopen();
+  if ($fsock->test() != false) {
+    $fsock->request($url, array("blocking" => false));
+  } else {
+    wp_remote_get($url, array("blocking" => false, "timeout" => 1));
+  }
 }
 
 function insert_embedder($embedderExists) {
