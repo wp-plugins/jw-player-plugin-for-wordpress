@@ -252,7 +252,6 @@ function generate_embed_code($atts) {
     }
     return $output;
   } else {
-    track_features($atts);
     if (get_option(LONGTAIL_KEY . "player_location_enable")) {
       $swf = LongTailFramework::generateSWFObject($atts, $embedder, get_option(LONGTAIL_KEY . "player_location"));
     } else {
@@ -371,26 +370,6 @@ function retrieve_file($fileType, $id) {
     return false;
   }
   return $file;
-}
-
-function track_features($atts) {
-  global $wp;
-  $features = $atts;
-  if (array_key_exists("modes", $features)) {
-    $features["modes"] = "_";
-  }
-  if (array_key_exists("playlist", $features)) {
-    $features["playlist"] = "_";
-  }
-  $host = "http://i.n.jwpltx.com/v1/wordpress/ping.gif";
-  $url = $host . "?e=features&s=" . urlencode(add_query_arg($wp->query_string, '', home_url($wp->request))) .
-    "&" . http_build_query($features);
-  $fsock = new WP_Http_Fsockopen();
-  if ($fsock->test() != false) {
-    $fsock->request($url, array("blocking" => false));
-  } else {
-    wp_remote_get($url, array("blocking" => false, "timeout" => 1));
-  }
 }
 
 function insert_embedder($embedderExists) {

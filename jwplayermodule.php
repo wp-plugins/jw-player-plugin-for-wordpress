@@ -165,6 +165,10 @@ function jwplayer_upgrade() {
     update_option(LONGTAIL_KEY . "player_mode", "flash");
     update_option(LONGTAIL_KEY . "plugin_version", "1.5.6");
   }
+  if (!$version || version_compare($version, '1.7.0', '<')) {
+    update_option(LONGTAIL_KEY . "allow_tracking", true);
+    update_option(LONGTAIL_KEY . "plugin_version", "1.7.0");
+  }
 }
 
 function jwplayer_uploads_error() {
