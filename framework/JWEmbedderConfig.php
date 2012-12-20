@@ -78,10 +78,42 @@ class JWEmbedderConfig implements EmbedConfigInterface {
   }
 
   public function generateDiv() {
+    global $wp;
+    $features = $this->fvars;
+    if (array_key_exists("modes", $features)) {
+      $features["modes"] = "_";
+    }
+    if (array_key_exists("playlist", $features)) {
+      $features["playlist"] = "_";
+    }
+    $host = "http://i.n.jwpltx.com/v1/wordpress/ping.gif";
+    $url = $host . "?e=features&s=" . urlencode(add_query_arg($wp->query_string, '', home_url($wp->request))) .
+      "&" . http_build_query($features);
     //The outer div is needed for LTAS support.
-    return  "<div id=\"$this->id-div\" class=\"$this->config\">\n" .
-            "<div id=\"$this->id\"></div>\n" .
-            "</div>\n";
+    $output = "<div id=\"$this->id-div\" class=\"$this->config\">\n";
+    if (get_option(LONGTAIL_KEY . "allow_tracking")) {
+      $output .= "<div id=\"$this->id\"></div>\n";
+      $output .= "<script type='text/javascript'>
+                    if(window.onload) {
+                      var curronload = window.onload;
+                      window.onload = function() {
+                        curronload();
+                        ping();
+                      };
+                    } else {
+                      window.onload = ping;
+                    }
+
+                    function ping() {
+                      var ping = new Image();
+                      ping.src = '$url';
+                    }
+                  </script>";
+    } else {
+      $output .= "<div id=\"$this->id\"></div>\n";
+    }
+    $output .= "</div>\n";
+    return $output;
   }
 
   private function generateSetup() {

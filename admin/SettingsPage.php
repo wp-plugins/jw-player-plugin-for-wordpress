@@ -20,6 +20,7 @@ if (isset($_POST['Uninstall'])) {
 
   if (isset($_POST["ssl"])) update_option(LONGTAIL_KEY . "use_ssl", $_POST["ssl"]);
   if (isset($_POST["head_js"])) update_option(LONGTAIL_KEY . "use_head_js", $_POST["head_js"]);
+  if (isset($_POST["allow_tracking"])) update_option(LONGTAIL_KEY . "allow_tracking", $_POST["allow_tracking"]);
 }
 
 function uninstall() {
@@ -234,6 +235,16 @@ function feedback_message ($message, $timeout = 0) { ?>
                     <label for="head_js_no"><?php _e("No", 'jw-player-plugin-for-wordpress'); ?></label>
                     <input id="head_js_no" type="radio" value="0" name="head_js" onclick="form.submit();" <?php checked(0, get_option(LONGTAIL_KEY . "use_head_js")); ?> />
                     <span class="description"><?php _e("Controls whether the plugin will insert the jwplayer.js or swfobject.js files into the head of every page.  If set to No jwplayer.js or swfobject.js will only be included on pages where the jwplayer.js shortcode is used.", 'jw-player-plugin-for-wordpress'); ?></span>
+                  </td>
+                </tr>
+                <tr valign="top">
+                  <th><?php _e("Allow anonymous analytics tracking:", 'jw-player-plugin-for-wordpress'); ?></th>
+                  <td>
+                    <label for="tracking_yes"><?php _e("Yes", 'jw-player-plugin-for-wordpress'); ?></label>
+                    <input id="tracking_yes" type="radio" value="1" name="allow_tracking" onclick="form.submit();" <?php checked(true, get_option(LONGTAIL_KEY . "allow_tracking")); ?> />
+                    <label for="tracking_no"><?php _e("No", 'jw-player-plugin-for-wordpress'); ?></label>
+                    <input id="tracking_no" type="radio" value="0" name="allow_tracking" onclick="form.submit();" <?php checked(0, get_option(LONGTAIL_KEY . "allow_tracking")); ?> />
+                    <span class="description"><?php _e("Allow LongTail Video to track plugin feature usage.  This will help us improve the plugin in the future.  <strong>Note: Tracking is done anonymously.</strong>", 'jw-player-plugin-for-wordpress'); ?></span>
                   </td>
                 </tr>
               </table>

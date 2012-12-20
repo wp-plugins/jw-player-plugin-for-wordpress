@@ -3,7 +3,7 @@
 Plugin Name: JW Player Plugin for WordPress
 Plugin URI: http://www.longtailvideo.com/
 Description: Embed a JW Player for Flash and HTML5 into your WordPress articles.
-Version: 1.6.1
+Version: 1.7.0
 Author: LongTail Video Inc.
 Author URI: http://www.longtailvideo.com/
 
@@ -164,6 +164,10 @@ function jwplayer_upgrade() {
   if (!$version || version_compare($version, '1.5.6', '<')) {
     update_option(LONGTAIL_KEY . "player_mode", "flash");
     update_option(LONGTAIL_KEY . "plugin_version", "1.5.6");
+  }
+  if (!$version || version_compare($version, '1.7.0', '<')) {
+    update_option(LONGTAIL_KEY . "allow_tracking", true);
+    update_option(LONGTAIL_KEY . "plugin_version", "1.7.0");
   }
 }
 
