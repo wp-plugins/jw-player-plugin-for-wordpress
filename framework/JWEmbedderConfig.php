@@ -92,7 +92,23 @@ class JWEmbedderConfig implements EmbedConfigInterface {
     //The outer div is needed for LTAS support.
     $output = "<div id=\"$this->id-div\" class=\"$this->config\">\n";
     if (get_option(LONGTAIL_KEY . "allow_tracking")) {
-      $output .= "<div id=\"$this->id\"><img src='$url' style='display:none;'></div>\n";
+      $output .= "<div id=\"$this->id\"></div>\n";
+      $output .= "<script type='text/javascript'>
+                    if(window.onload) {
+                      var curronload = window.onload;
+                      window.onload = function() {
+                        curronload();
+                        ping();
+                      };
+                    } else {
+                      window.onload = ping;
+                    }
+
+                    function ping() {
+                      var ping = new Image();
+                      ping.src = '$url';
+                    }
+                  </script>";
     } else {
       $output .= "<div id=\"$this->id\"></div>\n";
     }
