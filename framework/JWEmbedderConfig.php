@@ -62,6 +62,7 @@ class JWEmbedderConfig implements EmbedConfigInterface {
   );
   
   private $id;
+  private $divID;
   private $path;
   private $conf;
   private $fvars;
@@ -70,6 +71,7 @@ class JWEmbedderConfig implements EmbedConfigInterface {
 
   function  __construct($divId, $player_path, $config, $params = array(), $flash_vars = array(), $config_name = "") {
     $this->id = "jwplayer-" . $divId;
+    $this->divID = $divId;
     $this->path = $player_path;
     $this->conf = $config;
     $this->config = $config_name;
@@ -94,20 +96,26 @@ class JWEmbedderConfig implements EmbedConfigInterface {
     if (get_option(LONGTAIL_KEY . "allow_tracking")) {
       $output .= "<div id=\"$this->id\"></div>\n";
       $output .= "<script type='text/javascript'>
-                    if(window.onload) {
-                      var curronload = window.onload;
-                      window.onload = function() {
-                        curronload();
-                        ping();
-                      };
-                    } else {
-                      window.onload = ping;
+                    function addLoadEvent$this->divID(func) {
+                      var oldonload = window.onload;
+                      if (typeof window.onload != 'function') {
+                        window.onload = func
+                      } else {
+                        window.onload = function() {
+                          if (oldonload) {
+                            oldonload()
+                          }
+                          func()
+                        }
+                      }
                     }
 
-                    function ping() {
+                    function ping$this->divID() {
                       var ping = new Image();
                       ping.src = '$url';
                     }
+
+                    addLoadEvent$this->divID(ping$this->divID);
                   </script>";
     } else {
       $output .= "<div id=\"$this->id\"></div>\n";
