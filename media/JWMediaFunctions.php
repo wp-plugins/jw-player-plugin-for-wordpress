@@ -201,7 +201,15 @@ function jwplayer_attachment_fields($form_fields, $post) {
         "value" => get_post_meta($post->ID, LONGTAIL_KEY . "provider", true)
     );
   }
-  if (version_compare($wp_version, '3.5', '>=')) {
+  if (isset($_GET["post_id"]) && ($mime_type == "video" || $mime_type == "audio" || ($mime_type == "image" && get_option(LONGTAIL_KEY . "image_duration")))) {
+    $insert = "<input type='submit' class='button-primary' name='send[$post->ID]' value='" . esc_attr__('Insert JW Player', 'jw-player-plugin-for-wordpress') . "' />";
+    $form_fields[LONGTAIL_KEY . "player_select"] = array(
+      "label" => __("Select Player", 'jw-player-plugin-for-wordpress'),
+      "input" => "html",
+      "html" => generatePlayerSelectorHTML($post->ID)
+    );
+    $form_fields["jwplayer"] = array("tr" => "\t\t<tr class='submit'><td></td><td class='savesend'>$insert</td></tr>\n");
+  } else if (version_compare($wp_version, '3.5', '>=')) {
     if (($mime_type == "video" || $mime_type == "audio" || ($mime_type == "image" && get_option(LONGTAIL_KEY . "image_duration")))) {
       $insertJS = " <script type='text/javascript'>
                     function jwplayer_insert(id) {
@@ -227,16 +235,6 @@ function jwplayer_attachment_fields($form_fields, $post) {
         "html" => generatePlayerSelectorHTML($post->ID)
       );
       $form_fields["jwplayer"] = array("tr" => "\t\t<tr class='submit'><th valign='top' scope='row' class='label'><label><span></span></label></th><td class='savesend'>$insert</td></tr>\n$insertJS");
-    }
-  } else {
-    if (isset($_GET["post_id"]) && ($mime_type == "video" || $mime_type == "audio" || ($mime_type == "image" && get_option(LONGTAIL_KEY . "image_duration")))) {
-      $insert = "<input type='submit' class='button-primary' name='send[$post->ID]' value='" . esc_attr__('Insert JW Player', 'jw-player-plugin-for-wordpress') . "' />";
-      $form_fields[LONGTAIL_KEY . "player_select"] = array(
-        "label" => __("Select Player", 'jw-player-plugin-for-wordpress'),
-        "input" => "html",
-        "html" => generatePlayerSelectorHTML($post->ID)
-      );
-      $form_fields["jwplayer"] = array("tr" => "\t\t<tr class='submit'><td></td><td class='savesend'>$insert</td></tr>\n");
     }
   }
   return $form_fields;
@@ -373,28 +371,25 @@ add_filter("media_send_to_editor", "jwplayer_tag_to_editor", 11, 3);
  */
 function jwplayer_tag_to_editor($html, $send_id, $attachment) {
   global $wp_version;
-  if (version_compare($wp_version, '3.5', '>=')) {
-    if ($attachment[LONGTAIL_KEY . "insert_type"] == "jwplayer") {
-      $output = "[jwplayer ";
-      if ($attachment[LONGTAIL_KEY . "player_select"] != "Default") {
-        $output .= "config=\"" . $attachment[LONGTAIL_KEY . "player_select"] . "\" ";
-        update_post_meta($_POST["post_id"], LONGTAIL_KEY . "fb_headers_config", $attachment[LONGTAIL_KEY . "player_select"]);
-      }
-      $output .= "mediaid=\"" . $send_id . "\"]";
-      update_post_meta($_POST["post_id"], LONGTAIL_KEY . "fb_headers_id", $send_id);
-      return $output;
+  if ($attachment[LONGTAIL_KEY . "insert_type"] == "jwplayer") {
+    $output = "[jwplayer ";
+    if ($attachment[LONGTAIL_KEY . "player_select"] != "Default") {
+      $output .= "config=\"" . $attachment[LONGTAIL_KEY . "player_select"] . "\" ";
+      update_post_meta($_POST["post_id"], LONGTAIL_KEY . "fb_headers_config", $attachment[LONGTAIL_KEY . "player_select"]);
     }
-  } else {
-    if ($_POST["send"][$send_id] == "Insert JW Player") {
-      $output = "[jwplayer ";
-      if ($attachment[LONGTAIL_KEY . "player_select"] != "Default") {
-        $output .= "config=\"" . $attachment[LONGTAIL_KEY . "player_select"] . "\" ";
-        update_post_meta($_GET["post_id"], LONGTAIL_KEY . "fb_headers_config", $attachment[LONGTAIL_KEY . "player_select"]);
-      }
-      $output .= "mediaid=\"" . $send_id . "\"]";
-      update_post_meta($_GET["post_id"], LONGTAIL_KEY . "fb_headers_id", $send_id);
-      return $output;
+    $output .= "mediaid=\"" . $send_id . "\"]";
+    update_post_meta($_POST["post_id"], LONGTAIL_KEY . "fb_headers_id", $send_id);
+    return $output;
+  }
+  if ($_POST["send"][$send_id] == "Insert JW Player") {
+    $output = "[jwplayer ";
+    if ($attachment[LONGTAIL_KEY . "player_select"] != "Default") {
+      $output .= "config=\"" . $attachment[LONGTAIL_KEY . "player_select"] . "\" ";
+      update_post_meta($_GET["post_id"], LONGTAIL_KEY . "fb_headers_config", $attachment[LONGTAIL_KEY . "player_select"]);
     }
+    $output .= "mediaid=\"" . $send_id . "\"]";
+    update_post_meta($_GET["post_id"], LONGTAIL_KEY . "fb_headers_id", $send_id);
+    return $output;
   }
   return $html;
 }
