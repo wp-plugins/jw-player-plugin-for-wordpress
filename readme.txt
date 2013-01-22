@@ -1,7 +1,7 @@
 === JW Player for WordPress – Flash & HTML5 Video Player ===
 Contributors: LongTail Video Inc.
-Tags: JW Player, Video, Flash, LongTail Video, RTMP, Playlists, Audio, Image, HTML5, iPad, iPhone, iPod
-Requires at least: 2.8.6
+Tags: JW Player, Video, Flash, LongTail Video, Playlists, Audio, HTML5, iPad, iPhone, iPod, Mobile
+Requires at least: 3.0
 Tested up to: 3.5.0
 Stable tag: 1.7.2
 

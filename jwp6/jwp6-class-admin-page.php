@@ -32,10 +32,12 @@ class JWP6_Admin_Page {
 
     public function process_post_data($post_data, $save_to_option = true) {
         foreach($this->form_fields as $field) {
-            $validated = $field->validate($post_data);
-            if ( !$validated ) {
-                $field->error = true;
-                array_push($this->form_error_fields, $field);
+            if ( $field ) {
+                $validated = $field->validate($post_data);
+                if ( !$validated ) {
+                    $field->error = true;
+                    array_push($this->form_error_fields, $field);
+                }
             }
         }
 

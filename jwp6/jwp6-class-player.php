@@ -77,7 +77,7 @@ class JWP6_Player {
 
     public function save() {
         $players = get_option(JWP6 . 'players');
-        if ( ! in_array($this->name, $players) ) {
+        if ( ! $players || ! in_array($this->name, $players) ) {
             $players[] = $this->name;
             update_option(JWP6 . 'players', $players);
         }
