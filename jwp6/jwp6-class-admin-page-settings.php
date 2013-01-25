@@ -4,6 +4,9 @@
 class JWP6_Admin_Page_Licensing extends JWP6_Admin_Page {
 
     public function __construct() {
+        if ( isset($_POST) && array_key_exists('purge_settings_at_deactivation', $_POST) ) {
+            echo "The value of purge_settings_at_deactivation: " . $_POST['purge_settings_at_deactivation'];
+        }
         parent::__construct();
         $license_version_field =  new JWP6_Form_Field_Select(
             'license_version',
@@ -22,33 +25,32 @@ class JWP6_Admin_Page_Licensing extends JWP6_Admin_Page {
                 }
             )
         );
-        $player_location_field = new JWP6_Form_Field(
-            'player_location',
+
+        $tracking_field = new JWP6_Form_Field_Toggle(
+            'allow_anonymous_tracking',
             array(
-                'validation' => array('JWP6_Plugin', 'validate_empty_or_url'),
-                'error_help' => 'Please make sure that the url you provide is accessible.',
-                'help_text' => 'If you want to host '.
-                    "<a href='" . JWP6_Plugin::$urls['player_download'] . "'>your own player</a>, " .
-                    "you can add its full location here. <br />" . 
-                    "<strong>You can leave this setting blank and Longtail Video will host the " .
-                    "player for you.</strong>",
+                'label' => 'Allow anonymous tracking?',
+                'text' => 'Allow LongTail Video to track plugin feature usage.',
+                'help_text' => 'This will help us improve the plugin in the future. <strong>Note: Tracking is done anonymously.</strong>',
+                'default' => true,
             )
         );
-
-        $uninstall_field = new JWP6_Form_Field_Toggle(
-            'uninstall',
+        
+        $purge_field = new JWP6_Form_Field_Toggle(
+            'purge_settings_at_deactivation',
             array(
-                'label' => 'Confirm uninstall',
-                'text' => 'I confirm that I want to uninstall this plugin.',
+                'label' => 'Purge settings at deactivation?',
+                'text' => 'When I deactivate this plugin, I want all my settings for this plugin to be purged from the database.',
                 'default' => false,
-                'help_text' => '<strong>Please Note</strong>: This process in irreversible. All settings will be deleted from the database.'
+                'help_text' => '<strong>Please Note</strong>: This process in irreversible. If you ever decide to reactivate the plugin all your settings will be gone. Use with care!',
             )
         );
 
         $this->form_fields = array(
             $license_version_field, 
-            $license_key_field, 
-            $player_location_field
+            $license_key_field,
+            $tracking_field,
+            $purge_field,
         );
 
         $this->license_fields = array(
@@ -56,13 +58,11 @@ class JWP6_Admin_Page_Licensing extends JWP6_Admin_Page {
             $license_key_field, 
         );
 
-        $this->uninstall_fields = array(
-            $uninstall_field,
+        $this->other_fields = array(
+            $tracking_field,
+            $purge_field,
         );
 
-        $this->location_fields = array(
-            $player_location_field
-        );
     }
 
     public function render() {
@@ -80,28 +80,16 @@ class JWP6_Admin_Page_Licensing extends JWP6_Admin_Page {
                 <?php foreach ($this->license_fields as $field) { $this->render_form_row($field); } ?>
             </table>
 
-            <h3>Player Location Settings</h3>
+            <div class="divider"></div>
+
+            <h3>Other settings</h3>
+
             <table class="form-table">
-                <?php foreach ($this->location_fields as $field) { $this->render_form_row($field); } ?>
+                <?php foreach ($this->other_fields as $field) { $this->render_form_row($field); } ?>
             </table>
 
             <p class="submit">
                 <input type="submit" name="submit" id="submit" class="button-primary" value="Save Changes"  />
-            </p>
-        </form>
-
-        <div class="divider"></div>
-
-        <form method="post" action="<?php echo $this->page_url(); ?>">
-
-            <h3>Uninstall</h3>
-
-            <table class="form-table">
-                <?php foreach ($this->uninstall_fields as $field) { $this->render_form_row($field); } ?>
-            </table>
-
-            <p class="submit">
-                <input type="submit" name="submit" id="submit" class="button-primary" value="Uninstall this plugin."  />
             </p>
         </form>
 
@@ -119,8 +107,8 @@ class JWP6_Admin_Page_Licensing extends JWP6_Admin_Page {
                 $('#license_version').bind('change', check_key);
             });
         </script>
-    <?php
-    $this->render_page_end();
+        <?php
+        $this->render_page_end();
     }
 
 }

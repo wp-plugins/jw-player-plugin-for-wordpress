@@ -81,8 +81,10 @@
     text-decoration: none;
 }
 
+#wpbody-content.jwp6 div.tool-box ul li,
 #wpbody-content.jwp6 div.updated ul li {
     padding: 2px 0 2px 12px;
     list-style: disc inside;
 }
+
 

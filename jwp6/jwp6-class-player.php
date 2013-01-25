@@ -176,6 +176,41 @@ class JWP6_Player {
         return false;
     }
 
+    private function _tracking_code($id) {
+        global $wp;
+        $host = "http://i.n.jwpltx.com/v1/wordpress/ping.gif";
+        $tracking_url = JWP6_Plugin::$ping_image;
+        $tracking_url.= "?e=features&s=" . urlencode(add_query_arg($wp->query_string, '', home_url($wp->request)));
+        $tracking_url.= "&" . http_build_query($this->get_config());
+        if ($id == 0) {
+        ?>
+        
+        function jwp6AddLoadEvent(func) {
+            var oldonload = window.onload;
+            if (typeof window.onload != 'function') {
+                window.onload = func;
+            } else {
+                window.onload = function() {
+                    if (oldonload) {
+                        oldonload();
+                    }
+                    func();
+                }
+            }
+        }
+        <?php
+        }
+        ?>
+
+        function ping<?php echo $id; ?>() {
+            var ping = new Image();
+            ping.src = '<?php echo $tracking_url; ?>';
+        }
+
+        jwp6AddLoadEvent(ping<?php echo $id; ?>);
+        <?php
+    }
+
     private function _echo_if_default_value($param, $value) {
         if (
             array_key_exists($param, JWP6_Plugin::$player_options)
@@ -242,8 +277,10 @@ class JWP6_Player {
         unset($this->config['description']);
         $image = ( is_null($image) ) ? JWP6_Plugin::default_image_url() : $image;
         ?>
+        <pre><?php print_r($this->config); ?></pre>
         <div class="jwplayer" id="jwplayer-<?php echo $id; ?>"></div>
         <script type="text/javascript">
+            <?php if ( get_option(JWP6 . 'allow_anonymous_tracking') ) { $this->_tracking_code($id); } ?>
             jwplayer("jwplayer-<?php echo $id; ?>").setup({
                 <?php
                     if ( ! is_null($file) ) {

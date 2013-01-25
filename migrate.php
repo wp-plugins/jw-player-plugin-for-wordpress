@@ -74,7 +74,8 @@ class JWP6_Migrate {
         update_option(JWP6 . 'plugin_version', 6);
         add_option(JWP6 . 'previous_version', 5, '', true);
         delete_option(JWP6 . 'hideupgradeto6notice');
-        wp_redirect(admin_url('admin.php?page=' . JWP6 . 'menu_import&show_migration_notice=true'));
+        wp_redirect( JWPLAYER_PLUGIN_URL . "/jwp6/jwp6-import.php?a=migrate");
+        //wp_redirect(admin_url('admin.php?page=' . JWP6 . 'menu_import&show_migration_notice=true'));
     }
 }
 

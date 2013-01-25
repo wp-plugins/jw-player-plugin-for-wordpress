@@ -5,13 +5,8 @@ class JWP6_Admin_Page_Import extends JWP6_Admin_Page {
 
     public function __construct() {
         parent::__construct();
-        if ( isset($_GET['show_migration_notice']) ) {
-            // Create the default player.
-            $player = new JWP6_Player();
-            $player->save();
-            // Set a welcome message
-            $this->add_message('Thank you for upgrading to JW Player 6. Please take some time to migrate your settings first.');
-        }
+        $this->imported_players = get_option(JWP6 . 'imported_jwp5_players');
+        $this->imported_playlists = get_option(JWP6 . 'imported_jwp5_playlists');
     }
 
     public function render() {
@@ -28,14 +23,84 @@ class JWP6_Admin_Page_Import extends JWP6_Admin_Page {
     }
 
     public function do_render() {
-        $this->render_page_start('Import Settings from JW Player 5 Plugin');
+        $this->render_page_start('Migration from JW Player 5 Plugin');
         $this->render_all_messages();
+
+        if ( $this->imported_players ):
         ?>
+        <div class="divider"></div>
+        <div class="tool-box">
+
+            <h3>Imported JW Player 5 Players</h3>
+
+            <p>The following players were imported from the JW Player 5 plugin.</p>
+
+            <ul>
+                <?php foreach ($this->imported_players as $old => $new) {
+                    $player_edit_url = admin_url('admin.php?page=' . JWP6 . 'menu&player_id=' . $new);
+                    echo "<li>{$old} → <a href='{$player_edit_url}' title='Click to edit this player'>{$new}</a></li>";
+                } ?>
+            </ul>
+
+            <?php if ( ! JWP6_Plugin::player_license_key() ): ?>
+            <p class="description">
+                <strong>Please note:</strong>
+                You need to <a href="<?php echo admin_url('admin.php?page=' . JWP6 . 'menu_license'); ?>"
+                title="Click to enter your player license">enter
+                your player license key</a> to enable advanced / license specific player options and settings
+                (e.g. skins, rightclick, logo, etc).
+            </p>
+            <?php endif; ?>
+        </div>
+        <?php
+        endif;
+
+        if ( $this->imported_playlists ):
+        ?>
+        <div class="divider"></div>
+        <div class="tool-box">
+
+            <h3>Imported JW Player 5 Playlists</h3>
+
+            <p>The following playlists were imported from the JW Player 5 plugin.</p>
+
+            <ul>
+                <?php
+                $not_all_imported = false;
+                foreach ($this->imported_playlists as $info) {
+                    if ( $info['has_missing_items'] ) $not_all_imported = true;
+                    echo "<li>";
+                    echo "{$info['name']} → ";
+                    if ($info['nr_of_new_items']) {
+                        $nr = ($info['nr_of_old_items'] ==  $info['nr_of_new_items'] ) ? 
+                            'all': "{$info['nr_of_new_items']} of {$info['nr_of_old_items']}";
+                        echo "Imported {$nr} videos.";
+                    } else {
+                        echo "This playlist was not imported (no videos?).";
+                    }
+                    echo "</li>";
+
+                }
+                ?>
+            </ul>
+
+            <?php if ( $not_all_imported ): ?>
+            <p class="description">
+                <strong>Please note:</strong>
+                The JW Player 6 no longer supports images as content of a playlists.
+                Playlists that only contained images (e.g. for a slideshow) have not been
+                been imported.
+            </p>
+            <?php endif; ?>
+        </div>
+
+        <?php endif; ?>
 
         <div class="divider"></div>
 
         <form method="post" action="<?php echo $this->page_url(); ?>">
 
+            <?php /*
             <h3>Import Settings</h3>
 
             <table class="form-table">
@@ -98,6 +163,7 @@ class JWP6_Admin_Page_Import extends JWP6_Admin_Page {
             </table>
 
             <div class="divider"></div>
+            */ ?>
 
             <h3>Revert to version 5</h3>
 

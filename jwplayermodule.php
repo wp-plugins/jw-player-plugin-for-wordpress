@@ -24,12 +24,26 @@ along with this program; if not, write to the Free Software
 Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
  */
 
+/*
+If you want to host your own player, please update the following constant and
+set it to the url for your player. E.g.:
+define("JWP6_PLAYER_LOCATION", "https://www.example.com/assets/jwplayer/jwplayer.js");
+*/
+define("JWP6_PLAYER_LOCATION", null);
+
+
+
+/* DO NOT CHANGE ANYTHING BELOW HERE... */
+/* Unless you know what you are doing off course ;) */
+
 // version 5 prefix
 define("LONGTAIL_KEY", "jwplayermodule_");
 // version 6 prefix
 define("JWP6", "jwp6_");
 // Define the plugin root dir
 define("JWP6_PLUGIN_DIR_NAME", dirname( __FILE__ ));
+// Define the main plugin file
+define("JWP6_PLUGIN_FILE", __FILE__);
 
 // We check if this user is using the Player 5 or 6 and
 // redirect to the respective plugin version.
@@ -43,7 +57,8 @@ if ( ! $plugin_version ) {
     // bigger than 1 because if the plugin is uninstalled the uninstalled var is set.
     if ( $num_rows > 1 ) {
         $plugin_version = 5;
-    } else {
+    } 
+    else {
         $plugin_version = 6;
     }
     add_option(JWP6 . 'plugin_version', $plugin_version, '', 'yes');
@@ -51,10 +66,13 @@ if ( ! $plugin_version ) {
 
 // Redirect to the appropriate plugin.
 if ( $plugin_version >= 6 ) {
-    require_once dirname( __FILE__ ) . '/jwp6/jwp6-plugin.php';
+    // load version 6 plugin
+    require_once dirname(__FILE__) . '/jwp6/jwp6-plugin.php';
 }
 else {
-    require_once dirname( __FILE__ ) . '/migrate.php';
-    require_once dirname( __FILE__ ) . '/jwp5.php';
+    // load tools for migration to version 6
+    require_once dirname(__FILE__) . '/migrate.php';
+    // load version 5 plugin
+    require_once dirname(__FILE__) . '/jwp5.php';
 }
 

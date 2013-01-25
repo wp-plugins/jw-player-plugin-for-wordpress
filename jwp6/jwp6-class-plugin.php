@@ -9,6 +9,8 @@ class JWP6_Plugin {
 
     public static $default_image = '/img/default-image.png';
 
+    public static $ping_image = "http://i.n.jwpltx.com/v1/wordpress/ping.gif";
+
     public static $urls = array(
         'mail_support'      => "mailto:wordpress@longtailvideo.com",
         'forums'            => "http://www.longtailvideo.com/support/forums/jw-player/",
@@ -209,12 +211,42 @@ class JWP6_Plugin {
     public function __construct() {
     }
 
+    public static function activate_plugin() {
+        // Add the default player
+        $default_player = new JWP6_Player();
+        $default_player->save();
+
+        // Set default option for tracking
+        add_option(JWP6 . 'allow_anonymous_tracking', true, '', true);
+    }
+
+    public static function deactivate_plugin() {
+        $purge = get_option(JWP6 . 'purge_settings_at_deactivation');
+        if ( $purge ) {
+            JWP6_Plugin::purge_settings(true);
+        }
+    }
+
+    public static function purge_settings($purge_jwp5_settings_too = false) {
+        if ( $purge_jwp5_settings_too && ! get_option(JWP6 . 'jwp5_purged') ) {
+            JWP6_Legacy::purge_jwp5_settings();
+        }
+        global $wpdb;
+        $meta_query = "DELETE FROM $wpdb->postmeta WHERE meta_key LIKE '" . JWP6 . "%';";
+        $option_query = "DELETE FROM $wpdb->options WHERE option_name LIKE '" . JWP6 . "%'";
+        $wpdb->query($meta_query);
+        $wpdb->query($option_query);
+    }
+
     public static function player_license_version() {
         $license_version = get_option(JWP6 . 'license_version');
         return ( $license_version && in_array($license_version, JWP6_Plugin::$license_versions) ) ? $license_version : "free";
     }
 
     public static function player_url() {
+        if ( JWP6_PLAYER_LOCATION ) {
+            return JWP6_PLAYER_LOCATION;
+        }
         $root = ( is_ssl() ) ? JWP6_Plugin::$cdn_https_root : JWP6_Plugin::$cdn_http_root;
         return $root . JWP6_Plugin::player_license_version() . '/jwplayer.js';
     }
@@ -299,19 +331,19 @@ class JWP6_Plugin {
         // Keep track of the number of players that we are embedding;
         $jwp6_global['player_embed_count'] = ( array_key_exists('player_embed_count', $jwp6_global) ) ?
             $jwp6_global['player_embed_count'] + 1 : 0;
-        $legacy = (JWP6 == $tag) ? false : true;
-        $sc = new JWP6_Shortcode($shortcode, $legacy);
+        $sc = new JWP6_Shortcode($shortcode);
         return $sc->embedcode($jwp6_global['player_embed_count']);
     }
 
     public static function register_actions() {
+        register_activation_hook(JWP6_PLUGIN_FILE, array("JWP6_Plugin", "activate_plugin"));
+        register_deactivation_hook(JWP6_PLUGIN_FILE, array("JWP6_Plugin", "deactivate_plugin"));
         if ( ! is_admin() ) {
             add_filter('query_vars', array('JWP6_Plugin', 'register_query_vars'));
             add_action('parse_request',  array('JWP6_Plugin', 'parse_request'), 9 );
             add_action('wp_enqueue_scripts', array('JWP6_Plugin', 'insert_javascript'));
             add_action('wp_head', array('JWP6_Plugin', 'insert_license_key'));
             add_shortcode('jwplayer', array('JWP6_Plugin', 'shortcode'));
-            add_shortcode('jwp6', array('JWP6_Plugin', 'shortcode'));
         }
     }
 

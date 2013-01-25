@@ -10,7 +10,7 @@ function jwp6_l( $message ) {
     }
   }
 }
-// Let's make some space
+// Let's make some space in the log.
 jwp6_l("\n\n\n");
 
 define('JWP6_PLUGIN_URL', plugin_dir_url( __FILE__ ));
@@ -19,17 +19,20 @@ define('JWP6_PLUGIN_DIR', dirname(__FILE__));
 // Global variable to manage states.
 $jwp6_global = array();
 
-require_once dirname( __FILE__ ) . '/jwp6-class-plugin.php';
+require_once dirname(__FILE__) . '/jwp6-class-plugin.php';
 
-require_once dirname( __FILE__ ) . '/jwp6-class-player.php';
+require_once dirname(__FILE__) . '/jwp6-class-player.php';
 
-require_once dirname( __FILE__ ) . '/jwp6-class-shortcode.php';
+require_once dirname(__FILE__) . '/jwp6-class-shortcode.php';
+
+require_once dirname(__FILE__) . '/jwp6-class-legacy.php';
+
 
 // Register the actions
 JWP6_Plugin::register_actions();
 
 if ( is_admin() ) {
-    require_once dirname( __FILE__ ) . '/jwp6-class-admin.php';
-    require_once dirname( __FILE__ ) . '/jwp6-class-media.php';
+    require_once dirname(__FILE__) . '/jwp6-class-admin.php';
+    require_once dirname(__FILE__) . '/jwp6-class-media.php';
     $jwp6_admin = new JWP6_Admin();
 }

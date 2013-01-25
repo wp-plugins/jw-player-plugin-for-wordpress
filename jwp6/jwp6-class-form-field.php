@@ -86,7 +86,7 @@ class JWP6_Form_Field {
         $this->value = ( is_null($value) ) ? $this->value : $value;
         echo '<input name="' . $this->name . '" type="' . $this->type . '" ';
         echo 'id="' . $this->name . '" placeholder="' . $this->placeholder . '" ';
-        echo 'class="' . $this->class . '" value="' . $this->value . '" />' . "\n";
+        echo 'class="' . $this->class . '" value="' . esc_attr($this->value) . '" />' . "\n";
         if ( $this->unit ) {
             echo "<span class='unit'>{$this->unit}</span>";
         }
@@ -94,7 +94,7 @@ class JWP6_Form_Field {
     }
 
     public function render_label() {
-        echo '<label for="' . $this->name . '">' . $this->label . "</label>\n";
+        echo '<label for="' . esc_attr($this->name) . '">' . $this->label . "</label>\n";
     }
 
     protected function render_help() {
@@ -139,7 +139,7 @@ class JWP6_Form_Field_Select extends JWP6_Form_Field {
             } else {
                 $selected = ( $this->default == $value ) ? 'selected="selected"' : "";
             }
-            echo "\t<option $selected value='$value'>";
+            echo "\t<option $selected value='" . esc_attr($value) . "'>";
             echo ucfirst($description);
             echo "</option>\n";
         }
@@ -182,8 +182,8 @@ class JWP6_Form_Field_Radio extends JWP6_Form_Field {
             } else {
                 $checked = ( $this->default == $value ) ? 'checked="checked"' : "";
             }
-            echo "\t<label title='{$value}'>";
-            echo "\t\t<input type='radio' value='{$value}' name='{$this->name}' {$checked} value='{$value}' />";
+            echo "\t<label title='" . esc_attr($value) . "'>";
+            echo "\t\t<input type='radio' value='". esc_attr($value) . "' name='{$this->name}' {$checked} value='{$value}' />";
             echo "\t\t" . '<span>' . ucfirst($description) . '</span>';
             echo "\t</label>";
             echo "\t<br />";

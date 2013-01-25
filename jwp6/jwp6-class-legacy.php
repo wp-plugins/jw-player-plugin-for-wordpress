@@ -2,7 +2,7 @@
 
 // Class to import JW Player 5 configs and playlists
 
-class JWP6_Import {
+class JWP6_Legacy {
     
 
     static $optionmap = array(
@@ -51,7 +51,7 @@ class JWP6_Import {
         'skin' => array(
             'new' => 'skin',
             'default' => 'NULL',
-            'option_value' => array('JWP6_Import', 'skin_name_from_path'),
+            'option_value' => array('JWP6_Legacy', 'skin_name_from_path'),
             'options' => array(
                 'beelden' => 'beelden',
                 'bekle' => 'bekle', 
@@ -150,8 +150,8 @@ class JWP6_Import {
         foreach ($old_config as $option => $value) {
             $option = strval($option);
             $value = strval($value);
-            if ( array_key_exists($option, JWP6_Import::$optionmap) ) {
-                $optionmap = JWP6_Import::$optionmap[$option];
+            if ( array_key_exists($option, JWP6_Legacy::$optionmap) ) {
+                $optionmap = JWP6_Legacy::$optionmap[$option];
                 // Options that can be mapped one on one
                 if ( $optionmap ) {
                     $option = ( array_key_exists('new', $optionmap) ) ? $optionmap['new'] : $option;
@@ -166,7 +166,7 @@ class JWP6_Import {
             }
         }
 
-        foreach (JWP6_Import::$additional_options as $option => $info) {
+        foreach (JWP6_Legacy::$additional_options as $option => $info) {
             if ( "wp_option" == $info['mode'] ) {
                 $value = get_option($info['option_name']);
             }
@@ -177,11 +177,49 @@ class JWP6_Import {
         return $new_config;
     }
 
+    static function check_shortcode($shortcode) {
+
+        if ( array_key_exists('config', $shortcode) ) {
+            $shortcode['player'] = JWP6_Legacy::slugify($shortcode['config']);
+            unset($shortcode['config']);
+        }
+        if ( array_key_exists('playlistid', $shortcode) ) {
+            $post = JWP6_Legacy::playlist_from_old_id($shortcode['playlistid']);
+            if ( $post ) {
+                $shortcode['playlist'] = $post->ID;
+            }
+            unset($shortcode['playlistid']);
+        }
+        if ( array_key_exists('mediaid', $shortcode) ) {
+            $shortcode['file'] = $shortcode['mediaid'];
+            unset($shortcode['mediaid']);
+        }
+
+        foreach ($shortcode as $option => $value) {
+            if ( array_key_exists($option, JWP6_Legacy::$optionmap) ) {
+                $optionmap = JWP6_Legacy::$optionmap[$option];
+                // Options that can be mapped one on one
+                if ( $optionmap ) {
+                    $option = ( array_key_exists('new', $optionmap) ) ? $optionmap['new'] : $option;
+                    if ( array_key_exists('option_value', $optionmap) && is_callable($optionmap['option_value']) ) {
+                        $value = call_user_func($optionmap['option_value'], $value);
+                    }
+                    if ( false !== $optionmap['options'] ) {
+                        $value = ( array_key_exists($value, $optionmap['options']) ) ? $optionmap['options'][$value] : $optionmap['default'];
+                    }
+                }
+                $shortcode[$option] = $value;
+            }
+        }
+
+        return $shortcode;
+    }
+
     static function import_jwp5_player_from_xml($name, $config_file) {
         $old_config = simplexml_load_file($config_file);
 
-        $new_config = JWP6_Import::map_jwp5_config($old_config);
-        $new_name = JWP6_Import::slugify($name);
+        $new_config = JWP6_Legacy::map_jwp5_config($old_config);
+        $new_name = JWP6_Legacy::slugify($name);
 
         $player = new JWP6_Player($new_name, $new_config);
         $player->set('description', 'Imported from "' . $name . '"');
@@ -191,9 +229,9 @@ class JWP6_Import {
     }
 
     static function import_jwp5_players() {
-        $players = JWP6_Import::get_jwp5_players();
+        $players = JWP6_Legacy::get_jwp5_players();
         foreach ($players as $name => $xml_file) {
-            $new_player = JWP6_Import::import_jwp5_player_from_xml($name, $xml_file);
+            $new_player = JWP6_Legacy::import_jwp5_player_from_xml($name, $xml_file);
             $players[$name] = $new_player;
         }
         return $players;
@@ -220,6 +258,7 @@ class JWP6_Import {
             }
 
             $new_playlist['nr_of_new_items'] = count($new_playlist_items);
+            $new_playlist['has_missing_items'] = ( $new_playlist['nr_of_old_items'] == $new_playlist['nr_of_new_items'] ) ? false : true;
             $new_playlists[] = $new_playlist;
 
             if ( count($new_playlist_items) ) {
@@ -272,6 +311,7 @@ class JWP6_Import {
         @rmdir($jwp5_files_dir . "/configs/");
         @rmdir($jwp5_files_dir);
 
+        add_option(JWP6 . 'jwp5_purged', true);
         return True;
     }
 

@@ -30,7 +30,7 @@ include_once (dirname (__FILE__) . "/admin/AdminContext.php");
 include_once (dirname (__FILE__) . "/media/JWMediaFunctions.php");
 include_once (dirname (__FILE__) . "/media/JWShortcode.php");
 
-register_deactivation_hook(__FILE__, "jwplayer_deactivation");
+register_deactivation_hook(JWP6_PLUGIN_FILE, "jwplayer_deactivation");
 add_action('init', 'jwplayer_init');
 
 //Define the plugin directory and url for file access.

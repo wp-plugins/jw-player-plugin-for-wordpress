@@ -67,7 +67,7 @@ class JWP6_Admin {
             add_submenu_page(
                 JWP6 . "menu",
                 "Import Settings from JW Player 5 Plugin", 
-                "Import Settings", 
+                "JWP5 Migration", 
                 "administrator", 
                 JWP6 . "menu_import", 
                 array($this, 'admin_pages')

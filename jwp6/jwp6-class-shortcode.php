@@ -23,11 +23,11 @@ class JWP6_Shortcode {
     // Url for the download
     protected $download = null;
 
-    public function __construct($shortcode = null, $legacy = false) {
+    public function __construct($shortcode = null) {
         if ( null === $shortcode ) {
             return $this->_init_from_post_data();
         } else {
-            return $this->_init_from_shortcode($shortcode, $legacy);
+            return $this->_init_from_shortcode($shortcode);
         }
     }
 
@@ -74,26 +74,8 @@ class JWP6_Shortcode {
         // Maybe some additional settings?
     }
     
-    protected function _init_from_shortcode($shortcode, $legacy) {
-        // Legacy players
-        if ($legacy) {
-            require_once( JWP6_PLUGIN_DIR . '/jwp6-class-import.php' );
-            if ( isset($shortcode['config']) ) {
-                $shortcode['player'] = JWP6_Import::slugify($shortcode['config']);
-                unset($shortcode['config']);
-            }
-            if ( isset($shortcode['playlistid']) ) {
-                $post = JWP6_Import::playlist_from_old_id($shortcode['playlistid']);
-                if ( $post ) {
-                    $shortcode['playlist'] = $post->ID;
-                }
-                unset($shortcode['playlistid']);
-            } 
-            if ( isset($shortcode['mediaid']) ) {
-                $shortcode['file'] = $shortcode['mediaid'];
-                unset($shortcode['mediaid']);
-            }
-        }
+    protected function _init_from_shortcode($shortcode) {
+        $shortcode = JWP6_Legacy::check_shortcode($shortcode);
 
         // Player
         if ( isset($shortcode['player']) ) {
@@ -129,11 +111,6 @@ class JWP6_Shortcode {
             unset($shortcode['download']);
         }
 
-        // Title
-
-        // the rest
-        $this->config = ($legacy) ? JWP6_Import::map_jwp5_config($shortcode) : $shortcode;
-
     }
 
     // outputs the short code for this object
@@ -165,7 +142,7 @@ class JWP6_Shortcode {
             array_push($paramstrings , $key . '="' . $value . '"');
         }
 
-        return '[jwp6 ' .join(" ", $paramstrings).']';
+        return '[jwplayer ' .join(" ", $paramstrings).']';
     }
 
     // outputs the embed code
@@ -173,7 +150,13 @@ class JWP6_Shortcode {
         if ( is_null($this->file) ) {
             $file_url = null;
         } else {
-            $file_url = ( is_int($this->file) || ctype_digit($this->file) ) ? wp_get_attachment_url($this->file) : $this->file;
+            if ( is_int($this->file) || ctype_digit($this->file) ) {
+                $file_post = get_post($this->file);
+                $file_url = $file_post->guid;
+            }
+            else {
+                $this->file;
+            }
         }
         if ( is_null($this->playlist) ) {
             $playlist_url = null;
