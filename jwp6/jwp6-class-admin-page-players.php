@@ -341,6 +341,38 @@ class JWP6_Admin_Page_Players extends JWP6_Admin_Page {
 
         }
 
+        // Advertising
+
+        if ( JWP6_Plugin::option_available('adverstising') ) {
+
+            $advertising_client_field = new JWP6_Form_Field_Select(
+                'advertising__client',
+                array(
+                    'value' => $this->player->get('advertising__client'),
+                    'options' => JWP6_Plugin::$player_options['advertising__client']['options'],
+                    'default' => JWP6_Plugin::$player_options['advertising__client']['default'],
+                    //'help_text' => JWP6_Plugin::$player_options['advertising__client']['help_text'],
+                )
+            );
+
+            $advertising_tag_field = new JWP6_Form_Field(
+                'advertising__tag',
+                array(
+                    'value' => $this->player->get('advertising__tag'),
+                    'validation' => array('JWP6_Plugin', 'validate_empty_or_url'),
+                    'placeholder'  => "URL of your vast/googima tag",
+                    'class' => 'wide',
+                    'help_text' => JWP6_Plugin::$player_options['advertising__tag']['help_text'],
+                )
+            );
+
+            $this->advertising_fields = array(
+                'advertising_client_field' => $advertising_client_field,
+                'advertising_tag_field' => $advertising_tag_field,
+            );
+
+        }
+
         // GOOGLE ANALYTICS & SHARING
 
         if ( JWP6_Plugin::option_available('ga') ) {
@@ -411,12 +443,20 @@ class JWP6_Admin_Page_Players extends JWP6_Admin_Page {
             );
         }
 
+        if ( JWP6_Plugin::option_available('advertising') ) {
+            $this->form_fields = array_merge(
+                $this->form_fields, 
+                $this->advertising_fields
+            );
+        }
+
         if ( JWP6_Plugin::option_available('ga') ) {
             $this->form_fields = array_merge(
                 $this->form_fields, 
                 $this->other_settings_fields
             );
         }
+
     }
 
     protected function render_edit_page() {
@@ -464,6 +504,13 @@ class JWP6_Admin_Page_Players extends JWP6_Admin_Page {
             <h3>Rightclick Settings</h3>
             <table class="form-table">
                 <?php foreach ($this->rightclick_settings_fields as $field) { $this->render_form_row($field); } ?>
+            </table>
+            <?php endif; ?>
+
+            <?php if ( isset($this->advertising_fields) ): ?>
+            <h3>Advertising</h3>
+            <table class="form-table">
+                <?php foreach ($this->advertising_fields as $field) { $this->render_form_row($field); } ?>
             </table>
             <?php endif; ?>
 

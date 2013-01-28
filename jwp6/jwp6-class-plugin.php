@@ -3,9 +3,9 @@
 // Utility class that holds accessible settings and methods.
 class JWP6_Plugin {
 
-    public static $cdn_http_root = 'http://frontyard.dyndns.org/jwplayer/';
+    public static $cdn_http_player = 'http://p.jwpcdn.com/6/2/jwplayer.js';
 
-    public static $cdn_https_root = 'http://frontyard.dyndns.org/jwplayer/';
+    public static $cdn_https_player = 'https://ssl.p.jwpcdn.com/6/2/jwplayer.js';
 
     public static $default_image = '/img/default-image.png';
 
@@ -198,6 +198,30 @@ class JWP6_Plugin {
             'help_text' => 'When enabled the player will display sharing options which will link to the current page.',
         ),
 
+        // Advertising
+
+        'advertising' => array (
+            'licenses' => array('ads'),
+        ),
+
+        'advertising__client' => array(
+            'licenses' => array('ads'),
+            'options' => array(
+                'NULL' => 'No advertising client',
+                'vast' => 'Video Ad Serving Template (VAST)',
+                'googima' => 'Google Interactive Media Ads (IMA)',
+            ),
+            'default' => 'NULL',
+            'discard_if_default' => true,
+        ),
+
+        'advertising__tag' => array(
+            'licenses' => array('ads'),
+            'default' => '',
+            'discard_if_default' => true,
+            'help_text' => 'This tag will automatically get scheduled as a pre-roll tag to your main video.',
+        ),
+
     );
 
     public static $supported_video_extensions = array(
@@ -247,8 +271,7 @@ class JWP6_Plugin {
         if ( JWP6_PLAYER_LOCATION ) {
             return JWP6_PLAYER_LOCATION;
         }
-        $root = ( is_ssl() ) ? JWP6_Plugin::$cdn_https_root : JWP6_Plugin::$cdn_http_root;
-        return $root . JWP6_Plugin::player_license_version() . '/jwplayer.js';
+        return ( is_ssl() ) ? JWP6_Plugin::$cdn_https_player : JWP6_Plugin::$cdn_http_player;
     }
 
     public static function player_license_key() {
