@@ -3,8 +3,9 @@
 class JWP6_Admin {
 
     public function __construct() {
+        global $wp_version;
         $this->previous_version = get_option(JWP6 . 'previous_version');
-        add_action('media_buttons', array($this, 'media_button'), 99);
+        if ( version_compare($wp_version, '3.5', '<') ) add_action('media_buttons', array($this, 'media_button'), 99);
         add_action('admin_menu', array($this, 'admin_menu'));
         add_filter('media_upload_tabs', array($this, 'add_media_tab'), 99999);
         add_filter('media_upload_jwp6_media', array($this, 'render_media_tab'));
