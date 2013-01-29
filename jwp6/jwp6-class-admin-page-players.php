@@ -343,7 +343,7 @@ class JWP6_Admin_Page_Players extends JWP6_Admin_Page {
 
         // Advertising
 
-        if ( JWP6_Plugin::option_available('adverstising') ) {
+        if ( JWP6_Plugin::option_available('advertising') ) {
 
             $advertising_client_field = new JWP6_Form_Field_Select(
                 'advertising__client',
