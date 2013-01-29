@@ -25,7 +25,7 @@ class JWP6_Player {
 
     private $defaults = array(
         'width' => array('default' => 480),
-        'height' => array('default' => 320),
+        'height' => array('default' => 270),
         'description' => array('default' => ''),
         // The rest of the values will be added from JWP6_Plugin::$player_options;
     );

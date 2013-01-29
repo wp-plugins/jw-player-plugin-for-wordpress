@@ -166,7 +166,8 @@ class JWP6_Shortcode {
         $download_url = ( $this->download && ( is_int($this->download) || ctype_digit($this->download) ) ) ? wp_get_attachment_url($this->download) : $this->download;
         $image_url = null;
         if ( $this->image && ( is_int($this->image) || ctype_digit($this->image) ) ) {
-            $image_url = wp_get_attachment_url($this->image);
+            $image_post = get_post($this->file);
+            $image_url = $image_post->guid;
         }
         else if ( $this->image ) {
             $image_url = $this->image;
