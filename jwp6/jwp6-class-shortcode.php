@@ -155,7 +155,7 @@ class JWP6_Shortcode {
                 $file_url = $file_post->guid;
             }
             else {
-                $this->file;
+                $file_url = $this->file;
             }
         }
         if ( is_null($this->playlist) ) {

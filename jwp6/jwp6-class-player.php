@@ -182,36 +182,37 @@ class JWP6_Player {
         $tracking_url = JWP6_Plugin::$ping_image;
         $tracking_url.= "?e=features&s=" . urlencode(add_query_arg($wp->query_string, '', home_url($wp->request)));
         $tracking_url.= "&" . http_build_query($this->get_config());
+        $javascript = '';
         if ($id == 0) {
-        ?>
-        
-        function jwp6AddLoadEvent(func) {
-            var oldonload = window.onload;
-            if (typeof window.onload != 'function') {
-                window.onload = func;
-            } else {
-                window.onload = function() {
-                    if (oldonload) {
-                        oldonload();
+            $javascript .= "
+
+                function jwp6AddLoadEvent(func) {
+                    var oldonload = window.onload;
+                    if (typeof window.onload != 'function') {
+                        window.onload = func;
+                    } else {
+                        window.onload = function() {
+                            if (oldonload) {
+                                oldonload();
+                            }
+                            func();
+                        }
                     }
-                    func();
                 }
+            ";
+        }
+        $javascript .= "
+            function ping{$id}() {
+                var ping = new Image();
+                ping.src = '{$tracking_url}';
             }
-        }
-        <?php
-        }
-        ?>
 
-        function ping<?php echo $id; ?>() {
-            var ping = new Image();
-            ping.src = '<?php echo $tracking_url; ?>';
-        }
-
-        jwp6AddLoadEvent(ping<?php echo $id; ?>);
-        <?php
+            jwp6AddLoadEvent(ping{$id});
+        ";
+        return $javascript;
     }
 
-    private function _echo_if_default_value($param, $value) {
+    private function _add_if_default_value($param, $value) {
         if (
             array_key_exists($param, JWP6_Plugin::$player_options)
             &&
@@ -224,20 +225,21 @@ class JWP6_Player {
         return true;
     }
 
-    private function _echo_embedcode_params($params, $parents = array()) {
+    private function _add_embedcode_params($params, $parents = array()) {
+        $embedcode = "";
         $po = JWP6_Plugin::$player_options;
         $last_param = end(array_keys($params));
         foreach ($params as $param => $value) {
             $new_parents = $parents;
             $new_parents[] = $param;
             if ( is_array($value) ) {
-                echo str_repeat("\t", count($parents));
-                echo "'{$param}': {\n";
-                $this->_echo_embedcode_params($value, $new_parents);
-                echo ( $last_param == $param && count($parents) ) ? "}\n" : "},\n";
+                $embedcode .= str_repeat("\t", count($parents));
+                $embedcode .= "'{$param}': {\n";
+                $embedcode .= $this->_add_embedcode_params($value, $new_parents);
+                $embedcode .= ( $last_param == $param && count($parents) ) ? "}\n" : "},\n";
             } else {
                 $check_param = ( count($parents) ) ? implode('__', $new_parents) : $param;
-                if ( JWP6_Plugin::option_available($check_param) && $this->_echo_if_default_value($check_param, $value) ) {
+                if ( JWP6_Plugin::option_available($check_param) && $this->_add_if_default_value($check_param, $value) ) {
                     $stringval = null;
                     // See if it's a toggle.
                     if ( is_bool($value) ) {
@@ -258,13 +260,14 @@ class JWP6_Player {
                     }
                     // Print the value.
                     if ( ! is_null($stringval) ) {
-                        echo str_repeat("\t", count($parents));
-                        echo "'{$param}': {$stringval}";
-                        echo ( $last_param == $param && count($parents) ) ? "\n" : ",\n";
+                        $embedcode .= str_repeat("\t", count($parents));
+                        $embedcode .= "'{$param}': {$stringval}";
+                        $embedcode .= ( $last_param == $param && count($parents) ) ? "\n" : ",\n";
                     }
                 }
             }
         }
+        return $embedcode;
     }
 
     public function embedcode($id, $file = null, $playlist=null, $image = null, $download = null, $config = null) {
@@ -276,33 +279,31 @@ class JWP6_Player {
         }
         unset($this->config['description']);
         $image = ( is_null($image) ) ? JWP6_Plugin::default_image_url() : $image;
-        ?>
-        <pre><?php print_r($this->config); ?></pre>
-        <div class="jwplayer" id="jwplayer-<?php echo $id; ?>"></div>
-        <script type="text/javascript">
-            <?php if ( get_option(JWP6 . 'allow_anonymous_tracking') ) { $this->_tracking_code($id); } ?>
-            jwplayer("jwplayer-<?php echo $id; ?>").setup({
-                <?php
-                    if ( ! is_null($file) ) {
-                        echo "'file': '{$file}',\n";
-                    }
-                    if ( ! is_null($playlist) ) {
-                        echo "'playlist': '{$playlist}',\n";
-                    }
-                    $this->_echo_embedcode_params($this->config);
-                    if ( is_null($playlist) ) {
-                        echo "'image': '{$image}',\n";
-                    }
-                    if ( ! is_null($file) && is_null($playlist) ) {
-                        echo "'file': '{$file}'\n";
-                    }
-                    if ( ! is_null($playlist) ) {
-                        echo "'playlist': '{$playlist}'\n";
-                    }
-                ?>
-            });
-        </script>
-        <?php
+        $embedcode = "
+            <div class='jwplayer' id='jwplayer-{$id}'></div>
+            <script type='text/javascript'>
+        ";
+        if ( get_option(JWP6 . 'allow_anonymous_tracking') ) { 
+            $embedcode .= $this->_tracking_code($id);
+        }
+        $embedcode .= "
+            jwplayer('jwplayer-{$id}').setup({
+        ";
+        $embedcode .= $this->_add_embedcode_params($this->config);
+        if ( is_null($playlist) ) {
+            $embedcode .= "'image': '{$image}',\n";
+        }
+        if ( ! is_null($file) && is_null($playlist) ) {
+            $embedcode .= "'file': '{$file}'\n";
+        }
+        if ( ! is_null($playlist) ) {
+            $embedcode .= "'playlist': '{$playlist}'\n";
+        }
+        $embedcode .= "
+                });
+            </script>
+        ";
+        return $embedcode;
     }
 
 }
