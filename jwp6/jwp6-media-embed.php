@@ -17,7 +17,7 @@ require_once( JWP6_PLUGIN_DIR . '/jwp6-class-shortcode.php' );
 $jwp6m = new JWP6_Media();
 
 if ( $_SERVER['REQUEST_METHOD'] === 'POST' ) {
-    if ( $_POST['video_id'] || $_POST['video_url'] || $_POST['playlist_id']) {
+    if ( $_POST[JWP6 . 'mediaid'] || $_POST[JWP6 . 'file'] || $_POST[JWP6 . 'playlistid']) {
         $shortcode = new JWP6_Shortcode();
         media_send_to_editor($shortcode->shortcode());
         exit();
@@ -41,10 +41,11 @@ if ( $_SERVER['REQUEST_METHOD'] === 'POST' ) {
     <script type="text/javascript">
     var JWP6_AJAX_URL = "<?php echo JWP6_PLUGIN_URL . 'jwp6-ajax.php'; ?>";
     jQuery(function () {
-        jQuery('#player_name, #video_id, #playlist_id, #image_id')
+        jQuery('#player_name, #<?php echo JWP6; ?>mediaid, #<?php echo JWP6; ?>playlistid, #<?php echo JWP6; ?>imageid')
             .select2(jwp6media.SELECT2_SETTINGS)
             .bind('change', jwp6media.preview_player)
         ;
+        jwp6media.init_media_wizard();
     });
     </script>
     <title>Add a JW Player</title>
@@ -58,7 +59,7 @@ if ( $_SERVER['REQUEST_METHOD'] === 'POST' ) {
         <a href="<?php echo admin_url(); ?>media-upload.php">← Wordpress media manager</a>
     </li>
     <li class="active">
-        <a href="">JW Player</a>
+        <a href="">Embed a JW Player</a>
     </li>
 </ul>
 <?php endif; ?>
@@ -66,7 +67,7 @@ if ( $_SERVER['REQUEST_METHOD'] === 'POST' ) {
 <div id="wrapper" class="jwp6-media-tab">
 
 <?php if ( ! MEDIA_MANAGER_35 ): ?>
-<h1>JW Player Wizard</h1>
+<h1>JW Player Embed Wizard</h1>
 <?php endif; ?>
 
 <?php if ( isset($no_video_error) ): ?>
@@ -76,7 +77,7 @@ if ( $_SERVER['REQUEST_METHOD'] === 'POST' ) {
 </div>
 <?php endif; ?>
 
-<form method="post" action="<?php echo JWP6_PLUGIN_URL; ?>/jwp6-media.php" name="jwp6_wizard_form" id="jwp6_wizard_form">
+<form method="post" action="<?php echo JWP6_PLUGIN_URL; ?>/jwp6-media-embed.php" name="jwp6_wizard_form" id="jwp6_wizard_form">
 
 <p>
     This wizard uses the media in your media library, which means you must 
@@ -98,14 +99,14 @@ if ( $_SERVER['REQUEST_METHOD'] === 'POST' ) {
     <a href="">Player configuration page</a>
 </p>
 
-<div class="group" id="video_id_group">
+<div class="group" id="mediaid_group">
     <h2>Pick a video</h2>
     <div class="select">
-        <select name="video_id" id="video_id" data-placeholder="Pick a video..." style="width: 90%;">
+        <select name="<?php echo JWP6; ?>mediaid" id="<?php echo JWP6; ?>mediaid" data-placeholder="Pick a video..." style="width: 90%;">
             <option value=""></option>
             <?php foreach ($jwp6m->videos() as $attachment): ?>
             <option value="<?php echo $attachment['id']; ?>" title="<?php echo $attachment['url']; ?>"
-                data-thumb="<?php echo JWP6_Plugin::image_for_video_id($attachment['id']); ?>">
+                data-thumb="<?php echo JWP6_Plugin::image_from_mediaid($attachment['id'], true); ?>">
                 <?php echo $attachment['title']; ?> (<?php echo $attachment['name']; ?>)
             </option>
             <?php endforeach; ?>
@@ -113,27 +114,27 @@ if ( $_SERVER['REQUEST_METHOD'] === 'POST' ) {
     </div>
     <p class="info">
         You can also 
-        <a href="#video_url" class="fieldset_toggle">use a direct url to your video file</a> 
+        <a href="#file" class="fieldset_toggle">use a direct url to your video file</a> 
         or
-        <a href="#playlist" class="fieldset_toggle">select a playlist</a>.
+        <a href="#playlistid" class="fieldset_toggle">select a playlist</a>.
     </p>
 </div>
-<div class="group hidden" id="video_url_group">
+<div class="group hidden" id="file_group">
     <h2>Insert a video URL</h2>
     <div class="input">
-        <input type="text" name="video_url" />
+        <input type="text" name="<?php echo JWP6; ?>file" />
     </div>
     <p class="info">
         You can also 
-        <a href="#video" class="fieldset_toggle">pick a video from the media library</a> 
+        <a href="#mediaid" class="fieldset_toggle">pick a video from the media library</a> 
         or
-        <a href="#playlist" class="fieldset_toggle">select a playlist</a>.
+        <a href="#playlistid" class="fieldset_toggle">select a playlist</a>.
     </p>
 </div>
-<div class="group hidden" id="playlist_id_group">
+<div class="group hidden" id="playlistid_group">
     <h2>Pick a playlist</h2>
     <div class="select">
-        <select name="playlist_id" id="playlist_id" data-placeholder="Pick a playlist..." style="width: 90%;">
+        <select name="<?php echo JWP6; ?>playlistid" id="<?php echo JWP6; ?>playlistid" data-placeholder="Pick a playlist..." style="width: 90%;">
             <option value=""></option>
             <?php foreach ($jwp6m->playlists() as $playlist): ?>
             <option value="<?php echo $playlist->ID; ?>">
@@ -144,9 +145,9 @@ if ( $_SERVER['REQUEST_METHOD'] === 'POST' ) {
     </div>
     <p class="info">
         You can also 
-        <a href="#video" class="fieldset_toggle">pick a video from the media library</a> 
+        <a href="#mediaid" class="fieldset_toggle">pick a video from the media library</a> 
         or
-        <a href="#video_url" class="fieldset_toggle">use a direct url to your video file</a>.
+        <a href="#file" class="fieldset_toggle">use a direct url to your video file</a>.
     </p>
 </div>
 <div class="group" id="image_yesno_group">
@@ -155,10 +156,10 @@ if ( $_SERVER['REQUEST_METHOD'] === 'POST' ) {
         <a href="#image" class="fieldset_toggle">select a separate thumbnail</a>.
     </p>
 </div>
-<div class="group hidden" id="image_id_group">
+<div class="group hidden" id="imageid_group">
     <h2>Pick a video thumbnail</h2>
     <div class="select">
-        <select type="hidden" name="image_id" id="image_id" data-placeholder="Pick a thumbnail..." style="width: 90%;">
+        <select type="hidden" name="<?php echo JWP6; ?>imageid" id="<?php echo JWP6; ?>imageid" data-placeholder="Pick a thumbnail..." style="width: 90%;">
             <option value=""></option>
             <?php foreach ($jwp6m->images() as $attachment): ?>
             <option value="<?php echo $attachment['id']; ?>" title="<?php echo $attachment['url']; ?>"
@@ -170,19 +171,19 @@ if ( $_SERVER['REQUEST_METHOD'] === 'POST' ) {
     </div>
     <p class="info">
         The thumbnail will show before the video starts playing.
-        <a href="#image_url" class="fieldset_toggle">You can also use a direct url to your thumbnail</a>
+        <a href="#image" class="fieldset_toggle">You can also use a direct url to your thumbnail</a>
         or
         <a href="#image_yesno" class="fieldset_toggle">use the image associated with the video</a>.
     </p>
 </div>
-<div class="group hidden" id="image_url_group">
+<div class="group hidden" id="image_group">
     <h2>Insert a thumbnail url</h2>
     <div class="input">
-        <input type="text" name="image_url" />
+        <input type="text" name="<?php echo JWP6; ?>image" />
     </div>
     <p class="info">
         The thumbnail will show before the video starts playing.
-        <a href="#image" class="fieldset_toggle">You can also pick an image from the media library</a>
+        <a href="#imageid" class="fieldset_toggle">You can also pick an image from the media library</a>
         or
         <a href="#image_yesno" class="fieldset_toggle">use the image associated with the video</a>.
     </p>
@@ -192,12 +193,13 @@ if ( $_SERVER['REQUEST_METHOD'] === 'POST' ) {
     <button type="submit" class="button-primary" name="insert">Insert this player into your post</button>
 </div>
 
+</form><!-- end of jwp6_wizard_form -->
+
 <h2>Preview</h2>
 
 <div class="preview" id="player-preview">
     <p class="info">The preview of the player will show after you select a player and a video/video url/playlist.</p>
 </div>
-</form><!-- end of jwp6_wizard_form -->
 
 </div><!-- end of wrapper -->
 </body>

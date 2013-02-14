@@ -5,36 +5,23 @@ class JWP6_Admin {
     public function __construct() {
         global $wp_version;
         $this->previous_version = get_option(JWP6 . 'previous_version');
-        if ( version_compare($wp_version, '3.5', '<') ) add_action('media_buttons', array($this, 'media_button'), 99);
+        // if ( version_compare($wp_version, '3.5', '<') ) add_action('media_buttons', array($this, 'media_button'), 99);
+        add_action("init", array($this, 'enqueue_scripts_and_styles'));
         add_action('admin_menu', array($this, 'admin_menu'));
-        add_filter('media_upload_tabs', array($this, 'add_media_tab'), 99999);
-        add_filter('media_upload_jwp6_media', array($this, 'render_media_tab'));
-        JWP6_Media::add_filters();
+        JWP6_Media::actions_and_filters();
     }
 
-    public function media_button() {
-        $this->head_assets();
-        $url = esc_url(JWP6_PLUGIN_URL . 'jwp6-media.php?TB_iframe=1');
-        echo "<a href='$url' id='jwp6-media-button' class='thickbox' " .
-            "title='Add a JW Player to your post'>Add a JW Player</a>";
-    }
+    // public function media_button() {
+    //     $url = esc_url(JWP6_PLUGIN_URL . 'jwp6-media.php?TB_iframe=1');
+    //     echo "<a href='$url' id='jwp6-media-button' class='thickbox' " .
+    //         "title='Add a JW Player to your post'>Add a JW Player</a>";
+    // }
 
-    public static function add_media_tab($tabs) {
-        global $wp_version;
-        $tabs["jwp6_media"] = ( version_compare($wp_version, '3.5', '>=') ) ? 'JW Player Wizard' : 'JW Player →';
-        return $tabs;
-    }
-
-    public static function render_media_tab() {
-        wp_redirect(JWP6_PLUGIN_URL . 'jwp6-media.php');
-        exit();
-    }
-
-    public function head_assets() {
-        wp_register_script('jwp6-admin.js', JWP6_PLUGIN_URL.'js/jwp6-admin.js');
-        wp_enqueue_script('jwp6-admin.js');
-        wp_register_style('jwp6-admin.css', JWP6_PLUGIN_URL.'css/jwp6-admin.css');
-        wp_enqueue_style('jwp6-admin.css');
+    public static function enqueue_scripts_and_styles() {
+        wp_register_script('jwp6-admin-js', JWP6_PLUGIN_URL.'js/jwp6-admin.js');
+        wp_enqueue_script('jwp6-admin-js');
+        wp_register_style('jwp6-admin-css', JWP6_PLUGIN_URL.'css/jwp6-admin.css');
+        wp_enqueue_style('jwp6-admin-css');
     }
 
     public function admin_menu() {
@@ -67,20 +54,13 @@ class JWP6_Admin {
         if ( $this->previous_version && $this->previous_version < 6 && ! $purged) {
             add_submenu_page(
                 JWP6 . "menu",
-                "Import Settings from JW Player 5 Plugin", 
-                "JWP5 Migration", 
+                "Revert your plugin back to JW Player 5", 
+                "Revert to JW5", 
                 "administrator", 
                 JWP6 . "menu_import", 
                 array($this, 'admin_pages')
             );
         }
-        $media = add_media_page(
-            "JW Player Playlist Manager",    //$page_title
-            "Playlists",                     //$menu_title
-            "read",                          //$capability
-            JWP6 . "playlists",              //$menu_slug
-            array($this, 'playlist_manager') //$function
-        );
         //add_action("admin_print_scripts-$admin", "add_admin_js");
         //add_action("admin_print_scripts-$media", "add_admin_js");
     }
@@ -106,23 +86,8 @@ class JWP6_Admin {
         if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             $page->process_post_data($_POST);
         }
-        $this->head_assets();
         $page->head_assets();
         $page->render();
-    }
-
-    public function playlist_manager() {
-        wp_enqueue_script("jquery-ui-core");
-        wp_enqueue_script("jquery-ui-tabs");
-        wp_enqueue_script("jquery-ui-button");
-        wp_enqueue_script("jquery-ui-widget");
-        wp_enqueue_script("jquery-ui-mouse");
-        wp_enqueue_script("jquery-ui-draggable");
-        wp_enqueue_script("jquery-ui-droppable");
-        wp_enqueue_script("jquery-ui-sortable");
-        wp_register_style('jwp6-admin.css', JWP6_PLUGIN_URL.'css/jwp6-admin.css');
-        wp_enqueue_style('jwp6-admin.css');
-        require_once(JWP6_PLUGIN_DIR . '/jwp6-playlist-manager.php');
     }
 
 }

@@ -5,75 +5,64 @@ class JWP6_Shortcode {
     // JWP6_Player instance of the selected player
     protected $player;
 
-    // Additional player config params
-    protected $config;
+    // Array that holds the actual content parameters
+    protected $media_params = array(
+        'mediaid'   => null,
+        'file'      => null,
+        'playlistid'=> null,
+        'playlist'  => null,
+        'image'     => null,
+    );
 
-    // URL or id of WP Post object for selected media
+    // Additional player config params
+    protected $config_params;
+
+    /*
+    //Wordpress post ID for the media
+    protected $mediaid = null;
+
+    // URL for the media
     protected $file = null;
 
-    // URL or id of WP Post object for selected media
+    // Wordpress post ID for the playlist
+    protected $playlistid = null;
+
+    // URL for the playlist
     protected $playlist = null;
 
     // url for the placeholder thumb
     protected $image = null;
+    */
 
-    // Title of the video
-    protected $title = null;
-
-    // Url for the download
-    protected $download = null;
-
-    public function __construct($shortcode = null) {
+    public function __construct($shortcode = null, $alternative_post_data = false) {
         if ( null === $shortcode ) {
-            return $this->_init_from_post_data();
+            return $this->_init_from_post_data($alternative_post_data);
         } else {
             return $this->_init_from_shortcode($shortcode);
         }
     }
 
-    protected function _init_from_post_data() {
+    protected function _init_from_post_data($alternative_post_data = false) {
+        $post = ( $alternative_post_data && is_array($alternative_post_data) ) ? $alternative_post_data : $_POST;
         // First set the player
-        $player = new JWP6_Player($_POST['player_name']);
+        $player = new JWP6_Player($post['player_name']);
         if ( $player && $player->is_existing() ) {
             $this->player = $player;
-        } 
+        }
         else {
-            $this->player = new JWP6_Player('default');
-        }
-        // Video file
-        if ( isset($_POST['video_url']) && $_POST['video_url'] ) {
-            $this->file = $_POST['video_url'];
-        }
-        else if ( isset($_POST['video_id']) && $_POST['video_id'] ) {
-            $this->file = intval($_POST['video_id']);
-        } 
-        // Playlist
-        if ( isset($_POST['playlist_url']) && $_POST['playlist_url'] ) {
-            $this->playlist = $_POST['playlist_url'];
-        }
-        else if ( isset($_POST['playlist_id']) && $_POST['playlist_id'] ) {
-            $this->playlist = intval($_POST['playlist_id']);
+            $this->player = new JWP6_Player(0);
         }
 
-        // Image
-        if ( isset($_POST['image_url']) && $_POST['image_url'] ) {
-            $this->image = $_POST['image_url'];
+        foreach ($this->media_params as $param => $value) {
+            if ( isset($post[JWP6 . $param]) && $post[JWP6 . $param] ) {
+                $this->media_params[$param] = $post[JWP6 . $param];
+            } else if ( isset($post[$param]) && $post[$param] ) {
+                $this->media_params[$param] = $post[$param];
+            }
         }
-        else if ( isset($_POST['image_id']) && $_POST['image_id'] ) {
-            $this->image = intval($_POST['image_id']);
-        }
-        // Download
-        if ( isset($_POST['download_url']) && $_POST['download_url'] ) {
-            $this->download = $_POST['download_url'];
-        }
-        else if ( isset($_POST['download_id']) && $_POST['download_id'] ) {
-            $this->download = intval($_POST['download_id']);
-        }
-        // Title
-        // Still to come
-        // Maybe some additional settings?
+
     }
-    
+
     protected function _init_from_shortcode($shortcode) {
         $shortcode = JWP6_Legacy::check_shortcode($shortcode);
 
@@ -85,103 +74,243 @@ class JWP6_Shortcode {
             $this->player = new JWP6_Player('default');
         }
 
-        // File
-        if ( isset($shortcode['file']) ) {
-            $this->file = $shortcode['file'];
-            unset($shortcode['file']);
-        } 
-        if ( isset($shortcode['playlist']) ) {
-            $this->playlist = $shortcode['playlist'];
-            unset($shortcode['playlist']);
+        // Check fixed params
+        foreach ($this->media_params as $param => $value) {
+            if ( isset($shortcode[$param]) ) {
+                $this->media_params[$param] = $shortcode[$param];
+                unset($shortcode[$param]);
+            }
         }
 
-        if ( is_null($this->file) && is_null($this->playlist) ) {
-            exit('Error in shortcode. File/playlist value is compulsory.');
+        // Check if at least on media item has been set.
+        $media_is_set = false;
+        foreach (array('mediaid', 'file', 'playlist', 'playlistid') as $param) {
+            if ( ! is_null($this->media_params[$param]) ) $media_is_set = true;
+        }
+        if ( ! $media_is_set ) {
+            exit('Error in shortcode. You need to specify at least mediaid, file, playlistid or playlist in the jwplayer shortcode.');
         }
 
-        // Image
-        if ( isset($shortcode['image']) ) {
-            $this->image = $shortcode['image'];
-            unset($shortcode['image']);
-        }
+        // The other items in the shortcode can be 
+        $this->config_params = $shortcode;
 
-        // Download
-        if ( isset($shortcode['download']) ) {
-            $this->download = $shortcode['download'];
-            unset($shortcode['download']);
-        }
+    }
 
+    // Adds the filters for this class
+    public static function add_filters() {
+        add_filter('the_content', array('JWP6_Shortcode', 'the_content_filter'), 11);
+        add_filter('the_excerpt', array('JWP6_Shortcode', 'the_excerpt_filter'), 11);
+        add_filter('widget_text', array('JWP6_Shortcode', 'widget_text_filter'),  11);
     }
 
     // outputs the short code for this object
     public function shortcode() {
         $params = array();
         // Player
-        if ( 'default' != $this->player->get_name() ) {
-            $params['player'] = $this->player->get_name();
+        if ( $this->player->get_id() ) {
+            $params['player'] = $this->player->get_id();
         }
-        // Video
-        if ( $this->file ) {
-            $params['file'] = $this->file;
-        }
-        // Playlist
-        if ( $this->playlist ) {
-            $params['playlist'] = $this->playlist;
-        }
-        // Image
-        if ( $this->image ) {
-            $params['image'] = $this->image;
-        }
-        // Download
-        if ( $this->download ) $params['download'] = $this->download;
-        // Title
-        if ( $this->title ) $params['title'] = $this->title;
 
-        $paramstrings = array();
+        // Media
+        foreach ($this->media_params as $param => $value) {
+            if ( $value ) {
+                $params[$param] = $value;
+            }
+        }
+
+        $param_pairs = array();
         foreach ($params as $key => $value) {
-            array_push($paramstrings , $key . '="' . $value . '"');
+            array_push($param_pairs , $key . '="' . $value . '"');
         }
 
-        return '[jwplayer ' .join(" ", $paramstrings).']';
+        return '[jwplayer ' .join(" ", $param_pairs).']';
     }
 
     // outputs the embed code
-    public function embedcode($id = 0) {
-        if ( is_null($this->file) ) {
-            $file_url = null;
-        } else {
-            if ( is_int($this->file) || ctype_digit($this->file) ) {
-                $file_post = get_post($this->file);
-                $file_url = $file_post->guid;
+    public function embedcode() {
+        global $jwp6_global;
+        $jwp6_global['player_embed_count'] = ( array_key_exists('player_embed_count', $jwp6_global) ) ?
+            $jwp6_global['player_embed_count'] + 1 : 0;
+
+
+        // Make the code a little easier to read
+        foreach ($this->media_params as $param => $value) {
+            $$param = $value;
+        }
+
+
+        // MAIN MEDIA
+        $file_url = $playlist_url = null;
+
+        // mediaid
+        if ( is_int($mediaid) || ctype_digit($mediaid) ) {
+            $media_post = get_post($mediaid);
+            $file_url = $media_post->guid;
+        }
+        // file parameter overrules the mediaid
+        if ( $file ) $file_url = $file;
+
+        // playlistid
+        if ( is_int($playlistid) || ctype_digit($playlistid) ) {
+            $playlist_url = JWP6_Plugin::playlist_url($playlistid);
+        }
+        // Direct playlist setting overrules the playlistid settings
+        if ( $playlist ) $playlist_url = $playlist;
+
+        // If someone sets playlist and file, playlist has priority
+        if ( $file_url && $playlist_url) unset($file_url); 
+
+
+        // THUMBNAIL
+        $image_url = null;
+        // Direct image setting has priority
+        if ( $image ) {
+            if ( is_int($image) || ctype_digit($image) ) {
+                $image_post = get_post($image);
+                $image_url = $image_post->guid;
             }
             else {
-                $file_url = $this->file;
+                $image_url = $image;
             }
         }
-        if ( is_null($this->playlist) ) {
-            $playlist_url = null;
-        } else {
-            $playlist_url = ( is_int($this->playlist) || ctype_digit($this->playlist) ) ? JWP6_Plugin::playlist_url($this->playlist) : $this->playlist;
+        // Otherwise try to get it from the media
+        else if ( $mediaid ) {
+            $image_url = JWP6_Plugin::image_from_mediaid($mediaid);
         }
-        $download_url = ( $this->download && ( is_int($this->download) || ctype_digit($this->download) ) ) ? wp_get_attachment_url($this->download) : $this->download;
-        $image_url = null;
-        if ( $this->image && ( is_int($this->image) || ctype_digit($this->image) ) ) {
-            $image_post = get_post($this->file);
-            $image_url = $image_post->guid;
-        }
-        else if ( $this->image ) {
-            $image_url = $this->image;
-        } else if ( $this->file && ( is_int($this->file) || ctype_digit($this->file) ) ) {
-            $image_url = JWP6_Plugin::image_for_video_id($this->file);
-        }
+
         return $this->player->embedcode(
-            $id,
+            $jwp6_global['player_embed_count'],
             $file_url,
             $playlist_url,
             $image_url,
-            $download_url,
-            $this->config
+            $this->config_params
         );
     }
+
+
+    /**
+    * @file This file contains the necessary functions for parsing the jwplayer
+    * shortcode.  Re-implementation of the WordPress functionality was necessary
+    * as it did not support '.'
+    * @param string $the_content
+    * @return string
+    */
+    public static function the_excerpt_filter($the_content = "") {
+        $execute = $disable = false;
+        if (is_archive()) {
+            $archive_mode = get_option(JWP6 . "category_config");
+            $execute = $archive_mode == "excerpt";
+            $disable = $archive_mode == "disable";
+        } else if (is_search()) {
+            $search_mode = get_option(JWP6 . "search_config");
+            $execute = $search_mode == "excerpt";
+            $disable = $search_mode == "disable";
+        } else if (is_tag()) {
+            $tag_mode = get_option(JWP6 . "tag_config");
+            $execute = $tag_mode == "excerpt";
+            $disable = $tag_mode == "disable";
+        } else if (is_home()) {
+            $home_mode = get_option(JWP6 . "home_config");
+            $execute = $home_mode == "excerpt";
+            $disable = $home_mode == "disable";
+        }
+        $tag_regex = '/(.?)\[(jwplayer)\b(.*?)(?:(\/))?\](?:(.+?)\[\/\2\])?(.?)/s';
+        if ($execute) {
+            $the_content = preg_replace_callback($tag_regex, array("JWP6_Shortcode", "tag_parser"), $the_content);
+        } else if ($disable) {
+            $the_content = preg_replace_callback($tag_regex, array("JWP6_Shortcode", "tag_stripper"), $the_content);
+        }
+        return $the_content;
+    }
+
+    /**
+    * @param string $the_content
+    * @return mixed|string
+    */
+    public static function widget_text_filter($the_content = "") {
+        $tag_regex = '/(.?)\[(jwplayer)\b(.*?)(?:(\/))?\](?:(.+?)\[\/\2\])?(.?)/s';
+        $the_content = preg_replace_callback($tag_regex,  array("JWP6_Shortcode", "tag_parser"), $the_content);
+        return $the_content;
+    }
+
+    /**
+    * Callback for locating [jwplayer] tag instances.
+    * @param string $the_content The content to be parsed.
+    * @return string The parsed and replaced [jwplayer] tag.
+    */
+    public static function the_content_filter($the_content = "") {
+        $execute = $disable = false;
+        if (is_archive()) {
+            $archive_mode = get_option(JWP6 . "category_config");
+            $execute = $archive_mode == "content";
+            $disable = $archive_mode == "disable";
+        } else if (is_search()) {
+            $search_mode = get_option(JWP6 . "search_config");
+            $execute = $search_mode == "content";
+            $disable = $search_mode == "disable";
+        } else if (is_tag()) {
+            $tag_mode = get_option(JWP6 . "tag_config");
+            $execute = $tag_mode == "content";
+            $disable = $tag_mode == "disable";
+        } else if (is_home()) {
+            $home_mode = get_option(JWP6 . "home_config");
+            $execute = $home_mode == "content";
+            $disable = $home_mode == "disable";
+        } else {
+            $execute = true;
+        }
+        $tag_regex = '/(.?)\[(jwplayer)\b(.*?)(?:(\/))?\](?:(.+?)\[\/\2\])?(.?)/s';
+        if ($execute) {
+            $the_content = preg_replace_callback($tag_regex,  array("JWP6_Shortcode", "tag_parser"), $the_content);
+        } else if($disable) {
+            $the_content = preg_replace_callback($tag_regex,  array("JWP6_Shortcode", "tag_stripper"), $the_content);
+        }
+        return $the_content;
+    }
+
+    /**
+    * Parses the attributes of the [jwplayer] tag.
+    * @param array $matches The match array
+    * @return string The code that should replace the tag.
+    */
+    public static function tag_parser($matches) {
+        if ($matches[1] == "[" && $matches[6] == "]") {
+            return substr($matches[0], 1, -1);
+        }
+        $param_regex = '/([\w.]+)\s*=\s*"([^"]*)"(?:\s|$)|([\w.]+)\s*=\s*\'([^\']*)\'(?:\s|$)|([\w.]+)\s*=\s*([^\s\'"]+)(?:\s|$)|"([^"]*)"(?:\s|$)|(\S+)(?:\s|$)/';
+        $text = preg_replace("/[\x{00a0}\x{200b}]+/u", " ", $matches[3]);
+        $atts = array();
+        if (preg_match_all($param_regex, $text, $match, PREG_SET_ORDER)) {
+            foreach ($match as $p_match) {
+                if (!empty($p_match[1]))
+                    $atts[$p_match[1]] = stripcslashes($p_match[2]);
+                elseif (!empty($p_match[3]))
+                    $atts[$p_match[3]] = stripcslashes($p_match[4]);
+                elseif (!empty($p_match[5]))
+                    $atts[$p_match[5]] = stripcslashes($p_match[6]);
+                elseif (isset($p_match[7]) and strlen($p_match[7]))
+                    $atts[] = stripcslashes($p_match[7]);
+                elseif (isset($p_match[8]))
+                    $atts[] = stripcslashes($p_match[8]);
+            }
+        } else {
+            $atts = ltrim($text);
+        }
+
+        $shortcode = new JWP6_Shortcode($atts);
+        return $matches[1] . $shortcode->embedcode() . $matches[6];
+    }
+
+    /**
+    * @param $matches
+    * @return string
+    */
+    public static function tag_stripper($matches) {
+        if ($matches[1] == "[" && $matches[6] == "]") {
+            return substr($matches[0], 1, -1);
+        }
+        return $matches[1] . $matches[6];
+    }
+
 
 }

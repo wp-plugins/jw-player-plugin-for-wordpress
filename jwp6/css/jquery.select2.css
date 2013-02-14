@@ -110,8 +110,11 @@ Version: @@ver@@ Timestamp: @@timestamp@@
 .select2-drop {
     width: 100%;
     margin-top:-1px;
-    position: absolute;
+    /*RMNL
     z-index: 9999;
+    position: absolute;*/
+    position: fixed;
+    z-index: 9999999999;
     top: 100%;
 
     background: #fff;
@@ -187,7 +190,9 @@ Version: @@ver@@ Timestamp: @@timestamp@@
     padding-right: 4px;
 
     position: relative;
-    z-index: 10000;
+    /*RMNL
+    z-index: 10000;*/
+    z-index: 10000000000;
 
     white-space: nowrap;
 }
@@ -575,7 +580,7 @@ disabled look for already selected choices in the results dropdown
     padding: 0;
     width: 40px;
     height: 30px;
-    background: #000 url(../img/default-image.png) no-repeat 0 0;
+    background: #000 url(../img/jquery.select2.no-thumb.png) no-repeat 0 0;
     background-size: cover;
 }
 /* /RMNL */

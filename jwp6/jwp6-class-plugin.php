@@ -3,11 +3,13 @@
 // Utility class that holds accessible settings and methods.
 class JWP6_Plugin {
 
+    public static $player_version = '6.2';
+
     public static $cdn_http_player = 'http://p.jwpcdn.com/6/2/jwplayer.js';
 
     public static $cdn_https_player = 'https://ssl.p.jwpcdn.com/6/2/jwplayer.js';
 
-    public static $default_image = '/img/default-image.png';
+    public static $default_image = 'img/default-image.png';
 
     public static $ping_image = "http://i.n.jwpltx.com/v1/wordpress/ping.gif";
 
@@ -16,7 +18,8 @@ class JWP6_Plugin {
         'forums'            => "http://www.longtailvideo.com/support/forums/jw-player/",
         'player_docs'       => "http://www.longtailvideo.com/support/jw-player/",
         'player_download'   => "http://www.longtailvideo.com/jw-player/download/",
-        'player_pricing'    => "http://www.longtailvideo.com/jw-player/pricing/"
+        'player_pricing'    => "http://www.longtailvideo.com/jw-player/pricing/",
+        'migration_guide'   => "http://google.com/",
     );
 
     public static $license_versions = array(
@@ -87,7 +90,7 @@ class JWP6_Plugin {
         ),
         'primary' => array(
             'options' => array('html5', 'flash'),
-            'default' => 'html5',
+            'default' => 'flash',
             'help_text' => 'Which rendering mode to try first for rendering the player.',
             'discard_if_default' => true,
         ),
@@ -160,12 +163,12 @@ class JWP6_Plugin {
         ),
 
         // RIGHTCLICK
-        'abouttext' => array(
-            'licenses' => array('pro', 'premium', 'ads'),
-            'default' => '',
-            'discard_if_default' => true,
-            'help_text' => 'Text to display in the right-click menu. The default is About JW Player 6.x.xxx.',
-        ),
+        // 'abouttext' => array(
+        //     'licenses' => array('pro', 'premium', 'ads'),
+        //     'default' => '',
+        //     'discard_if_default' => true,
+        //     'help_text' => 'Text to display in the right-click menu. The default is About JW Player 6.x.xxx.',
+        // ),
 
         'aboutlink' => array(
             'licenses' => array('pro', 'premium', 'ads'),
@@ -287,14 +290,33 @@ class JWP6_Plugin {
         return JWP6_PLUGIN_URL . JWP6_Plugin::$default_image;
     }
 
-    public static function image_for_video_id($videoid) {
-        $imageid = get_post_meta($videoid, JWP6 . 'thumbnail', true);
-        if ($imageid) {
-            $image = get_post($imageid);
-            return $image->guid;
+    public static function image_from_mediaid($post_id, $default = false) {
+        $thumbinfo = get_post_meta($post_id, LONGTAIL_KEY . "thumbnail", true);
+        if ( $thumbinfo ) {
+            // Thumbinfo is either an id or a url;
+            if ( is_int($thumbinfo) || ctype_digit($thumbinfo) ) {
+                $thumbnail = get_post($thumbinfo);
+                if ($thumbnail) {
+                    return $thumbnail->guid;
+                }
+            // It's a url
+            } else {
+                return $thumbinfo;
+            }
         }
-        return JWP6_Plugin::default_image_url();
+        // In version 5 we could have a separate thumburl_setting
+        $thumbnail_url = get_post_meta($post_id, LONGTAIL_KEY . "thumbnail_url", true);
+        return ( $thumbnail_url ) ? $thumb_url : $default;
     }
+
+    // public static function image_from_mediaid($videoid) {
+    //     $imageid = get_post_meta($videoid, LONGTAIL_KEY . 'thumbnail', true);
+    //     if ($imageid) {
+    //         $image = get_post($imageid);
+    //         return $image->guid;
+    //     }
+    //     return JWP6_Plugin::default_image_url();
+    // }
 
     public static function option_available($option) {
         if ( array_key_exists($option, JWP6_Plugin::$player_options) ) {
@@ -362,11 +384,11 @@ class JWP6_Plugin {
         register_activation_hook(JWP6_PLUGIN_FILE, array("JWP6_Plugin", "activate_plugin"));
         register_deactivation_hook(JWP6_PLUGIN_FILE, array("JWP6_Plugin", "deactivate_plugin"));
         if ( ! is_admin() ) {
+            JWP6_Shortcode::add_filters();
             add_filter('query_vars', array('JWP6_Plugin', 'register_query_vars'));
             add_action('parse_request',  array('JWP6_Plugin', 'parse_request'), 9 );
             add_action('wp_enqueue_scripts', array('JWP6_Plugin', 'insert_javascript'));
             add_action('wp_head', array('JWP6_Plugin', 'insert_license_key'));
-            add_shortcode('jwplayer', array('JWP6_Plugin', 'shortcode'));
         }
     }
 

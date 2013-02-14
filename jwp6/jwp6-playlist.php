@@ -14,7 +14,7 @@ $limit = '';
 $playlist_id = intval($_GET['id']);
 $playlist = get_post($playlist_id);
 if ($playlist) {
-  $playlist_items = explode(",", get_post_meta($playlist_id, JWP6. "playlist_items", true));
+  $playlist_items = explode(",", get_post_meta($playlist_id, LONGTAIL_KEY . "playlist_items", true));
 }
 
 header("content-type:text/xml;charset=utf-8");
@@ -43,14 +43,14 @@ if (is_array ($playlist_items)) {
 
     	echo "\n\t\t".'<item>';
     	echo "\n\t\t\t".'<title>' . esc_attr(stripslashes($playlist_item->post_title)) . '</title>';
+        if ( $playlist_item->post_description ) {
+            echo "\n\t\t\t".'<description><![CDATA[' . esc_attr(stripslashes($playlist_item->post_title)) . ']]></description>';
+        }
         echo "\n\t\t\t"."<media:content url='" . esc_attr($playlist_item->guid) . "' />";
 
-        $thumbnail = get_post_meta($playlist_item_id, JWP6 . "thumbnail", true);
+        $thumbnail = JWP6_Plugin:image_from_mediaid($playlist_item_id);
         if ( $thumbnail ) {
-            $thumbnail = get_post($thumbnail);
-            if ( $thumbnail ) {
-                echo "\n\t\t\t"."<media:thumbnail url='" . esc_attr($thumbnail->guid) . "' />";
-            }
+            echo "\n\t\t\t"."<media:thumbnail url='" . esc_attr($thumbnail) . "' />";
         }
 		echo "\n\t\t".'</item>';
 	}

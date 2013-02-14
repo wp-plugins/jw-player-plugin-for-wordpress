@@ -61,7 +61,7 @@ class JWP6_Admin_Page {
         if ( is_array($additional_params) ) {
             $params = array_merge($params, $additional_params);
         }
-        return $this->base_url . '?' . http_build_query($params);
+        return admin_url($this->base_url . '?' . http_build_query($params));
     }
 
     public function head_assets() {
@@ -76,19 +76,22 @@ class JWP6_Admin_Page {
 
     protected function render_all_messages() {
         // Check for post error messages
-        $this->form_error_message();
-        foreach ($this->messages as $msg) {
-            $this->render_message($msg['message'], $msg['type']);
-        }
-    }
-
-    protected function form_error_message() {
         if ( count($this->form_error_fields) ) {
             $msg = 'Watch out you gave invalid input for <em>"';
             $msg .= implode ('"</em>, <em>"', array_map(function ($field) { return $field->label; }, $this->form_error_fields));
             $msg .= '"</em>. Please correct the input and resubmit to save your input.';
             $this->add_message($msg, 'error');
         }
+        if ( count($this->messages) ) {
+            foreach ($this->messages as $msg) {
+                $this->render_message($msg['message'], $msg['type']);
+            }
+        } else {
+            echo "<div class='divider'></div>";
+        }
+    }
+
+    protected function form_error_message() {
     }
 
     protected function render_message($msg, $type = 'updated') {

@@ -19,9 +19,8 @@ require_once( JWP6_PLUGIN_DIR . '/jwp6-class-media.php' );
 require_once( JWP6_PLUGIN_DIR . '/jwp6-class-shortcode.php' );
 
 if ( 'embedcode' == $call ) {
-    //print_r($_POST);
     $sc = new JWP6_Shortcode();
-    $sc->embedcode();
+    echo $sc->embedcode();
     exit();
 }
 

@@ -89,6 +89,14 @@ class JWP6_Legacy {
         ),
     );
 
+    static $jwp5_settings_to_import = array(
+        'allow_tracking' => array('name' => 'allow_anonymous_tracking', 'autoload' => true),
+        'category_mode' => array('name' => 'category_config', 'autoload' => false),
+        'search_mode' => array('name' => 'search_config', 'autoload' => false),
+        'tag_mode' => array('name' => 'tag_config', 'autoload' => false),
+        'home_mode' => array('name' => 'home_config', 'autoload' => false)
+    );
+
     public static function slugify($text) { 
         // slugify function as per 
         // http://stackoverflow.com/questions/2955251/php-function-to-make-slug-url-string
@@ -130,20 +138,6 @@ class JWP6_Legacy {
         return $path[0];
     }
 
-    static function playlist_from_old_id($old_id) {
-        $params = array(
-            "post_type" => JWP6 . "playlist",
-            "post_status" => 'publish, private,draft',
-            'sort_column' => 'post_title',
-            'post_parent' => $old_id,
-        );
-        $posts = get_posts($params);
-        if ( count($posts) ) {
-            return $posts[0];
-        }
-        return false;
-    }
-
     static function map_jwp5_config($old_config) {
         $new_config = array();
 
@@ -178,21 +172,20 @@ class JWP6_Legacy {
     }
 
     static function check_shortcode($shortcode) {
+        // Code to find attributes with a dot.
+        foreach ($shortcode as $key => $value) {
+            if ( is_int($key) ) {
+                unset($shortcode[$key]);
+                preg_match('/^(.+)=["\']{1}(.+)["\']{1}$/', $value, $matches);
+                if ( 3 == count($matches) ) {
+                    $shortcode[$matches[1]] = $matches[2];
+                }
+            }
+        }
 
         if ( array_key_exists('config', $shortcode) ) {
             $shortcode['player'] = JWP6_Legacy::slugify($shortcode['config']);
             unset($shortcode['config']);
-        }
-        if ( array_key_exists('playlistid', $shortcode) ) {
-            $post = JWP6_Legacy::playlist_from_old_id($shortcode['playlistid']);
-            if ( $post ) {
-                $shortcode['playlist'] = $post->ID;
-            }
-            unset($shortcode['playlistid']);
-        }
-        if ( array_key_exists('mediaid', $shortcode) ) {
-            $shortcode['file'] = $shortcode['mediaid'];
-            unset($shortcode['mediaid']);
         }
 
         foreach ($shortcode as $option => $value) {
@@ -200,6 +193,7 @@ class JWP6_Legacy {
                 $optionmap = JWP6_Legacy::$optionmap[$option];
                 // Options that can be mapped one on one
                 if ( $optionmap ) {
+                    unset($shortcode[$option]);
                     $option = ( array_key_exists('new', $optionmap) ) ? $optionmap['new'] : $option;
                     if ( array_key_exists('option_value', $optionmap) && is_callable($optionmap['option_value']) ) {
                         $value = call_user_func($optionmap['option_value'], $value);
@@ -219,13 +213,13 @@ class JWP6_Legacy {
         $old_config = simplexml_load_file($config_file);
 
         $new_config = JWP6_Legacy::map_jwp5_config($old_config);
-        $new_name = JWP6_Legacy::slugify($name);
+        $new_player_id = JWP6_Player::next_player_id();
 
-        $player = new JWP6_Player($new_name, $new_config);
-        $player->set('description', 'Imported from "' . $name . '"');
+        $player = new JWP6_Player($new_player_id, $new_config);
+        $player->set('description', $name);
         $player->save();
 
-        return $player->get_name();
+        return $player->full_description();
     }
 
     static function import_jwp5_players() {
@@ -237,42 +231,11 @@ class JWP6_Legacy {
         return $players;
     }
 
-    static function import_jwp5_playlists() {
-        $playlist_query = array(
-            "post_type" => "jw_playlist",
-            "post_status" => 'publish, private,draft',
-            'sort_column' => 'post_title',
-        );
-        $playlists = get_posts($playlist_query);
-        $new_playlists = array();
-        foreach ($playlists as $playlist) {
-            $old_playlist_items = explode(",", get_post_meta($playlist->ID, LONGTAIL_KEY. "playlist_items", true));
-            $new_playlist_items = array();
-            $new_playlist = array('name' => $playlist->post_title, 'nr_of_old_items' => count($old_playlist_items));
-            foreach ($old_playlist_items as $playlist_item_id)  {
-                $playlist_item = get_post($playlist_item_id);
-                $mime_type = substr($playlist_item->post_mime_type, 0, 5);
-                if ( 'video' == $mime_type || 'audio' == $mime_type ) {
-                    $new_playlist_items[] = $playlist_item_id;
-                }
-            }
-
-            $new_playlist['nr_of_new_items'] = count($new_playlist_items);
-            $new_playlist['has_missing_items'] = ( $new_playlist['nr_of_old_items'] == $new_playlist['nr_of_new_items'] ) ? false : true;
-            $new_playlists[] = $new_playlist;
-
-            if ( count($new_playlist_items) ) {
-                $new_playlist_post = array();
-                $new_playlist_post["post_title"] = $playlist->post_title;
-                $new_playlist_post["post_type"] = JWP6 . "playlist";
-                $new_playlist_post["post_status"] = null;
-                $new_playlist_post["post_parent"] = $playlist->ID;
-                $new_playlist_id = wp_insert_post($new_playlist_post);
-                update_post_meta($new_playlist_id, JWP6 . "playlist_items", implode(",", $new_playlist_items));
-            }
+    static function import_jwp5_settings() {
+        foreach (JWP6_Legacy::$jwp5_settings_to_import as $name => $new) {
+            $value = get_option(LONGTAIL_KEY . $name);
+            add_option(JWP6 . $new['name'], $value, '', $new['autoload']);
         }
-
-        return $new_playlists;
     }
 
     static function purge_jwp5_settings() {

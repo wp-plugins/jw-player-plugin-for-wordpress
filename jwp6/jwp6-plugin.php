@@ -1,4 +1,8 @@
 <?php
+// Enable the JW Player Embed Wizard with preview.
+// This can be buggy!
+define('JWP6_EMBED_WIZARD', false);
+
 
 // Simple function to log to the debug log.
 function jwp6_l( $message ) {
@@ -11,7 +15,7 @@ function jwp6_l( $message ) {
   }
 }
 // Let's make some space in the log.
-jwp6_l("\n\n\n");
+jwp6_l("\n--------------------------------------\nREQUEST: " . $_SERVER['REQUEST_URI'] . "\n\n");
 
 define('JWP6_PLUGIN_URL', plugin_dir_url( __FILE__ ));
 define('JWP6_PLUGIN_DIR', dirname(__FILE__));

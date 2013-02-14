@@ -1,5 +1,11 @@
 <?php
 
+define('JWP6_LINK_JWP6_INFO',               '#');
+define('JWP6_LINK_UPGRADE_WORDPRESS_GUIDE', '#');
+define('JWP6_LINK_REVERT_TO_JWP5',          '#');
+define('JWP6_LINK_REVERT_TO_JWP5JWP6_',     '#');
+
+
 class JWP6_Migrate {
     public static function upgrade_notice() {
         $jwp6_hideupgradeto6notice = get_option(JWP6 . 'hideupgradeto6notice');
@@ -34,23 +40,37 @@ class JWP6_Migrate {
                 <h3 class="hndle"><span>Upgrade to JW Player 6</span></h3>
                 <div class="inside">
                     <p style="margin: 15px;">
-                        <?php printf(__("You can now upgrade to JW Player 6, because")); ?>
-                        TODO: Text
+                        Your WordPress site currently uses JW Player 5. A newer version, <a href="<?php echo JWP6_LINK_JWP6_INFO; ?>">JW 
+                        player 6</a>, is available at present. You can automatically upgrade to this new version, receiving the following benefits:
                     </p>
-                    <p style="margin: 15px;">
-                        <?php printf(__("A migration to JW Player 6 is reversible.")); ?>
-                        TODO: Text
+                    <ul style="margin: 15px; list-style: disc inside;">
+                        <li>
+                            A much slicker interface, better HTML5 support and HTML5/Flash performance.
+                        </li>
+                        <li>
+                            CDN hosted player assets, so upgrades are easier and asset loading is faster.
+                        </li>
+                        <li>
+                            Pro (custom logo), Premium (skins, sharing, HLS) and Ads (VAST/IMA) features.
+                        </li>
+                    </ul>
+                    <p style="margin:15px;">
+                        Unfortunately, not all functionality of the JW5 player is offered with JW6. Most notable are the library
+                        of skins and plugins and the playback of images. See <a href="<?php echo JWP6_LINK_UPGRADE_WORDPRESS_GUIDE; ?>">upgrading 
+                        Wordpress from JW5 to JW6</a> for a full list.
                     </p>
-                    <p style="margin: 15px;">
-                        <strong>
-                            Make sure you 
-                            <a target="_blank" href="http://www.longtailvideo.com/support/jw-player/28834/migrating-from-jw5-to-jw6/">read our migratation guide</a>
-                            before you hit the button.
-                        </strong>
+                    <p style="margin:15px;">
+                        If after upgrading, you discover you miss a critical feature in JW6, you can always 
+                        <a href="<?php echo JWP6_LINK_REVERT_TO_JWP5; ?>">revert to JW5</a>
+                        again, retreiving all of your original configurations.
                     </p>
-                    <p style="margin: 15px;">
+                    <p style="margin: 25px 15px;">
                         <input type="hidden" name="noheader" value="true" />
-                        <input class="button" type="submit" name="migrate_to_jwp6" value="<?php _e("Upgrade to JW Player 6", 'jw-player-plugin-for-wordpress'); ?>" />
+                        <input class="button button-primary" type="submit" name="migrate_to_jwp6" value="<?php _e("Upgrade to JW Player 6", 'jw-player-plugin-for-wordpress'); ?>" />
+                    </p>
+                    <p style="margin:15px;">
+                        Note the JW Player Plugin for Wordpress no longer supports commercial JW5 upgrades. If you are interested in using a commercial
+                        version of the JW Player, you must <a href="<?php echo JWP6_LINK_UPGRADE_TO_JWP6; ?>">upgrade to JW Player 6</a>.
                     </p>
                 </div>
             </div>

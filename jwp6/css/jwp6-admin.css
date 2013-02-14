@@ -12,6 +12,12 @@
     border-top: solid 1px #DFDFDF;
 }
 
+#wpbody-content.jwp6 div.spacing {
+    margin: 20px;
+    height: 0;
+    overflow: hidden;
+}
+
 #wpbody-content.jwp6 td p.error {
     color: #c00;
 }
@@ -86,5 +92,44 @@
     padding: 2px 0 2px 12px;
     list-style: disc inside;
 }
+
+div.jwp6_hr {
+    width: 100%;
+    height: 0;
+    margin: 10px 0;
+    overflow: hidden;
+    border-top: solid 1px #e5e5e5;
+    border-bottom: solid 1px #fff;
+}
+
+form.jwp6-media-form {
+    clear: both;
+}
+
+form.jwp6-media-35 {
+    padding: 15px;
+}
+
+form.jwp6-media-form table {
+    width: 95%;
+    margin: 15px 0;
+}
+
+form.jwp6-media-form table th {
+    font-weight: bold;
+    width: 80px;
+}
+
+form.jwp6-media-form table td.description {
+    font-style: italic;
+    color: #666;
+}
+
+form.jwp6-media-form p.first {
+    margin: 0 0 25px 0;
+}
+
+
+
 
 

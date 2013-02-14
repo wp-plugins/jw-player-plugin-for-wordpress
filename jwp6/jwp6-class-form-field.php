@@ -155,6 +155,8 @@ class JWP6_Form_Field_Radio extends JWP6_Form_Field {
 
     public $description_is_value = false;
 
+    public $single_line = false;
+
     public $default;
 
     public function validate($post_data) {
@@ -174,6 +176,7 @@ class JWP6_Form_Field_Radio extends JWP6_Form_Field {
 
     public function render_field() {
         $checked_value = ( is_null($this->post_value) ) ? $this->value : $this->post_value;
+        $last_value = array_pop(array_keys($this->options));
         echo "<fieldset>";
         foreach ($this->options as $value => $description) {
             $value = ( $this->description_is_value ) ? $description : $value;
@@ -184,9 +187,11 @@ class JWP6_Form_Field_Radio extends JWP6_Form_Field {
             }
             echo "\t<label title='" . esc_attr($value) . "'>";
             echo "\t\t<input type='radio' value='". esc_attr($value) . "' name='{$this->name}' {$checked} value='{$value}' />";
-            echo "\t\t" . '<span>' . ucfirst($description) . '</span>';
+            echo "\t\t" . '<span>&nbsp;&nbsp;' . ucfirst($description) . '</span>';
             echo "\t</label>";
-            echo "\t<br />";
+            if ( $value != $last_value ) {
+                echo ( $this->single_line ) ? "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;" : "\t<br />";
+            }
         }
         echo "</fieldset>";
         $this->render_help();

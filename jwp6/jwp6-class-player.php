@@ -19,7 +19,7 @@ class JWP6_Player {
 
     */
 
-    protected $name;
+    protected $id;
 
     protected $config = array();
 
@@ -36,36 +36,38 @@ class JWP6_Player {
         'NULL' => null,
     );
 
-    public function __construct($name = 'default', $config = false) {
-        // complete defaults.
+    public function __construct($id = 0, $config = false) {
         foreach(JWP6_Plugin::$player_options as $option => $settings) {
             if ( array_key_exists('default', $settings) ) {
                 $this->defaults[$option] = array('default' => $settings['default']);
             }
         }
-        if ( $this->validate_player_name($name) ) {
-            $this->name = $name;
-            if ( $this->name == 'default' ) {
-                $this->set('description', 'Default and fallback player (unremovable).');
-            }
-            $saved_config = get_option(JWP6 . "player_config_" . $this->name);
-            if ( $saved_config ) {
-                $this->config = $saved_config;
-            }
-        } else {
-            throw new Exception("Please provide a valid player name", 1);
+        $this->id = $id;
+        if ( ! $this->id ) { // id = 0 and therefor default
+            $this->set('description', 'Default and fallback player (unremovable).');
         }
         if ( $config && is_array($config) ) {
             $this->config = $config;
+        } else {
+            $saved_config = get_option(JWP6 . "player_config_" . $this->id);
+            if ( $saved_config ) {
+                $this->config = $saved_config;
+            }
         }
     }
 
-    public static function validate_player_name($name) {
-        if ( preg_match('/^[a-z0-9_-]*$/i', $name) ) {
-            return $name;
-        }
-        return NULL;
+    public static function next_player_id() {
+        $last_player_id = get_option(JWP6 . 'last_player_id');
+        if ( false === $last_player_id ) return 0;
+        return intval($last_player_id) + 1;
     }
+
+    // public static function validate_player_name($name) {
+    //     if ( preg_match('/^[a-z0-9_-]*$/i', $name) ) {
+    //         return $name;
+    //     }
+    //     return NULL;
+    // }
 
     private function _validate_param_value($param, $value) {
         // TODO: More elaborate validation
@@ -77,16 +79,19 @@ class JWP6_Player {
 
     public function save() {
         $players = get_option(JWP6 . 'players');
-        if ( ! $players || ! in_array($this->name, $players) ) {
-            $players[] = $this->name;
+        if ( ! $players ) $players = array();
+        if ( ! in_array($this->id, $players) ) {
+            $this->id = $this->next_player_id();            
+            $players[] = $this->id;
+            update_option(JWP6 . 'last_player_id', $this->id);
             update_option(JWP6 . 'players', $players);
         }
-        update_option(JWP6 . 'player_config_' . $this->name, $this->config);
+        update_option(JWP6 . 'player_config_' . $this->id, $this->config);
     }
 
     // Check and see if this player has been saved to the option table or not.
     public function is_existing() {
-        $player_config = get_option(JWP6 . 'player_config_' . $this->name);
+        $player_config = get_option(JWP6 . 'player_config_' . $this->id);
         if ( $player_config ) {
             return true;
         }
@@ -94,10 +99,10 @@ class JWP6_Player {
     }
 
     public function purge() {
-        if ( 'default' != $this->name ) {
-            delete_option(JWP6 . 'player_config_' . $this->name);
+        if ( $this->id ) {
+            delete_option(JWP6 . 'player_config_' . $this->id);
             $players = get_option(JWP6 . 'players');
-            if (($key = array_search($this->name, $players)) !== false) {
+            if (($key = array_search($this->id, $players)) !== false) {
                 unset($players[$key]);
             }
             update_option(JWP6 . 'players', $players);
@@ -105,7 +110,7 @@ class JWP6_Player {
     }
 
     public function admin_url($page, $action = 'edit') {
-        $params = array( 'player_id' => $this->name );
+        $params = array( 'player_id' => $this->id );
         if ( 'copy' == $action || 'delete' == $action ) {
             $params['action'] = $action;
         }
@@ -116,12 +121,18 @@ class JWP6_Player {
         return $this->defaults;
     }
 
-    public function get_name() {
-        return $this->name;
+    public function get_id() {
+        return $this->id;
     }
 
     public function get_config() {
         return $this->config;
+    }
+
+    public function full_description() {
+        $desc = $this->get('description');
+        if ( ! $desc ) $desc = 'New player';
+        return "{$this->id}: {$desc}";
     }
 
     // Properties
@@ -270,7 +281,8 @@ class JWP6_Player {
         return $embedcode;
     }
 
-    public function embedcode($id, $file = null, $playlist=null, $image = null, $download = null, $config = null) {
+    public function embedcode($id, $file = null, $playlist=null, $image = null, $config = null) {
+
         // overwrite existing config with additional config from shortcode.
         if ( ! is_null($config) ) {
             foreach ($config as $param => $value) {
@@ -278,7 +290,7 @@ class JWP6_Player {
             }
         }
         unset($this->config['description']);
-        $image = ( is_null($image) ) ? JWP6_Plugin::default_image_url() : $image;
+        //$image = ( is_null($image) ) ? JWP6_Plugin::default_image_url() : $image;
         $embedcode = "
             <div class='jwplayer' id='jwplayer-{$id}'></div>
             <script type='text/javascript'>
@@ -290,7 +302,7 @@ class JWP6_Player {
             jwplayer('jwplayer-{$id}').setup({
         ";
         $embedcode .= $this->_add_embedcode_params($this->config);
-        if ( is_null($playlist) ) {
+        if ( ! is_null($image) ) {
             $embedcode .= "'image': '{$image}',\n";
         }
         if ( ! is_null($file) && is_null($playlist) ) {

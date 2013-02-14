@@ -20,26 +20,10 @@ function JWP6Admin() {
         $('a.jwp6_copy').bind('click', function (e) {
             e.stopPropagation();
             e.preventDefault();
-            function get_name(wrong_name) {
-                var name, message;
-                message = "What is the name for this new player?"
-                if ( wrong_name )
-                    message = message + "\nPlease note you can only use letters, digit, '_' and '-'.";
-                var name = prompt(message);
-                if (name && name.match(/^[a-z0-9_-]*$/i)) {
-                    return name;
-                } else if ( name ) {
-                    return get_name(name);
-                }
-                return false;
-            }
-            var name = get_name();
-            if ( name ) {
-                var params = j.parse_query_string(e.target.href);
-                $('#new_player_name').val(name);
-                $('#copy_from_player').val(params['player_id']);
-                $('#add_player_form').submit();
-            }
+            var params = j.parse_query_string(e.target.href);
+            $('#new_player_name').val(name);
+            $('#copy_from_player').val(params['player_id']);
+            $('#add_player_form').submit();
             return false;
         });
     };

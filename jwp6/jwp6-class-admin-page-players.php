@@ -21,6 +21,9 @@ class JWP6_Admin_Page_Players extends JWP6_Admin_Page {
             $this->process_action();
         } else if ( isset($_GET['player_id']) ) {
             $this->player = new JWP6_Player($_GET['player_id']);
+            if ( ! $this->player->is_existing() ) {
+                $this->add_message('Please note that you need save changes to definitely save this player.');
+            }
             $this->overview_or_edit = 'edit';
             return $this->_init_edit_page();
         }
@@ -32,7 +35,7 @@ class JWP6_Admin_Page_Players extends JWP6_Admin_Page {
         if ( 'delete' == $_GET['action'] ) {
             $player = new JWP6_Player($_GET['player_id']);
             $player->purge();
-            $this->add_message("Player {$player->get_name()} has been deleted.");
+            $this->add_message("Player {$player->get_id()} has been deleted.");
             unset($player);
         }
     }
@@ -47,23 +50,28 @@ class JWP6_Admin_Page_Players extends JWP6_Admin_Page {
     }
 
     protected function process_overview_post_data($post_data) {
+        $new_player = false;
         if ( !count($this->form_error_fields) ) {
+            $new_player_id = JWP6_Player::next_player_id();
             if ( isset($_POST['copy_from_player']) && $_POST['copy_from_player'] ) {
-                $from = $_POST['copy_from_player'];
+                $from = intval($_POST['copy_from_player']);
                 $players = get_option(JWP6 . "players");
-                if ( !in_array($from, $players) ) {
-                    throw new Exception("No valid player found", 1);
+                if ( in_array($from, $players) ) {
+                    $from = new JWP6_Player($from);
+                    $new_player = new JWP6_Player($new_player_id, $from->get_config());
+                    $new_description = "Copy of \"{$new_player->get('description')}\"";
+                    $new_player->set('description', $new_description);
+                    $new_player->save();
                 }
-                $from = new JWP6_Player($from);
-                $new_player = new JWP6_Player($this->form_fields['new_player_field']->value, $from->get_config());
             } else {
-                $new_player = new JWP6_Player($this->form_fields['new_player_field']->value);
+                $new_player = new JWP6_Player($new_player_id);
+                wp_redirect($new_player->admin_url($this));
+                exit();
             }
-            $new_player->save();
-            $this->players[$new_player->get_name()] = $new_player;
-            update_option(JWP6 . 'players', array_keys($this->players));
-            $this->form_fields['new_player_field']->value = "";
+            //$new_player->save();
         }
+        wp_redirect($this->page_url());
+        exit();
     }
 
     protected function process_edit_post_data($post_data) {
@@ -72,7 +80,7 @@ class JWP6_Admin_Page_Players extends JWP6_Admin_Page {
         }
         if ( !count($this->form_error_fields) ) {
             $this->player->save();
-            wp_redirect($this->page_url(array('player_saved' => $this->player->get_name())));
+            wp_redirect($this->page_url(array('player_saved' => $this->player->get_id())));
             exit();
         } else {
             wp_head();
@@ -81,31 +89,14 @@ class JWP6_Admin_Page_Players extends JWP6_Admin_Page {
 
     private function _init_overview_page() {
         $players = get_option(JWP6 . 'players');
-        if ( !$players ) {
-            $player = new JWP6_Player('default');
-            $player->save();
-            $this->players[$player->get_name()] = $player;
-        } else {
-            foreach ($players as $key => $player_name) {
-                $this->players[$player_name] = new JWP6_Player($player_name);
-            }
+        foreach ($players as $key => $player_name) {
+            $this->players[$player_name] = new JWP6_Player($player_name);
         }
         ksort($this->players);
         update_option(JWP6 . 'players', array_keys($this->players));
         if ( isset($_GET['player_saved']) && array_key_exists($_GET['player_saved'], $this->players) ) {
-            $this->add_message("Changes for your player <strong>{$_GET['player_saved']}</strong> have been saved successfully.");
+            $this->add_message("Changes for <strong>player {$_GET['player_saved']}</strong> have been saved successfully.");
         }
-        $new_player_field = new JWP6_Form_Field(
-            'new_player_name', 
-            array( 
-                'validation' => array('JWP6_Player', 'validate_player_name'),
-                'help_text' => 'Type a name for your new player. Please make sure that your name is unique and ' .
-                    'that you only use leters, numbers, a hyphen or an underscore.' .
-                    '<strong>You cannot change this name afterwards!</strong>',
-                'error_help' => 'Please note: only letters, numbers, "-" and "_".'
-            )
-        );
-        $this->form_fields = array( 'new_player_field' => $new_player_field );
     }
 
     private function _init_edit_page() {
@@ -300,29 +291,29 @@ class JWP6_Admin_Page_Players extends JWP6_Admin_Page {
             );
 
             // RIGHCLICK
-            $abouttext_field = new JWP6_Form_Field(
-                'abouttext',
-                array(
-                    'value' => $this->player->get('abouttext'),
-                    'label' => 'Text in rightclick menu',
-                    'validation' => "sanitize_text_field",
-                    'placeholder'  => "URL you want the right-click to link to.",
-                    'class' => 'wide',
-                    'help_text' => JWP6_Plugin::$player_options['abouttext']['help_text'],
-                )
-            );
+            // $abouttext_field = new JWP6_Form_Field(
+            //     'abouttext',
+            //     array(
+            //         'value' => $this->player->get('abouttext'),
+            //         'label' => 'Text in rightclick menu',
+            //         'validation' => "sanitize_text_field",
+            //         'placeholder'  => "URL you want the right-click to link to.",
+            //         'class' => 'wide',
+            //         'help_text' => JWP6_Plugin::$player_options['abouttext']['help_text'],
+            //     )
+            // );
 
-            $aboutlink_field = new JWP6_Form_Field(
-                'aboutlink',
-                array(
-                    'value' => $this->player->get('aboutlink'),
-                    'label' => 'Link',
-                    'validation' => array('JWP6_Plugin', 'validate_empty_or_url'),
-                    'placeholder'  => "URL you want the right-click to link to.",
-                    'class' => 'wide',
-                    'help_text' => JWP6_Plugin::$player_options['aboutlink']['help_text'],
-                )
-            );
+            // $aboutlink_field = new JWP6_Form_Field(
+            //     'aboutlink',
+            //     array(
+            //         'value' => $this->player->get('aboutlink'),
+            //         'label' => 'Link',
+            //         'validation' => array('JWP6_Plugin', 'validate_empty_or_url'),
+            //         'placeholder'  => "URL you want the right-click to link to.",
+            //         'class' => 'wide',
+            //         'help_text' => JWP6_Plugin::$player_options['aboutlink']['help_text'],
+            //     )
+            // );
 
             // FIELDSETS
 
@@ -334,10 +325,10 @@ class JWP6_Admin_Page_Players extends JWP6_Admin_Page {
                 'logo_position_field' => $logo_position_field,
             );
 
-            $this->rightclick_settings_fields = array(
-                'abouttext_field' => $abouttext_field,
-                'aboutlink_field' => $aboutlink_field,
-            );
+            // $this->rightclick_settings_fields = array(
+            //     'abouttext_field' => $abouttext_field,
+            //     'aboutlink_field' => $aboutlink_field,
+            // );
 
         }
 
@@ -438,8 +429,8 @@ class JWP6_Admin_Page_Players extends JWP6_Admin_Page {
         if ( JWP6_Plugin::option_available('logo') ) {
             $this->form_fields = array_merge(
                 $this->form_fields, 
-                $this->logo_settings_fields,
-                $this->rightclick_settings_fields
+                $this->logo_settings_fields
+                // $this->rightclick_settings_fields
             );
         }
 
@@ -460,7 +451,7 @@ class JWP6_Admin_Page_Players extends JWP6_Admin_Page {
     }
 
     protected function render_edit_page() {
-        $this->render_page_start('Edit player: <strong>' . $this->player->get_name() . '</strong>.');
+        $this->render_page_start('Edit player: <strong>' . $this->player->full_description() . '</strong>.');
         ?>
         <div class="backlink">
             <a href="<?php echo $this->page_url(); ?>">← Back to the player overview</a>
@@ -468,9 +459,8 @@ class JWP6_Admin_Page_Players extends JWP6_Admin_Page {
         <?php
         $this->render_all_messages();
         ?>
-        <div class="divider"></div>
 
-        <form method="post" action="<?php echo $this->page_url(array('noheader' => 'true', 'player_id' => $this->player->get_name())) ?>">
+        <form method="post" action="<?php echo $this->page_url(array('noheader' => 'true', 'player_id' => $this->player->get_id())) ?>">
             <?php settings_fields(JWP6 . 'menu'); ?>
 
             <h3>Basic Settings</h3>
@@ -500,12 +490,12 @@ class JWP6_Admin_Page_Players extends JWP6_Admin_Page {
             </table>
             <?php endif; ?>
 
-            <?php if ( isset($this->rightclick_settings_fields) ): ?>
+            <?php /*if ( isset($this->rightclick_settings_fields) ): ?>
             <h3>Rightclick Settings</h3>
             <table class="form-table">
                 <?php foreach ($this->rightclick_settings_fields as $field) { $this->render_form_row($field); } ?>
             </table>
-            <?php endif; ?>
+            <?php endif; */?>
 
             <?php if ( isset($this->advertising_fields) ): ?>
             <h3>Advertising</h3>
@@ -533,8 +523,6 @@ class JWP6_Admin_Page_Players extends JWP6_Admin_Page {
         $this->render_page_start('JW Players');
         $this->render_all_messages();
         ?>
-        <div class="divider"></div>
-
         <h3>Your Players</h3>
         <table class="wp-list-table widefat player-table" cellspacing="0">
             <?php $this->render_overview_header('thead'); ?>
@@ -544,15 +532,10 @@ class JWP6_Admin_Page_Players extends JWP6_Admin_Page {
             <?php $this->render_overview_header('tfoot'); ?>
         </table>
 
-        <div class="divider"></div>
-
-        <h3>Create a new player</h3>
-        <form method="post" id="add_player_form" name="add_player_form" action="<?php echo $this->page_url() ?>">
+        <form method="post" id="add_player_form" name="add_player_form" action="<?php echo $this->page_url(array('noheader'=>'true')) ?>">
             <?php settings_fields(JWP6 . 'menu'); ?>
-            <table class="form-table">
-                <?php foreach ($this->form_fields as $field) { $this->render_form_row($field); } ?>
-            </table>
             <p class="submit">
+                <input type="hidden" name="noheader" value="true" />
                 <input type="hidden" name="copy_from_player" id="copy_from_player" value="" />
                 <input type="submit" name="submit_form" id="submit_form" class="button-primary" value="Create a new player"  />
             </p>
@@ -573,12 +556,10 @@ class JWP6_Admin_Page_Players extends JWP6_Admin_Page {
         echo "<$type>";
         ?>
             <tr>
-                <th>Name</th>
+                <th>ID</th>
                 <th>Decription</th>
                 <th>Dimensions</th>
                 <th>Mode</th>
-                <!-- <th>Autostart</th> -->
-                <th>Playlist</th>
                 <th>&nbsp;</th>
                 <th>&nbsp;</th>
                 <th>&nbsp;</th>
@@ -590,20 +571,18 @@ class JWP6_Admin_Page_Players extends JWP6_Admin_Page {
     protected function render_overview_row($player) {
         ?>
         <tr valign="middle">
-            <td>
+            <td align="center">
                 <strong>
-                    <?php echo $player->get_name(); ?>
+                    <?php echo $player->get_id(); ?>
                 </strong>
             </td>
-            <td><?php echo $player->get('description'); ?></td>
+            <td><?php echo ( $player->get('description') ) ? $player->get('description') : "<em>no description</em>"; ?></td>
             <td><?php echo $player->get('width'); ?> x <?php echo $player->get('height'); ?></td>
             <td><?php echo $player->get('primary'); ?></td>
-            <!-- <td><?php if ( $player->get('autostart') ): ?><span class="yes">yes</span><?php else: ?><span class="no">no</span><?php endif; ?></td> -->
-            <td>...</td>
             <td><a href="<?php echo $player->admin_url($this, 'edit'); ?>" class="button jwp6_edit">Edit</a></td>
             <td><a href="<?php echo $player->admin_url($this, 'copy'); ?>" class="button jwp6_copy">Copy</a></td>
             <td>
-                <?php if ($player->get_name() != 'default'): ?>
+                <?php if ( $player->get_id() ): ?>
                 <a href="<?php echo $player->admin_url($this, 'delete'); ?>" class="button jwp6_delete">Delete</a>
                 <?php endif; ?>
             </td>

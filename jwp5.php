@@ -195,7 +195,8 @@ function jwplayer_install_notices() {
 // Build the admin and menu.
 function jwplayer_plugin_menu() {
   $admin = add_menu_page("JW Player Title", "JW Player", "administrator", "jwplayer", "jwplayer_plugin_pages", JWPLAYER_PLUGIN_URL . "/wordpress.png");
-  add_submenu_page("jwplayer", "JW Player Plugin Licensing", __("Licensing", 'jw-player-plugin-for-wordpress'), "administrator", "jwplayer-license", "jwplayer_plugin_pages");
+  // Please upgrade to JWP6!
+  //add_submenu_page("jwplayer", "JW Player Plugin Licensing", __("Licensing", 'jw-player-plugin-for-wordpress'), "administrator", "jwplayer-license", "jwplayer_plugin_pages");
   add_submenu_page("jwplayer", "JW Player Plugin Update", __("Upgrade", 'jw-player-plugin-for-wordpress'), "administrator", "jwplayer-update", "jwplayer_plugin_pages");
   add_submenu_page("jwplayer", "JW Player Plugin Settings", __("Settings", 'jw-player-plugin-for-wordpress'), "administrator", "jwplayer-settings", "jwplayer_plugin_pages");
   $media = add_media_page("JW Player Plugin Playlists", __("Playlists", 'jw-player-plugin-for-wordpress'), "read", "jwplayer-playlists", "jwplayer_media_pages");

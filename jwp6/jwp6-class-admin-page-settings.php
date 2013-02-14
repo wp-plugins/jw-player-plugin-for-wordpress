@@ -4,9 +4,6 @@
 class JWP6_Admin_Page_Licensing extends JWP6_Admin_Page {
 
     public function __construct() {
-        if ( isset($_POST) && array_key_exists('purge_settings_at_deactivation', $_POST) ) {
-            echo "The value of purge_settings_at_deactivation: " . $_POST['purge_settings_at_deactivation'];
-        }
         parent::__construct();
         $license_version_field =  new JWP6_Form_Field_Select(
             'license_version',
@@ -14,7 +11,7 @@ class JWP6_Admin_Page_Licensing extends JWP6_Admin_Page {
                 'options' => JWP6_Plugin::$license_versions,
                 'default' => 'free',
                 'description_is_value' => true,
-                'help_text' => 'If you do not have a license key. You should always choose free.',
+                'help_text' => 'Select which edition of JW Player you own to unlock additional template settings and to hide the player watermark.',
             )
         );
         $license_key_field = new JWP6_Form_Field(
@@ -22,16 +19,56 @@ class JWP6_Admin_Page_Licensing extends JWP6_Admin_Page {
             array(
                 'validation' => function ($value) {
                     return ( preg_match('/^\S*$/', $value) ) ? $value : NULL;
-                }
+                },
+                'help_text' => 'A license key is required for the Pro, Premium and Ads edition.',
             )
         );
+
+        $default_config_options = array(
+            'label' => 'Category pages',
+            'options' => array(
+                'excerpt' => 'Use excerpt',
+                'content' => 'Use content',
+                'disable' => 'Strip shortcode',
+            ),
+            'default' => 'content',
+            'single_line' => true,
+        );
+
+        $category_config_options = $default_config_options;
+        $category_config_options['label'] = 'Category pages';
+        $category_config_field = new JWP6_Form_Field_Radio(
+            'category_config',
+            $category_config_options
+        );        
+
+        $search_config_options = $default_config_options;
+        $search_config_options['label'] = 'Search pages';
+        $search_config_field = new JWP6_Form_Field_Radio(
+            'search_config',
+            $search_config_options
+        );        
+
+        $tag_config_options = $default_config_options;
+        $tag_config_options['label'] = 'Tag pages';
+        $tag_config_field = new JWP6_Form_Field_Radio(
+            'tag_config',
+            $tag_config_options
+        );        
+
+        $home_config_options = $default_config_options;
+        $home_config_options['label'] = 'Home page';
+        $home_config_field = new JWP6_Form_Field_Radio(
+            'home_config',
+            $home_config_options
+        );        
 
         $tracking_field = new JWP6_Form_Field_Toggle(
             'allow_anonymous_tracking',
             array(
-                'label' => 'Allow anonymous tracking?',
-                'text' => 'Allow LongTail Video to track plugin feature usage.',
-                'help_text' => 'This will help us improve the plugin in the future. <strong>Note: Tracking is done anonymously.</strong>',
+                'label' => 'Anonymous tracking',
+                'text' => 'Allow anonymous tracking of plugin feature usage',
+                'help_text' => 'We track which overall features (player edition, external urls, playlists, etc.) you use. This will help us improve the plugin in the future.',
                 'default' => true,
             )
         );
@@ -39,18 +76,11 @@ class JWP6_Admin_Page_Licensing extends JWP6_Admin_Page {
         $purge_field = new JWP6_Form_Field_Toggle(
             'purge_settings_at_deactivation',
             array(
-                'label' => 'Purge settings at deactivation?',
-                'text' => 'When I deactivate this plugin, I want all my settings for this plugin to be purged from the database.',
+                'label' => 'Purge settings',
+                'text' => 'Purge all plugin settings when I deactivate the plugin.',
                 'default' => false,
-                'help_text' => '<strong>Please Note</strong>: This process in irreversible. If you ever decide to reactivate the plugin all your settings will be gone. Use with care!',
+                'help_text' => 'Note. This process is irreversible. If you ever decide to reactivate the plugin all your settings will be gone. Use with care!',
             )
-        );
-
-        $this->form_fields = array(
-            $license_version_field, 
-            $license_key_field,
-            $tracking_field,
-            $purge_field,
         );
 
         $this->license_fields = array(
@@ -63,21 +93,55 @@ class JWP6_Admin_Page_Licensing extends JWP6_Admin_Page {
             $purge_field,
         );
 
+        $this->shortcode_fields = array(
+            $category_config_field,
+            $search_config_field,
+            $tag_config_field,
+            $home_config_field,
+        );
+
+        $this->form_fields = array_merge(
+            $this->license_fields,
+            $this->shortcode_fields,
+            $this->other_fields
+        );
+
     }
 
     public function render() {
         $this->render_page_start('License and Location');
         $this->render_all_messages();
         ?>
-
-        <div class="divider"></div>
-
         <form method="post" action="<?php echo $this->page_url(); ?>">
             <?php settings_fields(JWP6 . 'menu_licensing'); ?>
 
-            <h3>Player License Settings</h3>
+            <h3>License Settings</h3>
+
+            <p>
+                By default this plugin uses the JW Player 6 Free Edition. If you operate a commercial
+                site, you are required to <a href="<?php echo JWP6_Plugin::$urls['player_pricing']; ?>">
+                purchase a license key</a> for JW Player. In addition to removing the player watermark, 
+                a license key unlocks features like a custom logo, premium skins, Facebook/Twitter
+                sharing, Google Analytics integrations and Apple HLS streaming support.
+            </p>
+
             <table class="form-table">
                 <?php foreach ($this->license_fields as $field) { $this->render_form_row($field); } ?>
+            </table>
+
+            <div class="divider"></div>
+
+            <h3>Shortcode settings</h3>
+
+            <p>
+                Configure here wether you want JW Player to embed in overview pages (home, tags, etc). Depending
+                upon your Wordpress them, the JW Player plugin must render the shortcodes from either 
+                <code>the_excerpt</code> or <code>the_content</code>. The third option is to disbale player embeds
+                on a specific page type. This will strip out the shortcode.
+            </p>
+
+            <table class="form-table">
+                <?php foreach ($this->shortcode_fields as $field) { $this->render_form_row($field); } ?>
             </table>
 
             <div class="divider"></div>
@@ -85,6 +149,20 @@ class JWP6_Admin_Page_Licensing extends JWP6_Admin_Page {
             <h3>Other settings</h3>
 
             <table class="form-table">
+                <?php if ( is_null(JWP6_PLAYER_LOCATION) ): ?>
+                <tr>
+                    <th>
+                        Player Version
+                    </th>
+                    <td>
+                        <strong> <?php echo JWP6_Plugin::$player_version; ?></strong>
+                        <p class="description">
+                            JW Player itself will automatically get updated through updates of
+                            the Wordpress plugin. Player binaries are CDN hosted by Longtail Video.
+                        </p>
+                    </td>
+                </tr>
+                <?php endif; ?>
                 <?php foreach ($this->other_fields as $field) { $this->render_form_row($field); } ?>
             </table>
 

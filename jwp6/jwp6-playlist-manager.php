@@ -11,7 +11,7 @@ if (isset($_POST[JWP6_PL . "playlist_create"]) || isset($_POST["save"])) {
   $post_title = $_POST[JWP6_PL . "playlist_name"];
   $new_playlist = array();
   $new_playlist["post_title"] = $post_title;
-  $new_playlist["post_type"] = JWP6 . "playlist";
+  $new_playlist["post_type"] = 'jw_playlist';
   $new_playlist["post_status"] = null;
   $new_playlist["post_parent"] = null;
   if (isset($_POST["save"])) {
@@ -44,10 +44,10 @@ if (isset($_GET["p_items"])) {
 } else if (isset($_POST["playlist_items"]) && $_POST["old_playlist"] == $current_playlist) {
   $p_items = json_decode(str_replace("\\", "", $_POST["playlist_items"]));
 } else {
-  $p_items = explode(",", get_post_meta($current_playlist, JWP6 . "playlist_items", true));
+  $p_items = explode(",", get_post_meta($current_playlist, LONGTAIL_KEY . "playlist_items", true));
 }
 
-update_post_meta($new_playlist_id, JWP6 . "playlist_items", implode(",", $p_items));
+update_post_meta($new_playlist_id, LONGTAIL_KEY . "playlist_items", implode(",", $p_items));
 
 $file_order = "asc";
 $file_class = "sortable asc";
@@ -134,7 +134,7 @@ function jwp6_get_playlist_items($playlist_item_ids = array()) {
 
 function jwp6_pl_get_playlists() {
   $playlist = array(
-    "post_type" => JWP6 . "playlist",
+    "post_type" => 'jw_playlist',
     "post_status" => null,
     "post_parent" => null,
     "nopaging" => true,

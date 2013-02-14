@@ -137,8 +137,9 @@ function default_state() { ?>
   <?php
   // JWP6_MIGRATION
   JWP6_Migrate::migrate_section();
-  upload_section();
-  download_section();
+  // Please upgrade to JWP6!
+  //upload_section();
+  //download_section();
   ?>
   </div>
   <?php
