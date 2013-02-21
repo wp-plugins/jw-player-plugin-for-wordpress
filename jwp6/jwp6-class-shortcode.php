@@ -64,6 +64,7 @@ class JWP6_Shortcode {
     }
 
     protected function _init_from_shortcode($shortcode) {
+        jwp6_l('Shortcode: ' . print_r($shortcode, true));
         $shortcode = JWP6_Legacy::check_shortcode($shortcode);
 
         // Player
@@ -138,14 +139,14 @@ class JWP6_Shortcode {
             $$param = $value;
         }
 
-
         // MAIN MEDIA
         $file_url = $playlist_url = null;
 
         // mediaid
         if ( is_int($mediaid) || ctype_digit($mediaid) ) {
             $media_post = get_post($mediaid);
-            $file_url = $media_post->guid;
+            $file_url = JWP6_Plugin::url_from_post($media_post);
+            jwp6_l("File url: " . $file_url);
         }
         // file parameter overrules the mediaid
         if ( $file ) $file_url = $file;

@@ -309,14 +309,22 @@ class JWP6_Plugin {
         return ( $thumbnail_url ) ? $thumb_url : $default;
     }
 
-    // public static function image_from_mediaid($videoid) {
-    //     $imageid = get_post_meta($videoid, LONGTAIL_KEY . 'thumbnail', true);
-    //     if ($imageid) {
-    //         $image = get_post($imageid);
-    //         return $image->guid;
-    //     }
-    //     return JWP6_Plugin::default_image_url();
-    // }
+    public static function url_from_post($post) {
+        $url = $post->guid;
+        if ( $url ) return $url;
+        // if no URL maybe it's rtmp?
+        $rtmp = get_post_meta($post->ID, LONGTAIL_KEY . "rtmp", true);
+        if ( $rtmp && is_string($rtmp) ) {
+            return $rtmp;
+        } else if ( $rtmp ) {
+            // if no RTMP string, maybe it's jwp5 style rtmp.
+            $streamer = get_post_meta($post->ID, LONGTAIL_KEY . "streamer", true);
+            $file = get_post_meta($post->ID, LONGTAIL_KEY . "file", true);
+            return $streamer . $file;
+        }
+        // Nothing then...
+        return null;
+    }
 
     public static function option_available($option) {
         if ( array_key_exists($option, JWP6_Plugin::$player_options) ) {

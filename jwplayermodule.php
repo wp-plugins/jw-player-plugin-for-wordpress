@@ -1,10 +1,10 @@
 <?php
 
 /*
-Plugin Name: JW Player Plugin v2
+Plugin Name: JW Player 6 Plugin for Wordpress (Alpha)
 Plugin URI: http://www.longtailvideo.com/
-Description: Embed a JW Player 6 for HTML5 (or Flash) into your WordPress articles.
-Version: 2.0.0 - development
+Description: Embed a JW Player 6 for HTML5 (or Flash) into your WordPress articles. <strong>Please note this is an ALPHA Release.</strong> You can send bug reports and other remarks/requests to <a href="mailto:developers@longtailvideo.com">developers@longtailvideo.com</a>.
+Version: 2.0.0 - ALPHA
 Author: LongTail Video Inc.
 Author URI: http://www.longtailvideo.com/
 
