@@ -139,6 +139,7 @@ class JWP6_Legacy {
     }
 
     static function map_jwp5_config($old_config) {
+        jwp6_l('The old config is: ' . print_r($old_config, true));
         $new_config = array();
 
         foreach ($old_config as $option => $value) {
@@ -155,6 +156,9 @@ class JWP6_Legacy {
                     if ( false !== $optionmap['options'] ) {
                         $value = ( array_key_exists($value, $optionmap['options']) ) ? $optionmap['options'][$value] : $optionmap['default'];
                     }
+                } else {
+                    if ( 'false' == strtolower($value) ) $value = false;
+                    if ( 'true' == strtolower($value) ) $value = true;
                 }
                 $new_config[$option] = $value;
             }

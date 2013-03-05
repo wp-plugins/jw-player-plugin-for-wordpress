@@ -309,7 +309,7 @@ class JWP6_Player {
             $embedcode .= "'file': '{$file}'\n";
         }
         if ( ! is_null($playlist) ) {
-            $embedcode .= "'playlist': '{$playlist}'\n";
+            $embedcode .= "'playlist': {$playlist}\n";
         }
         $embedcode .= "
                 });

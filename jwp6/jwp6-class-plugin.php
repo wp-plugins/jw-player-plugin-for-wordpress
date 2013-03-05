@@ -92,7 +92,7 @@ class JWP6_Plugin {
             'options' => array('html5', 'flash'),
             'default' => 'flash',
             'help_text' => 'Which rendering mode to try first for rendering the player.',
-            'discard_if_default' => true,
+            //'discard_if_default' => true,
         ),
         'repeat' => array(
             'options' => false,
@@ -284,6 +284,35 @@ class JWP6_Plugin {
 
     public static function playlist_url($id) {
         return get_option('siteurl') . '/' . 'index.php?jwp6=rss&id=' . $id;
+    }
+
+    public static function playlist_output($id) {
+        $output = null;
+        $playlist = get_post($id);
+        if ($playlist) {
+          $playlist_items = explode(",", get_post_meta($id, LONGTAIL_KEY . "playlist_items", true));
+        }
+        if (is_array ($playlist_items)) {
+            $items = array();
+            foreach ($playlist_items as $playlist_item_id) {
+                $playlist_item = get_post($playlist_item_id);
+                $thumbnail = JWP6_Plugin::image_from_mediaid($playlist_item_id);
+                $item = "{\n";
+                $item .= "\t'title': '" . esc_attr(stripslashes($playlist_item->post_title)) . "',\n";
+                if ( $playlist_item->post_description ) {
+                    $item .= "\t'description': '" . esc_attr(stripslashes($playlist_item->post_description)) . "',\n";
+                }
+                if ( $thumbnail ) {
+                    $item .= "\t'image': '" . esc_attr($thumbnail) . "',\n";
+                }
+                $item .= "\t'sources': [{'file': '" . esc_attr($playlist_item->guid) . "'}]\n";
+
+                $item .= "}\n";
+                $items[] = $item;
+            }
+            $output = '[' . implode(", ", $items) . "]";
+        }
+        return $output;
     }
 
     public static function default_image_url() {

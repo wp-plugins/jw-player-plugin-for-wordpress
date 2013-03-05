@@ -32,7 +32,7 @@ if ( 'migrate' == $_GET['a'] ) {
     add_option(JWP6 . 'imported_jwp5_players', $players);
 
     // Set update message
-    $license_page = admin_url('admin.php?page=' . JWP6 . 'menu_license');
+    $license_page = admin_url('admin.php?page=' . JWP6 . 'menu_licensing');
     $message = "You have upgraded to JW Player 6. Please remember to ";
     $message.= "<strong><a href='{$license_page}'>enter your player license key</a></strong> ";
     $message.= "to enable all the license specific settings of the player.";

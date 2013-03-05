@@ -135,8 +135,8 @@ class JWP6_Admin_Page_Licensing extends JWP6_Admin_Page {
 
             <p>
                 Configure here wether you want JW Player to embed in overview pages (home, tags, etc). Depending
-                upon your Wordpress them, the JW Player plugin must render the shortcodes from either 
-                <code>the_excerpt</code> or <code>the_content</code>. The third option is to disbale player embeds
+                upon your Wordpress theme, the JW Player plugin must render the shortcodes from either 
+                <code>the_excerpt</code> or <code>the_content</code>. The third option is to disable player embeds
                 on a specific page type. This will strip out the shortcode.
             </p>
 

@@ -48,7 +48,7 @@ if (is_array ($playlist_items)) {
         }
         echo "\n\t\t\t"."<media:content url='" . esc_attr($playlist_item->guid) . "' />";
 
-        $thumbnail = JWP6_Plugin:image_from_mediaid($playlist_item_id);
+        $thumbnail = JWP6_Plugin::image_from_mediaid($playlist_item_id);
         if ( $thumbnail ) {
             echo "\n\t\t\t"."<media:thumbnail url='" . esc_attr($thumbnail) . "' />";
         }

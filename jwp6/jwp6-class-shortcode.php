@@ -140,7 +140,7 @@ class JWP6_Shortcode {
         }
 
         // MAIN MEDIA
-        $file_url = $playlist_url = null;
+        $file_url = $playlist_url = $playlist_output = null;
 
         // mediaid
         if ( is_int($mediaid) || ctype_digit($mediaid) ) {
@@ -153,13 +153,14 @@ class JWP6_Shortcode {
 
         // playlistid
         if ( is_int($playlistid) || ctype_digit($playlistid) ) {
-            $playlist_url = JWP6_Plugin::playlist_url($playlistid);
+            $playlist_output = JWP6_Plugin::playlist_output($playlistid);
+            //$playlist_url = JWP6_Plugin::playlist_url($playlistid);
         }
         // Direct playlist setting overrules the playlistid settings
-        if ( $playlist ) $playlist_url = $playlist;
+        if ( $playlist ) $playlist_output = "'" . $playlist . "'";
 
         // If someone sets playlist and file, playlist has priority
-        if ( $file_url && $playlist_url) unset($file_url); 
+        if ( $file_url && $playlist_output) unset($file_url); 
 
 
         // THUMBNAIL
@@ -182,7 +183,7 @@ class JWP6_Shortcode {
         return $this->player->embedcode(
             $jwp6_global['player_embed_count'],
             $file_url,
-            $playlist_url,
+            $playlist_output,
             $image_url,
             $this->config_params
         );
