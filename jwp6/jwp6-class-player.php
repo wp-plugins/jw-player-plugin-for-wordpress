@@ -227,11 +227,15 @@ class JWP6_Player {
         if (
             array_key_exists($param, JWP6_Plugin::$player_options)
             &&
+            array_key_exists("default", JWP6_Plugin::$player_options[$param]) 
+            &&
             array_key_exists("discard_if_default", JWP6_Plugin::$player_options[$param]) 
             && 
             JWP6_Plugin::$player_options[$param]["discard_if_default"]
         ) {
-            return false;
+            if ( $value == JWP6_Plugin::$player_options[$param]['default'] ) {
+                return false;
+            }
         }
         return true;
     }
