@@ -245,6 +245,7 @@ class JWP6_Player {
         $po = JWP6_Plugin::$player_options;
         $last_param = end(array_keys($params));
         foreach ($params as $param => $value) {
+            jwp6_l('param: ' . $param);
             $new_parents = $parents;
             $new_parents[] = $param;
             if ( is_array($value) ) {
@@ -293,6 +294,8 @@ class JWP6_Player {
                 $this->set($param, $value);
             }
         }
+        jwp6_l("Embedding player: " . $this->config['description']);
+        jwp6_l('With config: ' . print_r($this->config, true));
         unset($this->config['description']);
         //$image = ( is_null($image) ) ? JWP6_Plugin::default_image_url() : $image;
         $embedcode = "
@@ -319,6 +322,7 @@ class JWP6_Player {
                 });
             </script>
         ";
+        jwp6_l('Embedcode: ' . $embedcode);
         return $embedcode;
     }
 

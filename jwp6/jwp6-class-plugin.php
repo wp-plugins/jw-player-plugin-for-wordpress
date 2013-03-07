@@ -101,11 +101,6 @@ class JWP6_Plugin {
             'text' => 'Loop the playback of your video/playlist.',
             'discard_if_default' => true,
         ),
-        // 'startparam' => array(
-        //     'default' => '',
-        //     'help_text' => 'Querystring parameter for seeking to not-yet-download portions of FLV or MP4 files in Flash mode. Not needed for HTML5 (where this works by default). See Pseudostreaming in Flash for more info.',
-        //     'discard_if_default' => true,
-        // ),
 
         // LISTBAR
         'listbar__position' => array(

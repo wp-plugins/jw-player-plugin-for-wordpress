@@ -17,23 +17,6 @@ class JWP6_Shortcode {
     // Additional player config params
     protected $config_params;
 
-    /*
-    //Wordpress post ID for the media
-    protected $mediaid = null;
-
-    // URL for the media
-    protected $file = null;
-
-    // Wordpress post ID for the playlist
-    protected $playlistid = null;
-
-    // URL for the playlist
-    protected $playlist = null;
-
-    // url for the placeholder thumb
-    protected $image = null;
-    */
-
     public function __construct($shortcode = null, $alternative_post_data = false) {
         if ( null === $shortcode ) {
             return $this->_init_from_post_data($alternative_post_data);
@@ -71,7 +54,7 @@ class JWP6_Shortcode {
             $this->player = new JWP6_Player($shortcode['player']);
             unset($shortcode['player']);
         } else {
-            $this->player = new JWP6_Player('default');
+            $this->player = new JWP6_Player(0);
         }
 
         // Check fixed params
