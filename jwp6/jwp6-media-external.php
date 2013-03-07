@@ -28,11 +28,10 @@ function jwp6_media_external_tab($errors) {
     $form_action_url = apply_filters('media_upload_form_url', $form_action_url, $type);
 
     if ( isset($_POST["insertonlybutton"]) ) {
-        jwp6_l('Getting post with: ' . print_r($_POST, true));
         $youtube_pattern = "/youtube.com\/watch\?v=([0-9a-zA-Z_-]*)/i";
         $url = $_POST["insertonly"]["href"];
         $attachment = array(
-            "post_mime_type" => "video/x-flv",
+            "post_mime_type" => "video/mp4",
             "guid" => $url,
             "post_parent" => $post_id,
         );
@@ -50,7 +49,6 @@ function jwp6_media_external_tab($errors) {
                 $attachment["post_title"]="";
             }
         }
-        jwp6_l('Saving attachment with data: ' . print_r($attachment, true));
         $id = wp_insert_attachment($attachment, $url, $post_id);
         if ( isset($youtube_api) && $youtube_api ) {
             update_post_meta($id, LONGTAIL_KEY . "thumbnail", $youtube_api["thumbnail_url"]);

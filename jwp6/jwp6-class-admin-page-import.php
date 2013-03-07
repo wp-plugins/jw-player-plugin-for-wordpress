@@ -56,7 +56,7 @@ class JWP6_Admin_Page_Import extends JWP6_Admin_Page {
         jQuery(function(){
             jQuery('#revertjwp5button').bind('click', function (e) {
                 var c = confirm(
-                    'Please note:\n\n ' +
+                    'Please note:\n\n' +
                     '1. Player embeds that you have made with this version of the plugin can be buggy after you revert.\n' +
                     '2. All settings for version 6 of the plugin will be deleted.\n'
                 );

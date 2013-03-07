@@ -1,9 +1,8 @@
 <?php
 
-define('JWP6_LINK_JWP6_INFO',               '#');
-define('JWP6_LINK_UPGRADE_WORDPRESS_GUIDE', '#');
-define('JWP6_LINK_REVERT_TO_JWP5',          '#');
-define('JWP6_LINK_REVERT_TO_JWP5JWP6_',     '#');
+define('JWP6_LINK_JWP6_INFO',               'http://www.longtailvideo.com/jw-player/');
+define('JWP6_LINK_UPGRADE_WORDPRESS_GUIDE', 'http://www.longtailvideo.com/support/jw-player/28834/migrating-from-jw5-to-jw6');
+define('JWP6_LINK_UPGRADE_TO_JWP6',         'http://www.longtailvideo.com/jw-player/pricing/');
 
 
 class JWP6_Migrate {
@@ -61,8 +60,8 @@ class JWP6_Migrate {
                     </p>
                     <p style="margin:15px;">
                         If after upgrading, you discover you miss a critical feature in JW6, you can always 
-                        <a href="<?php echo JWP6_LINK_REVERT_TO_JWP5; ?>">revert to JW5</a>
-                        again, retreiving all of your original configurations.
+                        <strong>revert to JW5</strong>
+                        again, retrieving all of your original configurations.
                     </p>
                     <p style="margin: 25px 15px;">
                         <input type="hidden" name="noheader" value="true" />

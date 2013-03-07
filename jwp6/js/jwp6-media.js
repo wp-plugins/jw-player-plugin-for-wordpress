@@ -92,8 +92,6 @@ function JWP6Media() {' + t.JWP6 + '
             }
             if (t.fieldset_toggles[hash]['bind']) {
                 t[t.fieldset_toggles[hash]['bind']]();
-            } else {
-                console.log('NO bind function');
             }
         }
         //t.preview_player();
@@ -105,7 +103,6 @@ function JWP6Media() {' + t.JWP6 + '
     }
 
     this.select2_change = function(e) {
-        console.log('Value changed to: ' + e.val);
     };
 
     this.preview_player = function () {
@@ -153,14 +150,11 @@ function JWP6Media() {' + t.JWP6 + '
     };
 
     this.setThumbnailValue = function () {
-        console.log('Setting thumb val');
         var img_val = $('#' + t.JWP6 + 'the_image_value'),
             id_val = $('#' + t.JWP6 + 'the_image_id').val();
         if (id_val) {
-            console.log('To id_val');
             img_val.val(id_val);
         } else {
-            console.log('To url_val');
             img_val.val($('#' + t.JWP6 + 'the_image_url').val());
         }
     };

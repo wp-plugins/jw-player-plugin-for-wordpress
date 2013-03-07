@@ -321,7 +321,7 @@ class JWP6_Plugin {
 
     public static function image_from_mediaid($post_id, $default = false) {
         $thumbinfo = get_post_meta($post_id, LONGTAIL_KEY . "thumbnail", true);
-        if ( $thumbinfo ) {
+        if ( $thumbinfo && '-1' != $thumbinfo ) {
             // Thumbinfo is either an id or a url;
             if ( is_int($thumbinfo) || ctype_digit($thumbinfo) ) {
                 $thumbnail = get_post($thumbinfo);
@@ -335,7 +335,7 @@ class JWP6_Plugin {
         }
         // In version 5 we could have a separate thumburl_setting
         $thumbnail_url = get_post_meta($post_id, LONGTAIL_KEY . "thumbnail_url", true);
-        return ( $thumbnail_url ) ? $thumb_url : $default;
+        return ( $thumbnail_url ) ? $thumbnail_url : $default;
     }
 
     public static function url_from_post($post) {

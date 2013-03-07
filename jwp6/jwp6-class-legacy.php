@@ -139,7 +139,6 @@ class JWP6_Legacy {
     }
 
     static function map_jwp5_config($old_config) {
-        jwp6_l('The old config is: ' . print_r($old_config, true));
         $new_config = array();
 
         foreach ($old_config as $option => $value) {

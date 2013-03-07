@@ -182,16 +182,22 @@ class JWP6_Media {
         $image_attachments = get_posts($image_args);
         $mime_type = substr($post->post_mime_type, 0, 5);
         if ( 'video' == $mime_type ) {
+            $poster_html = JWP6_Media::thumb_select_html($post->ID, $image_attachments);
+            if ( ! isset($_REQUEST["post_id"]) ) {
+                $poster_html .= JWP6_Media::insert_javascript_for_attachment_fields($post);
+            }
             $form_fields[LONGTAIL_KEY . "thumbnail"] = array(
                 "label" => "Poster image",
                 "input" => "html",
-                "html" => JWP6_Media::thumb_select_html($post->ID, $image_attachments)
+                "html" => $poster_html
             );
-            $form_fields[JWP6 . "insert_with_player"] = array(
-                "label" => "Embed with",
-                "input" => "html",
-                "html" => JWP6_Media::insert_player_html($post),
-            );
+            if ( isset($_REQUEST["post_id"]) ) {
+                $form_fields[JWP6 . "insert_with_player"] = array(
+                    "label" => "Embed with",
+                    "input" => "html",
+                    "html" => JWP6_Media::insert_player_html($post),
+                );
+            }
         }
         return $form_fields;
     }
@@ -264,7 +270,7 @@ class JWP6_Media {
                 $image_id = $thumbnail;
                 $image_url_class = 'hidden';
             } else if ($thumbnail) {
-                $image_url = $thumbnail;
+                $image_url = JWP6_Plugin::image_from_mediaid($id);
                 $image_id_class = 'hidden';
             } else {
                 $image_url_class = 'hidden';
@@ -317,8 +323,12 @@ class JWP6_Media {
         }
         $output .= "
             </span>
-            <div class='jwp6_hr'></div>
         ";
+        if ( isset($_REQUEST["post_id"]) ) {
+            $output .= "
+                <div class='jwp6_hr'></div>
+            ";
+        }
         return $output;
     }
 
@@ -344,20 +354,18 @@ class JWP6_Media {
 
             <div class='jwp6_hr'></div>
         ";
-        if ( isset($_GET["post_id"]) || version_compare($wp_version, '3.5', '<') ) {
-            jwp6_l('Printing 3.4 style');
+        if ( version_compare($wp_version, '3.5', '<') ) {
             $html .= "
                 <input type='submit' class='button button-primary media-button' name='send[{$post->ID}]' value='Insert with JW Player' />
             ";
         } else {
-            jwp6_l('Printing 3.5 style');
             $html .= "
                 <button class='insert_with_jwp6 button button-primary media-button'
                     data-url='". JWP6_PLUGIN_URL . "jwp6-media-embed.php'>
                     Insert with JW Player
                 </button>
             ";
-        }   
+        }
         $html .= JWP6_Media::insert_javascript_for_attachment_fields($post);
         return $html;
     }
@@ -366,7 +374,6 @@ class JWP6_Media {
         return "
             <script language='javascript'>
                 function jwp6_insert_player() {
-                    console.log('test');
                     var selected_player = jQuery('#jwp6_insert_with_player').val();
                     wp.media.post('send-attachment-to-editor', {
                         nonce: wp.media.view.settings.nonce.sendToEditor,
@@ -406,7 +413,6 @@ class JWP6_Media {
                 });
             </script>
         ";
-        return $html;
     }
 
     /**
