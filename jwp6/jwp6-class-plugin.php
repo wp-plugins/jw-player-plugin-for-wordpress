@@ -305,7 +305,7 @@ class JWP6_Plugin {
                 if ( $thumbnail ) {
                     $item .= "\t'image': '" . esc_attr($thumbnail) . "',\n";
                 }
-                $item .= "\t'sources': [{'file': '" . esc_attr($playlist_item->guid) . "'}]\n";
+                $item .= "\t'sources': [{'file': '" . esc_attr(JWP6_Plugin::url_from_post($playlist_item)) . "'}]\n";
 
                 $item .= "}\n";
                 $items[] = $item;
