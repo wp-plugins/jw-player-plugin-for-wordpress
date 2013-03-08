@@ -8,10 +8,10 @@ function JWP6Admin() {
         var params = [], qs = url.split('?');
         if (qs.length > 1) {
             qs = qs[1].split('&');
-            for (item in qs) {
-                item = qs[item].split('=');
+            $.each(qs, function (index, item) {
+                item = item.split('=');
                 params[item[0]] = (item.length > 1) ? item[1] : null;
-            }
+            });
         }
         return params;
     };
