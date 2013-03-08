@@ -124,6 +124,7 @@ function jwp6_media_external_tab($errors) {
                     preloaded.each(function(){prepareMediaItem({id:this.id.replace(/[^0-9]/g, '')},'');});
                 }
                 updateMediaForm();
+                $('tr.url button, p.help').remove();
                 <?php if ( MEDIA_MANAGER_35 ): ?>
                 jQuery('ul#sidemenu').css('display', 'none');
                 jQuery('a.describe-toggle-off').css('display', 'none');

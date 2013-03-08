@@ -354,7 +354,7 @@ class JWP6_Media {
 
             <div class='jwp6_hr'></div>
         ";
-        if ( version_compare($wp_version, '3.5', '<') ) {
+        if ( isset($_GET["post_id"]) || version_compare($wp_version, '3.5', '<') ) { 
             $html .= "
                 <input type='submit' class='button button-primary media-button' name='send[{$post->ID}]' value='Insert with JW Player' />
             ";

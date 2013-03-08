@@ -24,44 +24,46 @@ class JWP6_Admin_Page_Licensing extends JWP6_Admin_Page {
             )
         );
 
-        $default_config_options = array(
-            'label' => 'Category pages',
-            'options' => array(
-                'excerpt' => 'Use excerpt',
-                'content' => 'Use content',
-                'disable' => 'Strip shortcode',
-            ),
-            'default' => 'content',
-            'single_line' => true,
-        );
+        if ( JWP6_USE_CUSTOM_SHORTCODE_FILTER ) {
+            $default_config_options = array(
+                'label' => 'Category pages',
+                'options' => array(
+                    'excerpt' => 'Use excerpt',
+                    'content' => 'Use content',
+                    'disable' => 'Strip shortcode',
+                ),
+                'default' => 'content',
+                'single_line' => true,
+            );
 
-        $category_config_options = $default_config_options;
-        $category_config_options['label'] = 'Category pages';
-        $category_config_field = new JWP6_Form_Field_Radio(
-            'category_config',
-            $category_config_options
-        );        
+            $category_config_options = $default_config_options;
+            $category_config_options['label'] = 'Category pages';
+            $category_config_field = new JWP6_Form_Field_Radio(
+                'category_config',
+                $category_config_options
+            );        
 
-        $search_config_options = $default_config_options;
-        $search_config_options['label'] = 'Search pages';
-        $search_config_field = new JWP6_Form_Field_Radio(
-            'search_config',
-            $search_config_options
-        );        
+            $search_config_options = $default_config_options;
+            $search_config_options['label'] = 'Search pages';
+            $search_config_field = new JWP6_Form_Field_Radio(
+                'search_config',
+                $search_config_options
+            );        
 
-        $tag_config_options = $default_config_options;
-        $tag_config_options['label'] = 'Tag pages';
-        $tag_config_field = new JWP6_Form_Field_Radio(
-            'tag_config',
-            $tag_config_options
-        );        
+            $tag_config_options = $default_config_options;
+            $tag_config_options['label'] = 'Tag pages';
+            $tag_config_field = new JWP6_Form_Field_Radio(
+                'tag_config',
+                $tag_config_options
+            );        
 
-        $home_config_options = $default_config_options;
-        $home_config_options['label'] = 'Home page';
-        $home_config_field = new JWP6_Form_Field_Radio(
-            'home_config',
-            $home_config_options
-        );        
+            $home_config_options = $default_config_options;
+            $home_config_options['label'] = 'Home page';
+            $home_config_field = new JWP6_Form_Field_Radio(
+                'home_config',
+                $home_config_options
+            );        
+        }
 
         $tracking_field = new JWP6_Form_Field_Toggle(
             'allow_anonymous_tracking',
@@ -93,12 +95,16 @@ class JWP6_Admin_Page_Licensing extends JWP6_Admin_Page {
             $purge_field,
         );
 
-        $this->shortcode_fields = array(
-            $category_config_field,
-            $search_config_field,
-            $tag_config_field,
-            $home_config_field,
-        );
+        if ( JWP6_USE_CUSTOM_SHORTCODE_FILTER ) {
+            $this->shortcode_fields = array(
+                $category_config_field,
+                $search_config_field,
+                $tag_config_field,
+                $home_config_field,
+            );
+        } else {
+            $this->shortcode_fields = array();
+        }
 
         $this->form_fields = array_merge(
             $this->license_fields,
@@ -131,6 +137,8 @@ class JWP6_Admin_Page_Licensing extends JWP6_Admin_Page {
 
             <div class="divider"></div>
 
+
+            <?php if ( JWP6_USE_CUSTOM_SHORTCODE_FILTER ): ?>
             <h3>Shortcode settings</h3>
 
             <p>
@@ -145,6 +153,7 @@ class JWP6_Admin_Page_Licensing extends JWP6_Admin_Page {
             </table>
 
             <div class="divider"></div>
+            <?php endif; ?>
 
             <h3>Other settings</h3>
 

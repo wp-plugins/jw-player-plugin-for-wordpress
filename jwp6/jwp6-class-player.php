@@ -236,13 +236,15 @@ class JWP6_Player {
     // Check if the child and parent will be included in the embedcode
     private function _add_child_embedcode_params($params, $parents = array()) {
         $parent = implode('__', $parents);
-        jwp6_l('Parent is: ' . $parent);
+        if ( ! JWP6_Plugin::option_available($parent) ) {
+            return false;
+        }
         if ( 
             $parent && 
             array_key_exists($parent, JWP6_Plugin::$player_options) && 
             array_key_exists('not_if', JWP6_Plugin::$player_options[$parent])
         ) {
-            $not_if = JWP6_Plugin::$player_options[$parent];
+            $not_if = JWP6_Plugin::$player_options[$parent]['not_if'];
             foreach ($not_if as $param => $value) {
                 if ( ! array_key_exists($param, $params) || $value == $params[$param] ) {
                     return false;

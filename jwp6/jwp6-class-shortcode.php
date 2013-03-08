@@ -81,9 +81,13 @@ class JWP6_Shortcode {
 
     // Adds the filters for this class
     public static function add_filters() {
-        add_filter('the_content', array('JWP6_Shortcode', 'the_content_filter'), 11);
-        add_filter('the_excerpt', array('JWP6_Shortcode', 'the_excerpt_filter'), 11);
-        add_filter('widget_text', array('JWP6_Shortcode', 'widget_text_filter'),  11);
+        if (JWP6_USE_CUSTOM_SHORTCODE_FILTER) {
+            add_filter('the_content', array('JWP6_Shortcode', 'the_content_filter'), 11);
+            add_filter('the_excerpt', array('JWP6_Shortcode', 'the_excerpt_filter'), 11);
+            add_filter('widget_text', array('JWP6_Shortcode', 'widget_text_filter'),  11);
+        } else {
+            add_shortcode('jwplayer', array('JWP6_Plugin', 'shortcode'));
+        }
     }
 
     // outputs the short code for this object

@@ -31,6 +31,17 @@ define("JWP6_PLAYER_LOCATION", "https://www.example.com/assets/jwplayer/jwplayer
 */
 define("JWP6_PLAYER_LOCATION", null);
 
+/*
+By default the JW Player plugin uses custom filters to replace the shortcodes. This
+allows for granular control of how the shortcode is replaced in different page types.
+E.g.: Wordpress normally strips out shortcodes from excerpts, which means that you 
+cannot show players in pages where a theme uses the "the_excerpt" function. However
+if you are making video blog and also want to show players in e.g. your search results
+or category pages, you can still do so because of our custom players.
+If you run into problems with other filters you can change this setting and see if it
+solves your problems ;)
+*/
+define("JWP6_USE_CUSTOM_SHORTCODE_FILTER", true);
 
 
 /* DO NOT CHANGE ANYTHING BELOW HERE... */

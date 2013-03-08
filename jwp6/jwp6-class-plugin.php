@@ -409,12 +409,8 @@ class JWP6_Plugin {
     }
 
     public static function shortcode($shortcode, $content, $tag) {
-        global $jwp6_global;
-        // Keep track of the number of players that we are embedding;
-        $jwp6_global['player_embed_count'] = ( array_key_exists('player_embed_count', $jwp6_global) ) ?
-            $jwp6_global['player_embed_count'] + 1 : 0;
         $sc = new JWP6_Shortcode($shortcode);
-        return $sc->embedcode($jwp6_global['player_embed_count']);
+        return $sc->embedcode();
     }
 
     public static function register_actions() {
