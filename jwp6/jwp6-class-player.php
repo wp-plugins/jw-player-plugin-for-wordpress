@@ -62,13 +62,6 @@ class JWP6_Player {
         return intval($last_player_id) + 1;
     }
 
-    // public static function validate_player_name($name) {
-    //     if ( preg_match('/^[a-z0-9_-]*$/i', $name) ) {
-    //         return $name;
-    //     }
-    //     return NULL;
-    // }
-
     private function _validate_param_value($param, $value) {
         // TODO: More elaborate validation
         if ( array_key_exists($param, $this->defaults) ) {
@@ -240,6 +233,25 @@ class JWP6_Player {
         return true;
     }
 
+    // Check if the child and parent will be included in the embedcode
+    private function _add_child_embedcode_params($params, $parents = array()) {
+        $parent = implode('__', $parents);
+        jwp6_l('Parent is: ' . $parent);
+        if ( 
+            $parent && 
+            array_key_exists($parent, JWP6_Plugin::$player_options) && 
+            array_key_exists('not_if', JWP6_Plugin::$player_options[$parent])
+        ) {
+            $not_if = JWP6_Plugin::$player_options[$parent];
+            foreach ($not_if as $param => $value) {
+                if ( ! array_key_exists($param, $params) || $value == $params[$param] ) {
+                    return false;
+                }
+            }
+        }
+        return true;
+    }
+
     private function _add_embedcode_params($params, $parents = array()) {
         $embedcode = "";
         $po = JWP6_Plugin::$player_options;
@@ -248,10 +260,12 @@ class JWP6_Player {
             $new_parents = $parents;
             $new_parents[] = $param;
             if ( is_array($value) ) {
-                $embedcode .= str_repeat("\t", count($parents));
-                $embedcode .= "'{$param}': {\n";
-                $embedcode .= $this->_add_embedcode_params($value, $new_parents);
-                $embedcode .= ( $last_param == $param && count($parents) ) ? "}\n" : "},\n";
+                if ( $this->_add_child_embedcode_params($value, $new_parents) ) {
+                    $embedcode .= str_repeat("\t", count($parents));
+                    $embedcode .= "'{$param}': {\n";
+                    $embedcode .= $this->_add_embedcode_params($value, $new_parents);
+                    $embedcode .= ( $last_param == $param && count($parents) ) ? "}\n" : "},\n";
+                }
             } else {
                 $check_param = ( count($parents) ) ? implode('__', $new_parents) : $param;
                 if ( JWP6_Plugin::option_available($check_param) && $this->_add_if_default_value($check_param, $value) ) {

@@ -103,6 +103,9 @@ class JWP6_Plugin {
         ),
 
         // LISTBAR
+        'listbar' =>  array(
+            'not_if' => array('position' => 'none'),
+        ),
         'listbar__position' => array(
             'options' => array(
                 'none' => 'Do not show listbar',
@@ -122,6 +125,7 @@ class JWP6_Plugin {
         // LOGO
         'logo' => array (
             'licenses' => array('pro', 'premium', 'ads'),
+            'not_if' => array('file' => ''),
         ),
         'logo__file' => array(
             'licenses' => array('pro', 'premium', 'ads'),
@@ -200,6 +204,7 @@ class JWP6_Plugin {
 
         'advertising' => array (
             'licenses' => array('ads'),
+            'not_if' => array('client' => 'NULL'),
         ),
 
         'advertising__client' => array(
