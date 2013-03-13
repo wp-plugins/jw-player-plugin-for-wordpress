@@ -1,73 +1,101 @@
+                                                                     
+                                                                     
+                                                                     
+                                             
 === JW Player for WordPress – Flash & HTML5 Video Player ===
 Contributors: LongTail Video Inc.
-Tags: JW Player, Video, Flash, LongTail Video, RTMP, Playlists, Audio, Image, HTML5, iPad, iPhone, iPod
-Requires at least: 2.8.6
+Tags: JW Player, Video, Flash, LongTail Video, Playlists, Audio, HTML5, iPad, iPhone, iPod, Mobile
+Requires at least: 3.0
 Tested up to: 3.5.0
-Stable tag: 1.7.2
+Stable tag: 2.0.0
 
-This video plugin is provided by LongTail Video Inc.  It enables you to embed Flash and HTML5 video using the JW Player on your WordPress website.
+This video plugin is provided by LongTail Video Inc.  It enables you to embed Flash and HTML5 video, audio and YouTube streams using the JW Player on your WordPress website.
 
 == Description ==
 
-JW Player for WordPress makes it extremely easy to deliver Flash and HTML5 video through your WordPress website. This plugin has been developed by LongTail Video, the creator of the JW Player, and allows for easy customization and embedding of Flash and HTML5 video using the JW Player in your WordPress posts. It provides support for all of the player's configuration options, including skins, plugins and the LongTail Video AdSolution.
+JW Player for WordPress makes it extremely easy to deliver Flash and HTML5 video through your WordPress website. This plugin has been developed by LongTail Video, the creator of the JW Player, and allows for easy customization and embedding of Flash and HTML5 video using the JW Player in your WordPress posts. It provides support for all of the player's configuration options, including custom watermarks, HLS/RTMP streaming and VAST/VPAID advertising.
 
 <strong>Key Features</strong>
 
 * Full support for JW Player for Flash and HTML5.
-* Manage multiple custom players.
-* Full skin and plugin support with easy to use plugin customization interface.
-* Full integration into the WordPress media library.  Embed video with the JW Player as you write your posts.
-* Support for adding external video to your media library including Youtube and RTMP streams.
+* Convenient and reliable CDN hosting of the actual JW Player assets.
+* Full Pro, Premium and Ads edition support with easy to use player configuration interface.
+* Full integration into the WordPress media library. Embed video with the JW Player as you write your posts.
+* Support for adding External Media to your Media Library, including Youtube and RTMP streams.
 * A full featured playlist manager - order your media by simply dragging the mouse.
 * A powerful shortcode system for customizations at embed time.
 
 <strong>Documentation</strong>
 
-* Full documentation for installation, setup and use on our <a href='http://www.longtailvideo.com/support/addons/jw-player-plugin-for-wordpress' target='_blank'>Support Site</a>.
-* Important information about File Permissions:  http://codex.wordpress.org/Changing_File_Permissions
+* Full documentation for installation, setup and use on our <a href='http://www.longtailvideo.com/support/jw-player/' target='_blank'>Support Site</a>, under the <em>WordPress</em> section.
+* Important information about File Permissions: http://codex.wordpress.org/Changing_File_Permissions
 * If you have any questions, comments, problems or suggestions please post on our forum at: http://www.longtailvideo.com/support/forums
 * The plugin has been tested on 1and1, MediaTemple, Dreamhost, and GoDaddy.
 
 <strong>Troubleshooting</strong>
 
-* If you're having issues please contact us at support@longtailvideo.com or our forum at: http://www.longtailvideo.com/support/forums.  We can't fix any issues you're having if we don't know they exist.
+* If you're having issues please post to our forums at: http://www.longtailvideo.com/support/forums.  We can't fix any issues you're having if we don't know they exist.
 * Please include a description of the problem, a link to your site demonstrating the issue, and the host you're using.
+* Keep an eye on this site's <em>Changelog</em> section if you're looking for a specific bugfix of feature enhancement for the plugin.
+
 
 == Installation ==
 
-Installing for the first time:
+Before installing the JW Player plugin, please ensure your WordPress installation meets the following requirements:
 
-1. Place the plugin folder in your plugin directory.
-1. Visit the JW Player Upgrade page and download or upload your JW Player.
-1. For more detailed instructions please visit: <a href='http://www.longtailvideo.com/support/addons/jw-player-plugin-for-wordpress/11513/getting-started-with-the-wordpress-plugin-for-the-jw-pla' target='_blank'>Getting Started with the WordPress Plugin for the JW Player</a>
-
-Upgrading:
-
-It is recommended that you back up your custom players if you are upgrading.
-
-You can perform the automatic update, download the plugin and upload, or FTP the plugin to the plugins folder directly.
-
-== Requirements ==
-
-* WordPress 2.8.6 or higher
+* WordPress 3.0 or higher
 * PHP 5.0 or higher
 * The wp-content/uploads directory needs to be writable by the plugin.  This is likely already the case as WordPress stores your media and various other uploads here.
 
-== Usage ==
+<strong>Initial Install</strong>
 
-1. Go to Site Admin > Settings > JW Player Plugin
-1. Click on the button to create a player.
-1. Configure the Basic flashvars.
-1. (Optional) Configure Advanced flashvars and add plugins.
-1. Save your Player.
-1. Create or edit a post.
-1. Click on one of the Upload/Insert buttons
-1. Using the Media Library tab, you should be able to edit your media.
-1. For a video you want to insert, click the Insert JW Player button.
-1. It should insert a tag that looks like the following: [jwplayer config="&lt;Player name&gt;" file="&lt;your video&gt;"] into the body.  &lt;your video&gt; is a url to your file.  The "config" attribute is only need when using a player other than the default.
-1. Save your posts.
+1. To install the plugin, extract the <em>jw­player­plugin­for­wordpress.zip</em> and FTP the folder to your WordPress plugins directory (<em>/wp­content/plugins/</em>) on your web server.
+1. Login to your WordPress website and navigate to Site Admin &raquo; Plugins. The JW Player Plugin will appear in the list of plugins. Click the <strong>Activate</strong> link to enable the plugin.
+1. At this point, the plugin is ready to be used. However, if you own a commercial JW Player license, you should set your Player Edition and License Key in the <em>JW Player &raquo; Settings</em> screen.
+
+Alternatively, you can install the plugin right from your <em>WordPress admin dashboard</em>.  Simply search for <strong>JW Player</strong> in the plugin section of the admin.  WordPress will download and install the plugin for you automatically.
+
+
+<strong>Upgrading</strong>
+
+If you previously installed the JW Player WordPress 1.x plugin and are interested in migrating from JW Player 5 to JW Player 6, please see our < href='http://www.longtailvideo.com/support/jw-player/29912/upgrading-wordpress-from-jw5-to-jw6' target='_blank'>Upgrading WordPress from JW5 to JW6</a> guide. It contains a list of all features that were added/removed, as well as a step­by­step walkthrough of the upgrade.
+
+If you cannot perform the automatic update, download the plugin and upload, or FTP the plugin to the plugins folder directly.
+
+<strong>Getting Started</strong>
+
+See <a href='http://www.longtailvideo.com/support/jw-player/31561/getting-started-with-the-jw-player-wordpress-plugin' target='_blank'>Getting Started the JW Player WordPress Plugin</a> for directions on getting your first video live.
+
+== Full Reference ==
+
+See the <a href='http://www.longtailvideo.com/support/jw-player/31560/jw-player-wordpress-plugin-reference' target='_blank'>WordPress JW Player Reference</a> on our support site for a full overview of the features this plugin supports:
+
+1. Deep Media Manager integration, including the ability to set poster thumbnails.
+1. Support for External Media in the Manager, including Youtube, RTMP and HLS streams.
+1. Create, manage and publish playlists of multiple audio or video files.
+1. Create and mange multiple player templates, containing JW Player layout and playback settings. 
+1. Add custom configuration options to the JW Player Short Codes.
+1. Settings for inserting a JW Player License Key, changing Short Code behaviour and more.
+
+Additionally, all the embedding, skinning and scripting functionalities of JW Player are at your disposal thrugh this plugin. See our <a href='http://www.longtailvideo.com/support/jw-player/' target='_blank'>JW Player Support Overview</a> for a full reference of JW Player.
 
 == Changelog ==
+
+= 2.0.0 =
+
+* FEATURE: Support for JW Player 6
+* FEATURE: CDN Hosted JW Player assets
+* FEATURE: Commercial Edition Support (Pro, Premium, Ads)
+
+<strong>Warning:</strong>: this is a major update to the plugin which also removed certain functionalities that are not supported anymore in JW Player 6:
+
+* REMOVED: Playback of GIF/JPG/PNG images
+* REMOVED: Library of pre­installed ZIP skins
+* REMOVED: Library of pre­installed SWF Plugins
+* REMOVED: Selected Media Settings (creator, duration, html5_file and download_file)
+* REMOVED: Selected Player Settings (streamer, provider, dock, icons, colors, item, shuffle, bufferlength, smoothing, wmode and volume)
+
+See < href='http://www.longtailvideo.com/support/jw-player/29912/upgrading-wordpress-from-jw5-to-jw6' target='_blank'>Upgrading WordPress from JW5 to JW6</a> for details on the features that were added and removed, plus a walkthrough of the upgrade process.
 
 = 1.7.2 =
 

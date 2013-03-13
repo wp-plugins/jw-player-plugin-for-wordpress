@@ -5,8 +5,6 @@ include "JWEmbedderConfig.php";
 include "FlashVar.php";
 include "PlayerPlugin.php";
 
-define("LONGTAIL_KEY", "jwplayermodule_");
-
 /**
  * Foundation class for player management, embedding and state.  It is
  * responsible for saving/loading of player config XML files, loading skins,
