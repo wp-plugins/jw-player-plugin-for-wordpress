@@ -4,6 +4,7 @@
 class JWP6_Admin_Page_Licensing extends JWP6_Admin_Page {
 
     public function __construct() {
+
         parent::__construct();
         $license_version_field =  new JWP6_Form_Field_Select(
             'license_version',
@@ -17,9 +18,7 @@ class JWP6_Admin_Page_Licensing extends JWP6_Admin_Page {
         $license_key_field = new JWP6_Form_Field(
             'license_key', 
             array(
-                'validation' => function ($value) {
-                    return ( preg_match('/^\S*$/', $value) ) ? $value : NULL;
-                },
+                'validation' => array($this, "license_key_validation"),
                 'help_text' => 'A license key is required for the Pro, Premium and Ads edition.',
             )
         );
@@ -112,6 +111,10 @@ class JWP6_Admin_Page_Licensing extends JWP6_Admin_Page {
             $this->other_fields
         );
 
+    }
+
+    public function license_key_validation($value) {
+        return ( preg_match('/^\S*$/', $value) ) ? $value : NULL;
     }
 
     public function render() {
