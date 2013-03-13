@@ -39,13 +39,14 @@ class JWP6_Form_Field {
     // The value that the method was given in the post request.
     protected $post_value = NULL;
 
+    public static function dummy_validation($value) {
+        return $value;
+    }
 
     public function __construct($name, $settings = array()) {
         $this->name = $name;
         $this->label = $this->nice_name();
-        $this->validation = function($value) {
-            return $value;
-        };
+        $this->validation = array("JWP6_Form_Field", "dummy_validation");
         foreach ($settings as $key => $value) {
             if ( property_exists($this, $key) ) {
                 $this->{$key} = $value;

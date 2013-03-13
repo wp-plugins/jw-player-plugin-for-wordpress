@@ -78,7 +78,11 @@ class JWP6_Admin_Page {
         // Check for post error messages
         if ( count($this->form_error_fields) ) {
             $msg = 'Watch out you gave invalid input for <em>"';
-            $msg .= implode ('"</em>, <em>"', array_map(function ($field) { return $field->label; }, $this->form_error_fields));
+            $errors = array();
+            foreach ($this->form_error_fields as $field) {
+                $errors[] = $field->label;
+            }
+            $msg .= implode ('"</em>, <em>"', $errors);
             $msg .= '"</em>. Please correct the input and resubmit to save your input.';
             $this->add_message($msg, 'error');
         }
