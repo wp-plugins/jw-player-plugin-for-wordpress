@@ -95,7 +95,7 @@ Additionally, all the embedding, skinning and scripting functionalities of JW Pl
 * REMOVED: Selected Media Settings (creator, duration, html5_file and download_file)
 * REMOVED: Selected Player Settings (streamer, provider, dock, icons, colors, item, shuffle, bufferlength, smoothing, wmode and volume)
 
-See < href='http://www.longtailvideo.com/support/jw-player/29912/upgrading-wordpress-from-jw5-to-jw6' target='_blank'>Upgrading WordPress from JW5 to JW6</a> for details on the features that were added and removed, plus a walkthrough of the upgrade process.
+See <a href='http://www.longtailvideo.com/support/jw-player/29912/upgrading-wordpress-from-jw5-to-jw6' target='_blank'>Upgrading WordPress from JW5 to JW6</a> for details on the features that were added and removed, plus a walkthrough of the upgrade process.
 
 = 1.7.2 =
 
