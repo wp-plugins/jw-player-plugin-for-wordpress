@@ -1,23 +1,21 @@
-                                                                     
-                                                                     
-                                                                     
-                                             
+
 === JW Player for WordPress – Flash & HTML5 Video Player ===
+
 Contributors: LongTail Video Inc.
 Tags: JW Player, Video, Flash, LongTail Video, Playlists, Audio, HTML5, iPad, iPhone, iPod, Mobile
 Requires at least: 3.0
 Tested up to: 3.5.0
-Stable tag: 2.0.1
+Stable tag: 2.0.2
 
-This video plugin is provided by LongTail Video Inc.  It enables you to embed Flash and HTML5 video, audio and YouTube streams using the JW Player on your WordPress website.
+The JW Player WordPress Plugin enables you to embed Flash and HTML5 audio and video, plus RTMP and YouTube streams, on your site using JW Player 6.
 
 == Description ==
 
-JW Player for WordPress makes it extremely easy to deliver Flash and HTML5 video through your WordPress website. This plugin has been developed by LongTail Video, the creator of the JW Player, and allows for easy customization and embedding of Flash and HTML5 video using the JW Player in your WordPress posts. It provides support for all of the player's configuration options, including custom watermarks, HLS/RTMP streaming and VAST/VPAID advertising.
+The JW Player WordPress Plugin makes it extremely easy to deliver Flash and HTML5 video through your WordPress website. This plugin has been developed by LongTail Video, the creator of the JW Player, and allows for easy customization and embedding of Flash and HTML5 video using the JW Player in your WordPress posts. It provides support for all of the JW Player 6 configuration options, including custom watermarks, HLS/RTMP streaming and VAST/VPAID advertising.
 
 <strong>Key Features</strong>
 
-* Full support for JW Player for Flash and HTML5.
+* Full support for JW Player 6 for Flash and HTML5.
 * Convenient and reliable CDN hosting of the actual JW Player assets.
 * Full Pro, Premium and Ads edition support with easy to use player configuration interface.
 * Full integration into the WordPress media library. Embed video with the JW Player as you write your posts.
@@ -25,16 +23,17 @@ JW Player for WordPress makes it extremely easy to deliver Flash and HTML5 video
 * A full featured playlist manager - order your media by simply dragging the mouse.
 * A powerful shortcode system for customizations at embed time.
 
+See <a href='http://www.longtailvideo.com/jw-player/'>the JW Player product pages</a> for more info about JW Player.
+
 <strong>Documentation</strong>
 
 * Full documentation for installation, setup and use on our <a href='http://www.longtailvideo.com/support/jw-player/' target='_blank'>Support Site</a>, under the <em>WordPress</em> section.
-* Important information about File Permissions: http://codex.wordpress.org/Changing_File_Permissions
-* If you have any questions, comments, problems or suggestions please post on our forum at: http://www.longtailvideo.com/support/forums
+* Important information about File Permissions can be found in <a href='http://codex.wordpress.org/Changing_File_Permissions'>the WordPress Codex</a>.
 * The plugin has been tested on 1and1, MediaTemple, Dreamhost, and GoDaddy.
 
 <strong>Troubleshooting</strong>
 
-* If you're having issues please post to our forums at: http://www.longtailvideo.com/support/forums.  We can't fix any issues you're having if we don't know they exist.
+* If you have any questions, comments, problems or suggestions please <a href="http://www.longtailvideo.com/support/forums">post on our forums</a>. We can't fix any issues you're having if we don't know they exist.
 * Please include a description of the problem, a link to your site demonstrating the issue, and the host you're using.
 * Keep an eye on this site's <em>Changelog</em> section if you're looking for a specific bugfix of feature enhancement for the plugin.
 
@@ -80,6 +79,14 @@ See the <a href='http://www.longtailvideo.com/support/jw-player/31560/jw-player-
 Additionally, all the embedding, skinning and scripting functionalities of JW Player are at your disposal thrugh this plugin. See our <a href='http://www.longtailvideo.com/support/jw-player/' target='_blank'>JW Player Support Overview</a> for a full reference of JW Player.
 
 == Changelog ==
+
+= 2.0.2 =
+
+* BUG: Fixed issue where inserting image would insert empty jwplayer tag.
+* BUG: Fixed missing descriptions in playlists.
+* BUG: Fixed issue where custom config param of JW5 shortcode is not mapped correctly to new JW6 Player id.
+* BUG: Fixed issue with javascript onload function.
+* BUG: Some other small fixes.
 
 = 2.0.1 =
 

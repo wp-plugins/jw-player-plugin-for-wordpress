@@ -5,7 +5,6 @@ class JWP6_Admin_Page_Import extends JWP6_Admin_Page {
 
     public function __construct() {
         parent::__construct();
-        $this->imported_players = get_option(JWP6 . 'imported_jwp5_players');
     }
 
     public function render() {

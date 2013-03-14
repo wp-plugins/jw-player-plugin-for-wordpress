@@ -299,8 +299,8 @@ class JWP6_Plugin {
                 $thumbnail = JWP6_Plugin::image_from_mediaid($playlist_item_id);
                 $item = "{\n";
                 $item .= "\t'title': '" . esc_attr(stripslashes($playlist_item->post_title)) . "',\n";
-                if ( $playlist_item->post_description ) {
-                    $item .= "\t'description': '" . esc_attr(stripslashes($playlist_item->post_description)) . "',\n";
+                if ( $playlist_item->post_content ) {
+                    $item .= "\t'description': '" . esc_attr(stripslashes($playlist_item->post_content)) . "',\n";
                 }
                 if ( $thumbnail ) {
                     $item .= "\t'image': '" . esc_attr($thumbnail) . "',\n";
@@ -370,7 +370,35 @@ class JWP6_Plugin {
         $key = get_option(JWP6 . 'license_key');
         if ( $key ) {
             ?>
+
             <script type="text/javascript">jwplayer.key='<?php echo $key; ?>';</script>
+
+            <?php
+        }
+    }
+
+    public static function insert_jwp6_load_event() {
+        if ( get_option(JWP6 . 'allow_anonymous_tracking') ) {
+            ?>
+
+            <script type="text/javascript">
+            if (typeof(jwp6AddLoadEvent) == 'undefined') {
+                function jwp6AddLoadEvent(func) {
+                    var oldonload = window.onload;
+                    if (typeof window.onload != 'function') {
+                        window.onload = func;
+                    } else {
+                        window.onload = function() {
+                            if (oldonload) {
+                                oldonload();
+                            }
+                            func();
+                        }
+                    }
+                }
+            }
+            </script>
+
             <?php
         }
     }
@@ -422,6 +450,7 @@ class JWP6_Plugin {
             add_action('parse_request',  array('JWP6_Plugin', 'parse_request'), 9 );
             add_action('wp_enqueue_scripts', array('JWP6_Plugin', 'insert_javascript'));
             add_action('wp_head', array('JWP6_Plugin', 'insert_license_key'));
+            add_action('wp_head', array('JWP6_Plugin', 'insert_jwp6_load_event'));
         }
     }
 

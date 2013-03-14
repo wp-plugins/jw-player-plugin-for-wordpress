@@ -248,7 +248,7 @@ class JWP6_Media {
 
     // Needed for JWP5 version type of embedding
     public static function media_send_to_editor($html, $send_id, $attachment) {
-        if ( isset($_POST['attachment']) && isset($_POST['action']) && $_POST['action'] == 'send-attachment-to-editor' ) {
+        if ( isset($_POST['attachment']) && isset($_POST['action']) && $_POST['action'] == 'send-attachment-to-editor' && isset($_POST['attachment'][JWP6 . 'insert_jwplayer']) ) {
             $shortcode = new JWP6_Shortcode(null, $_POST['attachment']);
         } else if ( isset($_POST['send'][$send_id]) ) {
             $player_name = ( isset($_POST['attachments'][$send_id][JWP6 . 'insert_with_player']) ) ? $_POST['attachments'][$send_id][JWP6 . 'insert_with_player'] : 0;
@@ -380,6 +380,7 @@ class JWP6_Media {
                         attachment: {
                             'id': " . $post->ID . ",
                             'player_name': selected_player,
+                            '" . JWP6 . "insert_jwplayer': true,
                             '" . JWP6 . "mediaid': " . $post->ID . "
                         },
                         html:       '',

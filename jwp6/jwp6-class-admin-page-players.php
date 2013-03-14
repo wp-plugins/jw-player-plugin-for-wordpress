@@ -17,6 +17,7 @@ class JWP6_Admin_Page_Players extends JWP6_Admin_Page {
 
     public function __construct() {
         parent::__construct();
+        $this->imported_players = get_option(JWP6 . 'imported_jwp5_players');
         if ( isset($_GET['player_id']) && isset($_GET['action']) ) {
             $this->process_action();
         } else if ( isset($_GET['player_id']) ) {
@@ -101,15 +102,21 @@ class JWP6_Admin_Page_Players extends JWP6_Admin_Page {
 
     private function _init_edit_page() {
         // Basic settings
-        $description_field = new JWP6_Form_Field(
-            'description',
-            array(
-                'value' => $this->player->get('description'),
-                'validation' => "sanitize_text_field",
-                'placeholder'  => "Use this short description as a reminder to identify the player.",
-                'class' => 'wide',
-            )
-        );
+        if ( $this->imported_players && array_key_exists($this->player->get('description'), $this->imported_players) ) {
+            $description_field = false;
+        } else if ( ! $this->player->get_id() ) {
+            $description_field = false;
+        } else {
+            $description_field = new JWP6_Form_Field(
+                'description',
+                array(
+                    'value' => $this->player->get('description'),
+                    'validation' => "sanitize_text_field",
+                    'placeholder'  => "Use this short description as a reminder to identify the player.",
+                    'class' => 'wide',
+                )
+            );
+        }
         $width_field = new JWP6_Form_Field(
             'width',
             array(
@@ -465,7 +472,7 @@ class JWP6_Admin_Page_Players extends JWP6_Admin_Page {
 
             <h3>Basic Settings</h3>
             <table class="form-table">
-                <?php foreach ($this->basic_settings_fields as $field) { $this->render_form_row($field); } ?>
+                <?php foreach ($this->basic_settings_fields as $field) { if ( $field ) $this->render_form_row($field); } ?>
             </table>
 
             <h3>Layout Settings</h3>
@@ -569,6 +576,14 @@ class JWP6_Admin_Page_Players extends JWP6_Admin_Page {
     }
 
     protected function render_overview_row($player) {
+        $description = $player->get('description');
+        if ( $description ) {
+            if ( $this->imported_players && array_key_exists($description, $this->imported_players) ) {
+                $description .= " <em>(imported JW5 player)</em>";
+            }
+        } else {
+            $description = "<em>no description</em>";
+        }
         ?>
         <tr valign="middle">
             <td align="center">
@@ -576,7 +591,7 @@ class JWP6_Admin_Page_Players extends JWP6_Admin_Page {
                     <?php echo $player->get_id(); ?>
                 </strong>
             </td>
-            <td><?php echo ( $player->get('description') ) ? $player->get('description') : "<em>no description</em>"; ?></td>
+            <td><?php echo $description; ?></td>
             <td><?php echo $player->get('width'); ?> x <?php echo $player->get('height'); ?></td>
             <td><?php echo $player->get('primary'); ?></td>
             <td><a href="<?php echo $player->admin_url($this, 'edit'); ?>" class="button jwp6_edit">Edit</a></td>

@@ -187,7 +187,10 @@ class JWP6_Legacy {
         }
 
         if ( array_key_exists('config', $shortcode) ) {
-            $shortcode['player'] = JWP6_Legacy::slugify($shortcode['config']);
+            $imported_players = get_option(JWP6 . 'imported_jwp5_players');
+            if ( isset($imported_players[$shortcode['config']]) ) {
+                $shortcode['player'] = $imported_players[$shortcode['config']];
+            }
             unset($shortcode['config']);
         }
 
@@ -222,14 +225,14 @@ class JWP6_Legacy {
         $player->set('description', $name);
         $player->save();
 
-        return $player->full_description();
+        return $new_player_id;
     }
 
     static function import_jwp5_players() {
         $players = JWP6_Legacy::get_jwp5_players();
         foreach ($players as $name => $xml_file) {
-            $new_player = JWP6_Legacy::import_jwp5_player_from_xml($name, $xml_file);
-            $players[$name] = $new_player;
+            $new_player_id = JWP6_Legacy::import_jwp5_player_from_xml($name, $xml_file);
+            $players[$name] = $new_player_id;
         }
         return $players;
     }

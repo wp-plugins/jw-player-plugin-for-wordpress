@@ -157,27 +157,27 @@ class JWP6_Player {
 
     public function set($param, $value = NULL) {
         $value = ( array_key_exists(strval($value), $this->translate_string_values) ) ? $this->translate_string_values[$value] : $value;
-        if ( $this->_validate_param_value($param, $value) ) {
-            if ( strpos($param, '__') ) {
-                $parts = split('__', $param);
-                $last_part = end($parts);
-                $a = &$this->config;
-                foreach ($parts as $part) {
-                    if ( $part == $last_part ) {
-                        $a[$part] = $value;
-                    } else {
-                        if ( !array_key_exists($part, $a) ) {
-                            $a[$part] = array();
-                        }
-                        $a = &$a[$part];
+        // if ( $this->_validate_param_value($param, $value) ) {
+        if ( strpos($param, '__') ) {
+            $parts = split('__', $param);
+            $last_part = end($parts);
+            $a = &$this->config;
+            foreach ($parts as $part) {
+                if ( $part == $last_part ) {
+                    $a[$part] = $value;
+                } else {
+                    if ( !array_key_exists($part, $a) ) {
+                        $a[$part] = array();
                     }
+                    $a = &$a[$part];
                 }
-            } else {
-                $this->config[$param] = $value;
             }
-            return true;
+        } else {
+            $this->config[$param] = $value;
         }
-        return false;
+        return true;
+        // }
+        // return false;
     }
 
     private function _tracking_code($id) {
@@ -186,34 +186,7 @@ class JWP6_Player {
         $tracking_url = JWP6_Plugin::$ping_image;
         $tracking_url.= "?e=features&s=" . urlencode(add_query_arg($wp->query_string, '', home_url($wp->request)));
         $tracking_url.= "&" . http_build_query($this->get_config());
-        $javascript = '';
-        if ($id == 0) {
-            $javascript .= "
-
-                function jwp6AddLoadEvent(func) {
-                    var oldonload = window.onload;
-                    if (typeof window.onload != 'function') {
-                        window.onload = func;
-                    } else {
-                        window.onload = function() {
-                            if (oldonload) {
-                                oldonload();
-                            }
-                            func();
-                        }
-                    }
-                }
-            ";
-        }
-        $javascript .= "
-            function ping{$id}() {
-                var ping = new Image();
-                ping.src = '{$tracking_url}';
-            }
-
-            jwp6AddLoadEvent(ping{$id});
-        ";
-        return $javascript;
+        return "function ping{$id}() { var ping = new Image(); ping.src = '{$tracking_url}'; } jwp6AddLoadEvent(ping{$id});\n";
     }
 
     private function _add_if_default_value($param, $value) {
@@ -263,10 +236,9 @@ class JWP6_Player {
             $new_parents[] = $param;
             if ( is_array($value) ) {
                 if ( $this->_add_child_embedcode_params($value, $new_parents) ) {
-                    $embedcode .= str_repeat("\t", count($parents));
-                    $embedcode .= "'{$param}': {\n";
+                    $embedcode .= "'{$param}': { ";
                     $embedcode .= $this->_add_embedcode_params($value, $new_parents);
-                    $embedcode .= ( $last_param == $param && count($parents) ) ? "}\n" : "},\n";
+                    $embedcode .= ( $last_param == $param && count($parents) ) ? "} " : "}, ";
                 }
             } else {
                 $check_param = ( count($parents) ) ? implode('__', $new_parents) : $param;
@@ -291,9 +263,8 @@ class JWP6_Player {
                     }
                     // Print the value.
                     if ( ! is_null($stringval) ) {
-                        $embedcode .= str_repeat("\t", count($parents));
                         $embedcode .= "'{$param}': {$stringval}";
-                        $embedcode .= ( $last_param == $param && count($parents) ) ? "\n" : ",\n";
+                        $embedcode .= ( $last_param == $param && count($parents) ) ? " " : ", ";
                     }
                 }
             }
@@ -302,7 +273,6 @@ class JWP6_Player {
     }
 
     public function embedcode($id, $file = null, $playlist=null, $image = null, $config = null) {
-
         // overwrite existing config with additional config from shortcode.
         if ( ! is_null($config) ) {
             foreach ($config as $param => $value) {
@@ -310,31 +280,23 @@ class JWP6_Player {
             }
         }
         unset($this->config['description']);
-        //$image = ( is_null($image) ) ? JWP6_Plugin::default_image_url() : $image;
-        $embedcode = "
-            <div class='jwplayer' id='jwplayer-{$id}'></div>
-            <script type='text/javascript'>
-        ";
+        $embedcode = "<div class='jwplayer' id='jwplayer-{$id}'></div>";
+        $embedcode .= "<script type='text/javascript'>";
         if ( get_option(JWP6 . 'allow_anonymous_tracking') ) { 
             $embedcode .= $this->_tracking_code($id);
         }
-        $embedcode .= "
-            jwplayer('jwplayer-{$id}').setup({
-        ";
+        $embedcode .= "jwplayer('jwplayer-{$id}').setup({";
         $embedcode .= $this->_add_embedcode_params($this->config);
         if ( ! is_null($image) ) {
-            $embedcode .= "'image': '{$image}',\n";
+            $embedcode .= "'image': '{$image}', ";
         }
         if ( ! is_null($file) && is_null($playlist) ) {
-            $embedcode .= "'file': '{$file}'\n";
+            $embedcode .= "'file': '{$file}' ";
         }
         if ( ! is_null($playlist) ) {
-            $embedcode .= "'playlist': {$playlist}\n";
+            $embedcode .= "'playlist': {$playlist} ";
         }
-        $embedcode .= "
-                });
-            </script>
-        ";
+        $embedcode .= "});</script>";
         return $embedcode;
     }
 
