@@ -131,7 +131,7 @@ class JWP6_Player {
     // Properties
     public function get($param) {
         if ( strpos($param, '__') ) {
-            $parts = split('__', $param);
+            $parts = explode('__', $param);
             $last_part = end($parts);
             $a = $this->config;
             foreach ($parts as $part) {
@@ -156,10 +156,11 @@ class JWP6_Player {
     }
 
     public function set($param, $value = NULL) {
+        if ( ! $param ) return false;
         $value = ( array_key_exists(strval($value), $this->translate_string_values) ) ? $this->translate_string_values[$value] : $value;
         // if ( $this->_validate_param_value($param, $value) ) {
         if ( strpos($param, '__') ) {
-            $parts = split('__', $param);
+            $parts = explode('__', $param);
             $last_part = end($parts);
             $a = &$this->config;
             foreach ($parts as $part) {
@@ -189,114 +190,82 @@ class JWP6_Player {
         return "function ping{$id}() { var ping = new Image(); ping.src = '{$tracking_url}'; } jwp6AddLoadEvent(ping{$id});\n";
     }
 
-    private function _add_if_default_value($param, $value) {
-        if (
-            array_key_exists($param, JWP6_Plugin::$player_options)
-            &&
-            array_key_exists("default", JWP6_Plugin::$player_options[$param]) 
-            &&
-            array_key_exists("discard_if_default", JWP6_Plugin::$player_options[$param]) 
-            && 
-            JWP6_Plugin::$player_options[$param]["discard_if_default"]
-        ) {
-            if ( $value == JWP6_Plugin::$player_options[$param]['default'] ) {
-                return false;
-            }
-        }
-        return true;
-    }
 
-    // Check if the child and parent will be included in the embedcode
-    private function _add_child_embedcode_params($params, $parents = array()) {
-        $parent = implode('__', $parents);
-        if ( ! JWP6_Plugin::option_available($parent) ) {
-            return false;
-        }
-        if ( 
-            $parent && 
-            array_key_exists($parent, JWP6_Plugin::$player_options) && 
-            array_key_exists('not_if', JWP6_Plugin::$player_options[$parent])
-        ) {
-            $not_if = JWP6_Plugin::$player_options[$parent]['not_if'];
-            foreach ($not_if as $param => $value) {
-                if ( ! array_key_exists($param, $params) || $value == $params[$param] ) {
-                    return false;
-                }
-            }
-        }
-        return true;
-    }
-
-    private function _add_embedcode_params($params, $parents = array()) {
-        $embedcode = "";
+    private function _embed_params($params = null, $parent = null) {
         $po = JWP6_Plugin::$player_options;
-        $last_param = end(array_keys($params));
+        if ( is_null($params) ) {
+            $params = $this->config;
+            unset($params['description']);
+        }
+        $new_params = array();
         foreach ($params as $param => $value) {
-            $new_parents = $parents;
-            $new_parents[] = $param;
+            if ( !$param ) continue;
+            $check_param = ( is_null($parent) ) ? $param : $parent . "__" . $param;
+            // If the value is an array, we recurse into a deeper level
             if ( is_array($value) ) {
-                if ( $this->_add_child_embedcode_params($value, $new_parents) ) {
-                    $embedcode .= "'{$param}': { ";
-                    $embedcode .= $this->_add_embedcode_params($value, $new_parents);
-                    $embedcode .= ( $last_param == $param && count($parents) ) ? "} " : "}, ";
+                $new_value = $this->_embed_params($value, $check_param);
+                if ( is_array($new_value) && count($new_value) ) {
+                    $new_params[$param] = $new_value;
                 }
+            // Check if this param has a value that should exclude it's complete parent.
+            } else if ( $parent && isset($po[$parent]['not_if'][$param]) && $value == $po[$parent]['not_if'][$param] ) {
+                return null;
+            // if the param exists in the player options, it's a built-in option and we can
+            // perform additional checks
+            } else if ( array_key_exists($check_param, JWP6_Plugin::$player_options) ) {
+                // Check to see if the option is available for this license.
+                if ( JWP6_Plugin::option_available($check_param) ) {
+                    $check_for_default = ( isset($po[$check_param]['discard_if_default']) && $po[$check_param]['discard_if_default'] ) ? true : false;
+                    if ( !$check_for_default && $value != $po[$check_param]['default'] ) {
+                        if ( true === $value && isset($po[$check_param]['embedval']) ) $value = $po[$check_param]['embedval'];
+                        $new_params[$param] = $value;
+                    }
+                }
+            // no further checking the param was set by the user and we assume he/she
+            // knows what he/she is doing.
             } else {
-                $check_param = ( count($parents) ) ? implode('__', $new_parents) : $param;
-                if ( JWP6_Plugin::option_available($check_param) && $this->_add_if_default_value($check_param, $value) ) {
-                    $stringval = null;
-                    // See if it's a toggle.
-                    if ( is_bool($value) ) {
-                        if ( array_key_exists($check_param, $po) && array_key_exists('stringval', $po[$check_param])
-                        ) {
-                            $stringval = ( true == $value ) ? $po[$check_param]['stringval'] : null;
-                        }
-                        else {
-                            $stringval = ( true == $value ) ? 'true' : 'false';
-                        }
-                    }
-                    // an integer
-                    else if ( is_int( $value ) ) {
-                        $stringval = $value;
-                    }
-                    else {
-                        $stringval = "'" . str_replace("'", "\'", $value) . "'";
-                    }
-                    // Print the value.
-                    if ( ! is_null($stringval) ) {
-                        $embedcode .= "'{$param}': {$stringval}";
-                        $embedcode .= ( $last_param == $param && count($parents) ) ? " " : ", ";
-                    }
-                }
+                $new_params[$param] = $value;
             }
         }
-        return $embedcode;
+        return $new_params;
     }
 
     public function embedcode($id, $file = null, $playlist=null, $image = null, $config = null) {
-        // overwrite existing config with additional config from shortcode.
         if ( ! is_null($config) ) {
             foreach ($config as $param => $value) {
                 $this->set($param, $value);
             }
         }
-        unset($this->config['description']);
+
+        $params = $this->_embed_params();
+        
+        if ( $image ) {
+            $params['image'] = $image;
+        }
+        if ( $file && ! $playlist ) {
+            if ( $this->get('streamer') ) {
+                $file = $this->get('streamer') . $file;
+            }
+            if ( "/" == substr($file, 0, 1) ) {
+                $protocol = ( is_ssl() ) ? "https://" : "http://";
+                $file = $protocol . $_SERVER['SERVER_NAME'] . $file;
+            }
+            $params['file'] = $file;
+        } else if ( $playlist ) {
+            $params['playlist'] = $playlist;
+        }
+
         $embedcode = "<div class='jwplayer' id='jwplayer-{$id}'></div>";
+
+        $embedcode .= "<pre>" . json_encode($params) . "</pre>";
+
         $embedcode .= "<script type='text/javascript'>";
         if ( get_option(JWP6 . 'allow_anonymous_tracking') ) { 
             $embedcode .= $this->_tracking_code($id);
         }
-        $embedcode .= "jwplayer('jwplayer-{$id}').setup({";
-        $embedcode .= $this->_add_embedcode_params($this->config);
-        if ( ! is_null($image) ) {
-            $embedcode .= "'image': '{$image}', ";
-        }
-        if ( ! is_null($file) && is_null($playlist) ) {
-            $embedcode .= "'file': '{$file}' ";
-        }
-        if ( ! is_null($playlist) ) {
-            $embedcode .= "'playlist': {$playlist} ";
-        }
-        $embedcode .= "});</script>";
+        $embedcode .= "jwplayer('jwplayer-{$id}').setup(" . json_encode($params) . ");\n";
+        $embedcode .= "</script>";
+
         return $embedcode;
     }
 

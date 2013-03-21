@@ -144,7 +144,7 @@ class JWP6_Media {
 
     public function playlist_name_with_info($playlist){
         $videosstring = get_post_meta($playlist->ID, LONGTAIL_KEY . "playlist_items", true);
-        $videosarray = split(',', $videosstring);
+        $videosarray = explode(',', $videosstring);
         $videoscount = count($videosarray);
         if ( 1 === $videoscount ) {
             return $playlist->post_title . " ($videoscount video)";
@@ -181,7 +181,7 @@ class JWP6_Media {
         );
         $image_attachments = get_posts($image_args);
         $mime_type = substr($post->post_mime_type, 0, 5);
-        if ( 'video' == $mime_type ) {
+        if ( 'video' == $mime_type || 'audio' == $mime_type ) {
             $poster_html = JWP6_Media::thumb_select_html($post->ID, $image_attachments);
             if ( ! isset($_REQUEST["post_id"]) ) {
                 $poster_html .= JWP6_Media::insert_javascript_for_attachment_fields($post);

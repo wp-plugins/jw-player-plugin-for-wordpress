@@ -41,6 +41,7 @@ class JWP6_Legacy {
             'default' => 'true',
             'options' => array(
                 'none' => 'false',
+                'list' => 'false',
             ),
         ),
 
@@ -79,6 +80,9 @@ class JWP6_Legacy {
             'default' => 'true',
             'options' => array(),
         ),
+
+        'streamer' => false,
+
     );
 
     static $additional_options = array(
@@ -133,8 +137,8 @@ class JWP6_Legacy {
     }
 
     static function skin_name_from_path($path) {
-        $path = split('skins/', $path);
-        $path = split('\.', $path[1]);
+        $path = explode('skins/', $path);
+        $path = explode('.', $path[1]);
         return $path[0];
     }
 

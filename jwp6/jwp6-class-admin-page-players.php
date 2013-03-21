@@ -102,10 +102,20 @@ class JWP6_Admin_Page_Players extends JWP6_Admin_Page {
 
     private function _init_edit_page() {
         // Basic settings
+        $cannot_edit = false;
         if ( $this->imported_players && array_key_exists($this->player->get('description'), $this->imported_players) ) {
-            $description_field = false;
+            $cannot_edit = 'You cannot edit the description of this player, because this is an imported JW5 player configuration and the description is used to map your old shortcodes to this player.';
         } else if ( ! $this->player->get_id() ) {
-            $description_field = false;
+            $cannot_edit = 'You cannot edit the description of the default editor.';
+        }
+        if ( $cannot_edit ) {
+            $description_field = new JWP6_Form_Field_Uneditable(
+                'description',
+                array(
+                    'value' => $this->player->get('description'),
+                    'why_not' => $cannot_edit,
+                )
+            );
         } else {
             $description_field = new JWP6_Form_Field(
                 'description',
@@ -398,6 +408,16 @@ class JWP6_Admin_Page_Players extends JWP6_Admin_Page {
                 'sharing_field' => $sharing_field,
             );
 
+        }
+
+        if ( $this->player->get('streamer') ) {
+            $this->other_settings_fields['streamer_field'] = new JWP6_Form_Field_Uneditable(
+                'streamer',
+                array(
+                    'value' => $this->player->get('streamer'),
+                    'why_not' => "This is an imported JW Player 5 that had a custom streamer setting. JW player 6 only supports this setting as a legacy setting.",
+                )
+            );
         }
 
 

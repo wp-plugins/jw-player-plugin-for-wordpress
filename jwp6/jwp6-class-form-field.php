@@ -58,7 +58,7 @@ class JWP6_Form_Field {
     }
 
     public function nice_name() {
-        $name = ( strpos($this->name,'__') ) ? end(split('__', $this->name)) : $this->name;
+        $name = ( strpos($this->name,'__') ) ? end(explode('__', $this->name)) : $this->name;
         return ucwords( str_replace( '_', ' ', $name ) );
     }
 
@@ -98,11 +98,32 @@ class JWP6_Form_Field {
         echo '<label for="' . esc_attr($this->name) . '">' . $this->label . "</label>\n";
     }
 
-    protected function render_help() {
+    public function render_help() {
+        echo '<p class="description">' . $this->help_text . '</p>';
         if ( $this->error ) {
             echo '<p class="description error">' . $this->error_help . '</p>';
         }
         echo '<p class="description">' . $this->help_text . '</p>';
+    }
+
+}
+
+class JWP6_Form_Field_Uneditable extends JWP6_Form_Field {
+
+    public $why_not = 'You cannot edit the value for this setting.';
+
+    public function render_field($value = '') {
+        echo "<strong>{$this->value}</strong>";
+        if ( $this->unit ) echo "<span class='unit'>{$this->unit}</span>";
+        if ( $this->why_not ) echo '<p class="description">' . $this->why_not . '</p>';
+    }
+
+    public function save() {
+        // does nothing, it's uneditable...
+    }
+
+    public function validate() {
+        return true;
     }
 
 }

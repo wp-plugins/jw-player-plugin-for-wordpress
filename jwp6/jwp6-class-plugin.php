@@ -61,7 +61,7 @@ class JWP6_Plugin {
                 'stormtrooper' => 'Stormtrooper',
                 'vapor' => 'Vapor',
             ),
-            'default' => 'NULL',
+            'default' => null,
             'discard_if_default' => true,
             'licenses' => array('premium', 'ads'),
         ),
@@ -92,7 +92,7 @@ class JWP6_Plugin {
             'options' => array('html5', 'flash'),
             'default' => 'flash',
             'help_text' => 'Which rendering mode to try first for rendering the player.',
-            //'discard_if_default' => true,
+            'discard_if_default' => false,
         ),
         'repeat' => array(
             'options' => false,
@@ -113,7 +113,7 @@ class JWP6_Plugin {
                 'right' => 'Show listbar to the right of the player',
             ),
             'default' => 'none',
-            // 'discard_if_default' => true,
+            'discard_if_default' => false,
             'help_text' => 'Position of the listbar relative to the video display. You can choose no listbar, a listbar below the display, to the right of the display.'
         ),
         'listbar__size' => array(
@@ -139,7 +139,7 @@ class JWP6_Plugin {
             'default' => false,
             'help_text' => 'By default (false), the logo remains visible all the time. When this option is set to true, the logo will automatically show and hide along with the other player controls',
             'text' => 'Hide logo during playback.',
-            // 'discard_if_default' => true,
+            'discard_if_default' => false,
         ),
         'logo__link' => array(
             'licenses' => array('pro', 'premium', 'ads'),
@@ -183,7 +183,7 @@ class JWP6_Plugin {
             'options' => false,
             'default' => false,
             'discard_if_default' => true,
-            'stringval' => '{}',
+            //'embedval' => json_decode("{}"),
             'text' => 'Enable google analytics for JW Player.',
             'help_text' => 'Please note that in order for Google Analytics to work you to have it installed in your Wordpress install.',
         ),
@@ -194,7 +194,7 @@ class JWP6_Plugin {
             'licenses' => array('premium', 'ads'),
             'options' => false,
             'default' => false,
-            'stringval' => '{}',
+            //'embedval' => json_decode("{}"),
             'discard_if_default' => true,
             'text' => 'Enable sharing for this player.',
             'help_text' => 'When enabled the player will display sharing options which will link to the current page.',
@@ -204,7 +204,7 @@ class JWP6_Plugin {
 
         'advertising' => array (
             'licenses' => array('ads'),
-            'not_if' => array('client' => 'NULL'),
+            'not_if' => array('client' => null),
         ),
 
         'advertising__client' => array(
@@ -214,7 +214,7 @@ class JWP6_Plugin {
                 'vast' => 'Video Ad Serving Template (VAST)',
                 'googima' => 'Google Interactive Media Ads (IMA)',
             ),
-            'default' => 'NULL',
+            'default' => null,
             'discard_if_default' => true,
         ),
 
@@ -223,6 +223,12 @@ class JWP6_Plugin {
             'default' => '',
             'discard_if_default' => true,
             'help_text' => 'This tag will automatically get scheduled as a pre-roll tag to your main video.',
+        ),
+
+        // Deprecated but supported for backwards compatibility
+        'streamer' => array(
+            'default' => '',
+            'discard_if_default' => true,
         ),
 
     );
@@ -286,8 +292,7 @@ class JWP6_Plugin {
         return get_option('siteurl') . '/' . 'index.php?jwp6=rss&id=' . $id;
     }
 
-    public static function playlist_output($id) {
-        $output = null;
+    public static function playlist_object($id) {
         $playlist = get_post($id);
         if ($playlist) {
           $playlist_items = explode(",", get_post_meta($id, LONGTAIL_KEY . "playlist_items", true));
@@ -297,22 +302,21 @@ class JWP6_Plugin {
             foreach ($playlist_items as $playlist_item_id) {
                 $playlist_item = get_post($playlist_item_id);
                 $thumbnail = JWP6_Plugin::image_from_mediaid($playlist_item_id);
-                $item = "{\n";
-                $item .= "\t'title': '" . esc_attr(stripslashes($playlist_item->post_title)) . "',\n";
+                $item = array(
+                    'title' => $playlist_item->post_title,
+                    'sources' => array(array('file' => JWP6_Plugin::url_from_post($playlist_item)),),
+                );
                 if ( $playlist_item->post_content ) {
-                    $item .= "\t'description': '" . esc_attr(stripslashes($playlist_item->post_content)) . "',\n";
+                    $item['description'] = $playlist_item->post_content;
                 }
                 if ( $thumbnail ) {
-                    $item .= "\t'image': '" . esc_attr($thumbnail) . "',\n";
+                    $item['image'] = $thumbnail;
                 }
-                $item .= "\t'sources': [{'file': '" . esc_attr(JWP6_Plugin::url_from_post($playlist_item)) . "'}]\n";
-
-                $item .= "}\n";
                 $items[] = $item;
             }
-            $output = '[' . implode(", ", $items) . "]";
+            return $items;
         }
-        return $output;
+        return null;
     }
 
     public static function default_image_url() {
@@ -362,8 +366,9 @@ class JWP6_Plugin {
                     return false;
                 }
             }
+            return true;
         }
-        return true;
+        return false;
     }
 
     public static function insert_license_key() {
