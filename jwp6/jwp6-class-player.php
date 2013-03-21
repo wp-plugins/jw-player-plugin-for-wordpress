@@ -263,7 +263,7 @@ class JWP6_Player {
         if ( get_option(JWP6 . 'allow_anonymous_tracking') ) { 
             $embedcode .= $this->_tracking_code($id);
         }
-        $embedcode .= "jwplayer('jwplayer-{$id}').setup(" . json_encode($params) . ");\n";
+        $embedcode .= "jwplayer('jwplayer-{$id}').setup(" . str_replace("&amp;", "&", json_encode($params)) . ");\n";
         $embedcode .= "</script>";
 
         return $embedcode;
