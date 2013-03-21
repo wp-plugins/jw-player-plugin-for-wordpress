@@ -4,7 +4,7 @@
 Contributors: LongTail Video Inc.
 Tags: JW Player, Video, Flash, LongTail Video, Playlists, Audio, HTML5, iPad, iPhone, iPod, Mobile
 Requires at least: 3.0
-Tested up to: 3.5.0
+Tested up to: 3.5.1
 Stable tag: 2.0.3
 
 The JW Player WordPress Plugin enables you to embed Flash and HTML5 audio and video, plus RTMP and YouTube streams, on your site using JW Player 6.
