@@ -216,8 +216,8 @@ class JWP6_Player {
                 // Check to see if the option is available for this license.
                 if ( JWP6_Plugin::option_available($check_param) ) {
                     $check_for_default = ( isset($po[$check_param]['discard_if_default']) && $po[$check_param]['discard_if_default'] ) ? true : false;
-                    if ( !$check_for_default && $value != $po[$check_param]['default'] ) {
-                        if ( true === $value && isset($po[$check_param]['embedval']) ) $value = $po[$check_param]['embedval'];
+                    if ( !$check_for_default || $value != $po[$check_param]['default'] ) {
+                        if ( true === $value && isset($po[$check_param]['embedval']) ) $value = json_decode($po[$check_param]['embedval']);
                         $new_params[$param] = $value;
                     }
                 }
@@ -257,7 +257,7 @@ class JWP6_Player {
 
         $embedcode = "<div class='jwplayer' id='jwplayer-{$id}'></div>";
 
-        $embedcode .= "<pre>" . json_encode($params) . "</pre>";
+        // $embedcode .= "<pre>" . json_encode($params) . "</pre>";
 
         $embedcode .= "<script type='text/javascript'>";
         if ( get_option(JWP6 . 'allow_anonymous_tracking') ) { 
