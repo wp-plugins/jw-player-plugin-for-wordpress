@@ -84,7 +84,7 @@ Additionally, all the embedding, skinning and scripting functionalities of JW Pl
 = 2.0.3 =
 
 * BUG: Fixed issue with relative video file paths
-* BUG: Fixed issue with <p> tags
+* BUG: Fixed issue with &lt;p&gt; tags
 * BUG: Fixed problem with nested player configuration parameters
 * BUG: Fixed issue with description in playlists
 * BUG: Fixed audio insert with JW Player button
