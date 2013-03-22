@@ -99,7 +99,6 @@ class JWP6_Form_Field {
     }
 
     public function render_help() {
-        echo '<p class="description">' . $this->help_text . '</p>';
         if ( $this->error ) {
             echo '<p class="description error">' . $this->error_help . '</p>';
         }

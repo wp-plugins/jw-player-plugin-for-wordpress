@@ -5,7 +5,9 @@ Contributors: LongTail Video Inc.
 Tags: JW Player, Video, Flash, LongTail Video, Playlists, Audio, HTML5, iPad, iPhone, iPod, Mobile
 Requires at least: 3.0
 Tested up to: 3.5.1
-Stable tag: 2.0.4
+Stable tag: 2.0.5
+License: GPLv2 or later
+License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
 The JW Player WordPress Plugin enables you to embed Flash and HTML5 audio and video, plus RTMP and YouTube streams, on your site using JW Player 6.
 
@@ -55,16 +57,26 @@ Before installing the JW Player plugin, please ensure your WordPress installatio
 
 Alternatively, you can install the plugin right from your <em>WordPress admin dashboard</em>.  Simply search for <strong>JW Player</strong> in the plugin section of the admin.  WordPress will download and install the plugin for you automatically.
 
+<strong>Getting Started</strong>
 
-<strong>Upgrading</strong>
+See <a href='http://www.longtailvideo.com/support/jw-player/31561/getting-started-with-the-jw-player-wordpress-plugin' target='_blank'>Getting Started the JW Player WordPress Plugin</a> for directions on getting your first video live.
+
+== Upgrade Notice ==
 
 If you previously installed the JW Player WordPress 1.x plugin and are interested in migrating from JW Player 5 to JW Player 6, please see our < href='http://www.longtailvideo.com/support/jw-player/29912/upgrading-wordpress-from-jw5-to-jw6' target='_blank'>Upgrading WordPress from JW5 to JW6</a> guide. It contains a list of all features that were added/removed, as well as a step­by­step walkthrough of the upgrade.
 
 If you cannot perform the automatic update, download the plugin and upload, or FTP the plugin to the plugins folder directly.
 
-<strong>Getting Started</strong>
+== Known Issues ==
 
-See <a href='http://www.longtailvideo.com/support/jw-player/31561/getting-started-with-the-jw-player-wordpress-plugin' target='_blank'>Getting Started the JW Player WordPress Plugin</a> for directions on getting your first video live.
+<strong>Wordpress Plugin Issues</strong>
+
+* The fitVids javascript library that is used to make some themes responsive is not compatible with JW Player 6.
+* Version 2.0.x of this does not yet support multiple languages.
+
+<strong>Player Issues</strong>
+
+Please look at our <a href="http://developer.longtailvideo.com/">developer site</a> for <a href="http://developer.longtailvideo.com/trac/report/3">a list of known issues and future enhancements of the JW Player</a>.
 
 == Full Reference ==
 
@@ -79,11 +91,22 @@ See the <a href='http://www.longtailvideo.com/support/jw-player/31560/jw-player-
 
 Additionally, all the embedding, skinning and scripting functionalities of JW Player are at your disposal thrugh this plugin. See our <a href='http://www.longtailvideo.com/support/jw-player/' target='_blank'>JW Player Support Overview</a> for a full reference of JW Player.
 
+== Screenshots ==
+
+1. The plugin integrates with the Wordpress Media Manager and the metadata you insert is can be used by the player.
+2. You can add as many different player configurations as you like. One for the feature on your homepage, another with playlists and so on.
+3. Control almost every aspect of your player right within Wordpress.
+
 == Changelog ==
+
+= 2.0.5 =
+
+* BUG: Quick fix of help text being diplayed twice.
+* ENHANCEMENT: Added screenshots and updated readme.
 
 = 2.0.4 =
 
-* BUG: Quick fix of issue with ampersands in external urls.
+* BUG: Quick fix of issue with ampersands in file urls.
 * BUG: Quick fix of issue with inserting images via the media library.
 
 = 2.0.3 =

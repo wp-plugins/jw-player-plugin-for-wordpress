@@ -250,6 +250,8 @@ class JWP6_Player {
                 $protocol = ( is_ssl() ) ? "https://" : "http://";
                 $file = $protocol . $_SERVER['SERVER_NAME'] . $file;
             }
+            // Comment out the line below if you are using relative urls to the page (officially not supported)
+            // if ( ! strpos($file, "://") ) $file = site_url() . "/" . $file;
             $params['file'] = $file;
         } else if ( $playlist ) {
             $params['playlist'] = $playlist;
