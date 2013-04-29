@@ -238,6 +238,28 @@ class JWP6_Player {
         }
 
         $params = $this->_embed_params();
+
+        // Support of tracks and sources.
+        foreach (array('sources', 'tracks') as $option) {
+            if ( isset($params[$option]) ) {
+                $json = '[' . $params[$option] . ']';
+                $obj = json_decode(preg_replace('/[{, ]{1}(\w+):/i', '"\1":', $json));
+                if ( null == $obj ) {
+                    $json = str_replace(array('"',  "'"), array('\"', '"'), $json);
+                    $obj = json_decode(preg_replace('/[{, ]{1}(\w+):/i', '"\1":', $json));
+                }
+                $params[$option] = $obj;
+            }
+        }
+        
+        // Figure out the size of the player.
+        $aspectratio = $this->get('aspectratio');
+        if ( $aspectratio && 'NULL' != $aspectratio ) {
+            unset($params['height']);
+            $params['width'] = "100%";
+        } else if ( $aspectratio ) {
+            unset($params['aspectratio']);
+        }
         
         if ( $image ) {
             $params['image'] = $image;
@@ -257,15 +279,19 @@ class JWP6_Player {
             $params['playlist'] = $playlist;
         }
 
+        $paramstring = str_replace("\\/", "/", str_replace("&amp;", "&", json_encode($params)));
+
         $embedcode = "<div class='jwplayer' id='jwplayer-{$id}'></div>";
-
-        // $embedcode .= "<pre>" . json_encode($params) . "</pre>";
-
         $embedcode .= "<script type='text/javascript'>";
-        if ( get_option(JWP6 . 'allow_anonymous_tracking') ) { 
-            $embedcode .= $this->_tracking_code($id);
+        if ( JWP6_DISABLE_FITVIDS ) {
+            // Redeclare fitVids to stop it from breaking the JW Player embedding.
+            $embedcode .= 'if(typeof(jQuery)=="function"){(function($){$.fn.fitVids=function(){}})(jQuery)};';
         }
-        $embedcode .= "jwplayer('jwplayer-{$id}').setup(" . str_replace("&amp;", "&", json_encode($params)) . ");\n";
+        // Anonymous tracking has been disabled until further notice
+        // if ( get_option(JWP6 . 'allow_anonymous_tracking') ) { 
+        //     $embedcode .= $this->_tracking_code($id);
+        // }
+        $embedcode .= "jwplayer('jwplayer-{$id}').setup(" . $paramstring . ");\n";
         $embedcode .= "</script>";
 
         return $embedcode;

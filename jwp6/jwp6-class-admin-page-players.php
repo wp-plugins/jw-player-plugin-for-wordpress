@@ -127,22 +127,38 @@ class JWP6_Admin_Page_Players extends JWP6_Admin_Page {
                 )
             );
         }
+
+        $aspectratio_field = new JWP6_Form_Field_Select(
+            'aspectratio',
+            array(
+                'label' => 'Player Size',
+                'value' => $this->player->get('aspectratio'),
+                'options' => JWP6_Plugin::$player_options['aspectratio']['options'],
+                'default' => JWP6_Plugin::$player_options['aspectratio']['default'],
+                'help_text' => JWP6_Plugin::$player_options['aspectratio']['help_text'],
+            )
+        );
+
         $width_field = new JWP6_Form_Field(
             'width',
             array(
+                'label' => 'Fixed width',
                 'value' => $this->player->get('width'),
                 'validation' => array('JWP6_Plugin', 'validate_int'),
                 'unit' => 'pixels wide.',
                 'class' => 'small right',
+                'only_if' => array('aspectratio' => 'NULL'),
             )
         );
         $height_field = new JWP6_Form_Field(
             'height',
             array(
+                'label' => 'Fixed height',
                 'value' => $this->player->get('height'),
                 'validation' => array('JWP6_Plugin', 'validate_int'),
                 'unit' => 'pixels high.',
                 'class' => 'small right',
+                'only_if' => array('aspectratio' => 'NULL'),
             )
         );
 
@@ -307,31 +323,6 @@ class JWP6_Admin_Page_Players extends JWP6_Admin_Page {
                 )
             );
 
-            // RIGHCLICK
-            // $abouttext_field = new JWP6_Form_Field(
-            //     'abouttext',
-            //     array(
-            //         'value' => $this->player->get('abouttext'),
-            //         'label' => 'Text in rightclick menu',
-            //         'validation' => "sanitize_text_field",
-            //         'placeholder'  => "URL you want the right-click to link to.",
-            //         'class' => 'wide',
-            //         'help_text' => JWP6_Plugin::$player_options['abouttext']['help_text'],
-            //     )
-            // );
-
-            // $aboutlink_field = new JWP6_Form_Field(
-            //     'aboutlink',
-            //     array(
-            //         'value' => $this->player->get('aboutlink'),
-            //         'label' => 'Link',
-            //         'validation' => array('JWP6_Plugin', 'validate_empty_or_url'),
-            //         'placeholder'  => "URL you want the right-click to link to.",
-            //         'class' => 'wide',
-            //         'help_text' => JWP6_Plugin::$player_options['aboutlink']['help_text'],
-            //     )
-            // );
-
             // FIELDSETS
 
             $this->logo_settings_fields = array(
@@ -341,11 +332,6 @@ class JWP6_Admin_Page_Players extends JWP6_Admin_Page {
                 'logo_margin_field' => $logo_margin_field,
                 'logo_position_field' => $logo_position_field,
             );
-
-            // $this->rightclick_settings_fields = array(
-            //     'abouttext_field' => $abouttext_field,
-            //     'aboutlink_field' => $aboutlink_field,
-            // );
 
         }
 
@@ -420,9 +406,9 @@ class JWP6_Admin_Page_Players extends JWP6_Admin_Page {
             );
         }
 
-
         $this->basic_settings_fields = array(
             'description_field' => $description_field,
+            'aspectratio_field' => $aspectratio_field,
             'width_field' => $width_field,
             'height_field' => $height_field
         );
@@ -483,6 +469,22 @@ class JWP6_Admin_Page_Players extends JWP6_Admin_Page {
         <div class="backlink">
             <a href="<?php echo $this->page_url(); ?>">← Back to the player overview</a>
         </div>
+        <script type="text/javascript">
+        jQuery(function () {
+            var $ = jQuery;
+            function check_aspect_ratio() {
+                if ( 'NULL' == $('#id_aspectratio').val() ) {
+                    $('#width_row, #height_row').show();
+                } else {
+                    $('#width_row, #height_row').hide();
+                }
+            }
+            $('#id_aspectratio').bind('change', function() {
+                check_aspect_ratio();
+            });
+            check_aspect_ratio();
+        });
+        </script>
         <?php
         $this->render_all_messages();
         ?>
@@ -516,13 +518,6 @@ class JWP6_Admin_Page_Players extends JWP6_Admin_Page {
                 <?php foreach ($this->logo_settings_fields as $field) { $this->render_form_row($field); } ?>
             </table>
             <?php endif; ?>
-
-            <?php /*if ( isset($this->rightclick_settings_fields) ): ?>
-            <h3>Rightclick Settings</h3>
-            <table class="form-table">
-                <?php foreach ($this->rightclick_settings_fields as $field) { $this->render_form_row($field); } ?>
-            </table>
-            <?php endif; */?>
 
             <?php if ( isset($this->advertising_fields) ): ?>
             <h3>Advertising</h3>
@@ -604,6 +599,11 @@ class JWP6_Admin_Page_Players extends JWP6_Admin_Page {
         } else {
             $description = "<em>no description</em>";
         }
+        if ( 'NULL' == $player->get('aspectratio') || null === $player->get('aspectratio') ) {
+            $player_size = $player->get('width') . " x " . $player->get('height');
+        } else {
+            $player_size = "Responsive (" . $player->get('aspectratio') . ")";
+        }
         ?>
         <tr valign="middle">
             <td align="center">
@@ -612,7 +612,7 @@ class JWP6_Admin_Page_Players extends JWP6_Admin_Page {
                 </strong>
             </td>
             <td><?php echo $description; ?></td>
-            <td><?php echo $player->get('width'); ?> x <?php echo $player->get('height'); ?></td>
+            <td><?php echo $player_size; ?></td>
             <td><?php echo $player->get('primary'); ?></td>
             <td><a href="<?php echo $player->admin_url($this, 'edit'); ?>" class="button jwp6_edit">Edit</a></td>
             <td><a href="<?php echo $player->admin_url($this, 'copy'); ?>" class="button jwp6_copy">Copy</a></td>

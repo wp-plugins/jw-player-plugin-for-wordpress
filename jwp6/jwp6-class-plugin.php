@@ -3,11 +3,11 @@
 // Utility class that holds accessible settings and methods.
 class JWP6_Plugin {
 
-    public static $player_version = '6.2';
+    public static $player_version = '6.4';
 
-    public static $cdn_http_player = 'http://p.jwpcdn.com/6/2/jwplayer.js';
+    public static $cdn_http_player = 'http://p.jwpcdn.com/6/4/jwplayer.js';
 
-    public static $cdn_https_player = 'https://ssl.p.jwpcdn.com/6/2/jwplayer.js';
+    public static $cdn_https_player = 'https://ssl.p.jwpcdn.com/6/4/jwplayer.js';
 
     public static $default_image = 'img/default-image.png';
 
@@ -30,6 +30,23 @@ class JWP6_Plugin {
     );
 
     public static $player_options = array(
+        // BASIC SETTINGS
+        'aspectratio' => array(
+            'options' => array(
+                'NULL' => 'Fixed size (not responsive).',
+                '16:9' => 'Responsive 16:9 - Wide screen TV',
+                '8:5' => 'Responsive 16:10 - Monitor screens',
+                '4:3' => 'Responsive 4:3 - Classic TV',
+                '3:2' => 'Responsive 3:2 - Photo camera',
+                '1:1' => 'Responsive 1:1 - Square',
+                '2.4:1' => 'Responsive 2.4:1 - Cinemascope',
+                //'9:16' => 'Responsive 16:9 - Portrait video',
+            ),
+            'default' => 'NULL',
+            'discard_if_default' => true,
+            'help_text' => 'Use a fixed size to ensure your player always has the same size or choose a specific aspect ratio to make your player responsive. In this case the player will use the full width of its enclosing container/html element and scale its height according to the aspect ratio.',
+        ),
+
         // LAYOUT
         'controls' => array(
             'options' => false,
@@ -373,12 +390,11 @@ class JWP6_Plugin {
 
     public static function insert_license_key() {
         $key = get_option(JWP6 . 'license_key');
-        if ( $key ) {
-            ?>
-
-            <script type="text/javascript">jwplayer.key='<?php echo $key; ?>';</script>
-
-            <?php
+        if ($key || null === JWP6_PLAYER_LOCATION) {
+            echo '<script type="text/javascript">';
+            if ( $key ) echo "jwplayer.key='$key';";
+            if ( null === JWP6_PLAYER_LOCATION ) echo 'jwplayer.defaults = { "ph": 2 };';
+            echo '</script>';
         }
     }
 

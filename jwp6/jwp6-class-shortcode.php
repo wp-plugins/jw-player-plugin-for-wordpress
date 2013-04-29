@@ -70,9 +70,9 @@ class JWP6_Shortcode {
         foreach (array('mediaid', 'file', 'playlist', 'playlistid') as $param) {
             if ( ! is_null($this->media_params[$param]) ) $media_is_set = true;
         }
-        if ( ! $media_is_set ) {
-            exit('Error in shortcode. You need to specify at least mediaid, file, playlistid or playlist in the jwplayer shortcode.');
-        }
+        //if ( ! $media_is_set ) {
+        //    exit('Error in shortcode. You need to specify at least mediaid, file, playlistid or playlist in the jwplayer shortcode.');
+        //}
 
         // The other items in the shortcode can be 
         $this->config_params = $shortcode;
@@ -147,7 +147,6 @@ class JWP6_Shortcode {
 
         // If someone sets playlist and file, playlist has priority
         if ( $file_url && $playlist) unset($file_url); 
-
 
         // THUMBNAIL
         $image_url = null;

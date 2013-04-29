@@ -4,7 +4,7 @@
 Plugin Name: JW Player 6 Plugin for Wordpress
 Plugin URI: http://www.longtailvideo.com/
 Description: Embed a JW Player 6 for HTML5 (or Flash) into your WordPress articles. <strong>Please note</strong>: The part of this plugin that works with JW Player 6 is new and might not be as polished as the part for player 5. If you find bugs, please report them in <a href="http://www.longtailvideo.com/support/forums/addons/working-with-wordpress">the Wordpress section of our forum</a>.
-Version: 2.0.5
+Version: 2.1.0
 Author: LongTail Video Inc.
 Author URI: http://www.longtailvideo.com/
 
@@ -43,9 +43,19 @@ solves your problems ;)
 */
 define("JWP6_USE_CUSTOM_SHORTCODE_FILTER", true);
 
+/*
+FitVids.js is not compatible with the JW Player 6 because it breaks the way the player
+is embedded in the page. If you enable fitVids, the player will briefly show and 
+disappear immediately after. Patching fitVids would be the best solution, but because
+fitVids is included with so many themes and plugins, it would take a lot of time 
+before all of them were updated too. As a solution, this plugin disables the fitVids, 
+by redeclaring the function before a player embed. If you want to disable that because
+you've update the fitVids lib yourself, you can change the setting below to false.
+*/
+define('JWP6_DISABLE_FITVIDS', true);
 
 /* DO NOT CHANGE ANYTHING BELOW HERE... */
-/* Unless you know what you are doing off course ;) */
+/* Unless you know what you are doing off course ;-) */
 
 // version 5 prefix
 define("LONGTAIL_KEY", "jwplayermodule_");

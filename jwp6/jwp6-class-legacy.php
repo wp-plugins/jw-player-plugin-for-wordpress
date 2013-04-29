@@ -137,9 +137,22 @@ class JWP6_Legacy {
     }
 
     static function skin_name_from_path($path) {
-        $path = explode('skins/', $path);
-        $path = explode('.', $path[1]);
-        return $path[0];
+        $info = pathinfo($path);
+        if ( isset($info['extension']) ) {
+            if ( 'xml' == $info['extension'] ) {
+                return $path;
+            }
+            else if ( 'zip' == $info['extension'] ) {
+                $name = explode('.', $info['basename']);
+                $name = $name[0];
+            }
+        } else {
+            $name = $info['basename'];
+        }
+        foreach (JWP6_Legacy::$optionmap['skin']['options'] as $old => $new) {
+            if ( $name == $old ) return $old;
+        }
+        return NULL;
     }
 
     static function map_jwp5_config($old_config) {
@@ -156,7 +169,7 @@ class JWP6_Legacy {
                     if ( array_key_exists('option_value', $optionmap) && is_callable($optionmap['option_value']) ) {
                         $value = call_user_func($optionmap['option_value'], $value);
                     }
-                    if ( false !== $optionmap['options'] ) {
+                    else if ( false !== $optionmap['options'] ) {
                         $value = ( array_key_exists($value, $optionmap['options']) ) ? $optionmap['options'][$value] : $optionmap['default'];
                     }
                 } else {
@@ -208,7 +221,7 @@ class JWP6_Legacy {
                     if ( array_key_exists('option_value', $optionmap) && is_callable($optionmap['option_value']) ) {
                         $value = call_user_func($optionmap['option_value'], $value);
                     }
-                    if ( false !== $optionmap['options'] ) {
+                    else if ( false !== $optionmap['options'] ) {
                         $value = ( array_key_exists($value, $optionmap['options']) ) ? $optionmap['options'][$value] : $optionmap['default'];
                     }
                 }

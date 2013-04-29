@@ -128,11 +128,11 @@ class JWP6_Admin_Page {
 
     protected function render_form_row($field) {
         ?>
-        <tr valign="top">
-            <th scope="row">
+        <tr valign="top" id="<?php echo $field->name; ?>_row">
+            <th scope="row" id="<?php echo $field->name; ?>_label">
                 <?php $field->render_label(); ?>
             </th>
-            <td>
+            <td id="<?php echo $field->name; ?>_field">
                 <?php $field->render_field(); ?>
             </td>
         </tr>

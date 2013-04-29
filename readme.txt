@@ -5,7 +5,7 @@ Contributors: LongTail Video Inc.
 Tags: JW Player, Video, Flash, LongTail Video, Playlists, Audio, HTML5, iPad, iPhone, iPod, Mobile
 Requires at least: 3.0
 Tested up to: 3.5.1
-Stable tag: 2.0.5
+Stable tag: 2.1.0
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -71,8 +71,8 @@ If you cannot perform the automatic update, download the plugin and upload, or F
 
 <strong>Wordpress Plugin Issues</strong>
 
-* The fitVids javascript library that is used to make some themes responsive is not compatible with JW Player 6.
-* Version 2.0.x of this does not yet support multiple languages.
+* The fitVids javascript library that is used to make some themes responsive is not compatible with JW Player 6. With 2.1 fitVids is automatically disabled by the plugin.
+* This version of the plugin does not yet support internationalization (translations).
 
 <strong>Player Issues</strong>
 
@@ -98,6 +98,15 @@ Additionally, all the embedding, skinning and scripting functionalities of JW Pl
 3. Control almost every aspect of your player right within Wordpress.
 
 == Changelog ==
+
+= 2.1.0 =
+
+* FEATURE: Added responsive player
+* FEATURE: Added support for multiple sources and tracks via shortcode
+* ENHANCEMENT: Neutralize fitVids on pages with JW Players
+* BUG: Minimum capability for managing playlist "publish_posts"
+* BUG: Setting an external skin with the shortcode.
+* BUG: Various small fixes and optimizations.
 
 = 2.0.5 =
 
