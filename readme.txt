@@ -378,3 +378,5 @@ See <a href='http://www.longtailvideo.com/support/jw-player/29912/upgrading-word
 
 = 1.0.0 =
 * Initial release of the JW Player Plugin for WordPress
+
+
