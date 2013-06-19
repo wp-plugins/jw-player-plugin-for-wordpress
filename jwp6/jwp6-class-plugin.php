@@ -3,11 +3,11 @@
 // Utility class that holds accessible settings and methods.
 class JWP6_Plugin {
 
-    public static $player_version = '6.4';
+    public static $player_version = '6.5';
 
-    public static $cdn_http_player = 'http://p.jwpcdn.com/6/4/jwplayer.js';
+    public static $cdn_http_player = 'http://p.jwpcdn.com/6/5/jwplayer.js';
 
-    public static $cdn_https_player = 'https://ssl.p.jwpcdn.com/6/4/jwplayer.js';
+    public static $cdn_https_player = 'https://ssl.p.jwpcdn.com/6/5/jwplayer.js';
 
     public static $default_image = 'img/default-image.png';
 
@@ -80,7 +80,7 @@ class JWP6_Plugin {
             ),
             'default' => null,
             'discard_if_default' => true,
-            'licenses' => array('premium', 'ads'),
+            'licenses' => array('pro', 'premium', 'ads'),
         ),
 
         // PLAYBACK
@@ -448,13 +448,18 @@ class JWP6_Plugin {
         return NULL;
     }
 
+    // NO LONGER IN USE (get_headers is not always enabled, causes support problems.)
+    // public static function validate_empty_or_url($value) {
+    //     if ( '' === $value ) return $value;
+    //     $url = esc_url($value);
+    //     if ( get_headers($url) ) {
+    //         return $url;
+    //     }
+    //     return NULL;
+    // }
+    // Instead this dummy function
     public static function validate_empty_or_url($value) {
-        if ( '' === $value ) return $value;
-        $url = esc_url($value);
-        if ( get_headers($url) ) {
-            return $url;
-        }
-        return NULL;
+        return $value;
     }
 
     public static function shortcode($shortcode, $content, $tag) {

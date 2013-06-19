@@ -369,8 +369,9 @@ class JWP6_Admin_Page_Players extends JWP6_Admin_Page {
 
         // GOOGLE ANALYTICS & SHARING
 
-        if ( JWP6_Plugin::option_available('ga') ) {
+        $this->other_settings_fields = array();
 
+        if ( JWP6_Plugin::option_available('ga') ) {
             $ga_field = new JWP6_Form_Field_Toggle(
                 'ga',
                 array(
@@ -379,7 +380,10 @@ class JWP6_Admin_Page_Players extends JWP6_Admin_Page {
                     'label' => 'Google Analytics',
                 )
             );
+            $this->other_settings_fields['ga_field'] = $ga_field;
+        }
 
+        if ( JWP6_Plugin::option_available('sharing') ) {
             $sharing_field = new JWP6_Form_Field_Toggle(
                 'sharing',
                 array(
@@ -388,12 +392,7 @@ class JWP6_Admin_Page_Players extends JWP6_Admin_Page {
                     'label' => 'Sharing',
                 )
             );
-
-            $this->other_settings_fields = array(
-                'ga_field' => $ga_field,
-                'sharing_field' => $sharing_field,
-            );
-
+            $this->other_settings_fields['sharing_field'] = $sharing_field;
         }
 
         if ( $this->player->get('streamer') ) {
@@ -454,7 +453,7 @@ class JWP6_Admin_Page_Players extends JWP6_Admin_Page {
             );
         }
 
-        if ( JWP6_Plugin::option_available('ga') ) {
+        if ( count($this->other_settings_fields) ) {
             $this->form_fields = array_merge(
                 $this->form_fields, 
                 $this->other_settings_fields

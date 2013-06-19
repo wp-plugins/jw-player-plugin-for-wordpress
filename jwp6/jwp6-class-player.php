@@ -23,6 +23,12 @@ class JWP6_Player {
 
     protected $config = array();
 
+    private $json_replace = array(
+        '&amp;' => '&',
+        '&#038;' => '&',
+        '\/' => '/',
+    );
+
     private $defaults = array(
         'width' => array('default' => 480),
         'height' => array('default' => 270),
@@ -279,7 +285,10 @@ class JWP6_Player {
             $params['playlist'] = $playlist;
         }
 
-        $paramstring = str_replace("\\/", "/", str_replace("&amp;", "&", json_encode($params)));
+        $paramstring = json_encode($params);
+        foreach ($this->json_replace as $from => $to) { 
+            $paramstring = str_replace($from, $to, $paramstring);
+        }
 
         $embedcode = "<div class='jwplayer' id='jwplayer-{$id}'></div>";
         $embedcode .= "<script type='text/javascript'>";

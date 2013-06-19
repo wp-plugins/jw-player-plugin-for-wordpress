@@ -138,6 +138,7 @@ class JWP6_Media {
             "post_type" => 'jw_playlist',
             "post_status" => 'publish, private,draft',
             'sort_column' => 'post_title',
+            'numberposts' => 999999,
         );
         return get_posts($params);
     }
