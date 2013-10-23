@@ -13,7 +13,7 @@ The JW Player WordPress Plugin enables you to embed Flash and HTML5 audio and vi
 
 == Description ==
 
-The JW Player WordPress Plugin makes it extremely easy to deliver Flash and HTML5 video through your WordPress website. This plugin has been developed by LongTail Video, the creator of the JW Player, and allows for easy customization and embedding of Flash and HTML5 video using the JW Player in your WordPress posts. It provides support for all of the JW Player 6 configuration options, including custom watermarks, HLS/RTMP streaming and VAST/VPAID advertising.
+The JW Player WordPress Plugin makes it extremely easy to deliver Flash and HTML5 video through your WordPress website. This plugin allows for easy customization and embedding of Flash and HTML5 video using the JW Player in your WordPress posts. It provides support for all of the JW Player 6 configuration options, including custom watermarks, HLS/RTMP streaming and VAST/VPAID advertising.
 
 <strong>Key Features</strong>
 
@@ -25,7 +25,7 @@ The JW Player WordPress Plugin makes it extremely easy to deliver Flash and HTML
 * A full featured playlist manager - order your media by simply dragging the mouse.
 * A powerful shortcode system for customizations at embed time.
 
-See <a href='http://www.longtailvideo.com/jw-player/'>the JW Player product pages</a> for more info about JW Player.
+See <a href='http://www.jwplayer.com/'>the JW Player product pages</a> for more info about JW Player.
 
 <strong>Documentation</strong>
 
