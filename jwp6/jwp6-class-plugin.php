@@ -208,7 +208,7 @@ class JWP6_Plugin {
         // Sharing
 
         'sharing' => array (
-            'licenses' => array('premium', 'ads'),
+            'licenses' => array('pro', 'premium', 'ads'),
             'options' => false,
             'default' => false,
             'embedval' => '{}',
