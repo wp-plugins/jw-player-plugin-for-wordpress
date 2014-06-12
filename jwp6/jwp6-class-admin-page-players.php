@@ -34,6 +34,7 @@ class JWP6_Admin_Page_Players extends JWP6_Admin_Page {
 
     protected function process_action() {
         if ( 'delete' == $_GET['action'] ) {
+            check_admin_referer( 'delete-player_' . $_GET['player_id'] );
             $player = new JWP6_Player($_GET['player_id']);
             $player->purge();
             $this->add_message("Player {$player->get_id()} has been deleted.");
@@ -617,7 +618,7 @@ class JWP6_Admin_Page_Players extends JWP6_Admin_Page {
             <td><a href="<?php echo $player->admin_url($this, 'copy'); ?>" class="button jwp6_copy">Copy</a></td>
             <td>
                 <?php if ( $player->get_id() ): ?>
-                <a href="<?php echo $player->admin_url($this, 'delete'); ?>" class="button jwp6_delete">Delete</a>
+                <a href="<?php echo wp_nonce_url( $player->admin_url($this, 'delete'), 'delete-player_' . $player->get_id() ); ?>" class="button jwp6_delete">Delete</a>
                 <?php endif; ?>
             </td>
         </tr>
