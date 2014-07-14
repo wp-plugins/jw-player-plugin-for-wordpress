@@ -5,7 +5,7 @@ Contributors: LongTail Video Inc.
 Tags: JW Player, Video, Flash, LongTail Video, Playlists, Audio, HTML5, iPad, iPhone, iPod, Mobile
 Requires at least: 3.0
 Tested up to: 3.5.1
-Stable tag: 2.1.4
+Stable tag: 2.1.5
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -37,7 +37,7 @@ See <a href='http://www.jwplayer.com/'>the JW Player product pages</a> for more 
 
 * If you have any questions, comments, problems or suggestions please <a href="http://www.longtailvideo.com/support/forums/addons/working-with-wordpress">post on our forums</a>. We can't fix any issues you're having if we don't know they exist.
 * Please include a description of the problem, a link to your site demonstrating the issue, and the host you're using.
-* Please do not write a one star review when you encounter a problem with this plugin. <a href="http://www.longtailvideo.com/support/forums/addons/working-with-wordpress">Contact us</a> instead and we will try to help you</a>. 
+* Please do not write a one star review when you encounter a problem with this plugin. <a href="http://www.longtailvideo.com/support/forums/addons/working-with-wordpress">Contact us</a> instead and we will try to help you</a>.
 * Keep an eye on this site's <em>Changelog</em> section if you're looking for a specific bugfix of feature enhancement for the plugin.
 
 
@@ -98,6 +98,10 @@ Additionally, all the embedding, skinning and scripting functionalities of JW Pl
 3. Control almost every aspect of your player right within Wordpress.
 
 == Changelog ==
+
+= 2.1.5 =
+
+* ENHANCEMENT: Support for JW Player 6.9 (See the <a href="http://www.jwplayer.com/support/jw-player/28835/release-notes">Player elease notes</a> for more info).
 
 = 2.1.4 =
 
