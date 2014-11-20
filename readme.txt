@@ -101,15 +101,15 @@ Additionally, all the embedding, skinning and scripting functionalities of JW Pl
 
 = 2.1.7 =
 
-* HOTFIX: Fix for JW Player plugin custom short that broke with Wordpress 4.0.1 releaes
+* HOTFIX: Fix for JW Player plugin custom short that broke with Wordpress 4.0.1 release
 
 = 2.1.6 =
 
-* ENHANCEMENT: Support for JW Player 6.10 (See the <a href="http://www.jwplayer.com/support/jw-player/28835/release-notes">Player elease notes</a> for more info).
+* ENHANCEMENT: Support for JW Player 6.10 (See the <a href="http://www.jwplayer.com/support/jw-player/28835/release-notes">Player release notes</a> for more info).
 
 = 2.1.5 =
 
-* ENHANCEMENT: Support for JW Player 6.9 (See the <a href="http://www.jwplayer.com/support/jw-player/28835/release-notes">Player elease notes</a> for more info).
+* ENHANCEMENT: Support for JW Player 6.9 (See the <a href="http://www.jwplayer.com/support/jw-player/28835/release-notes">Player release notes</a> for more info).
 
 = 2.1.4 =
 
@@ -121,7 +121,7 @@ Additionally, all the embedding, skinning and scripting functionalities of JW Pl
 
 = 2.1.2 =
 
-* ENHANCEMENT: Support for JW Player 6.8 (See the <a href="http://www.jwplayer.com/support/jw-player/28835/release-notes">Player elease notes</a> for more info).
+* ENHANCEMENT: Support for JW Player 6.8 (See the <a href="http://www.jwplayer.com/support/jw-player/28835/release-notes">Player release notes</a> for more info).
 
 = 2.1.1 =
 
