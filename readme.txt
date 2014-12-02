@@ -99,6 +99,11 @@ Additionally, all the embedding, skinning and scripting functionalities of JW Pl
 
 == Changelog ==
 
+= 2.1.9 =
+
+* ENHANCEMENT: Support for JW Player 6.11 (See the <a href="http://www.jwplayer.com/support/jw-player/28835/release-notes">Player release notes</a> for more info).
+* ENHANCEMENT: New Admin menu logo resembles JW Player logo.
+
 = 2.1.8 =
 
 * HOTFIX: Fix for JW Player plugin custom short codes with multiple sources.
