@@ -4,7 +4,7 @@
 Plugin Name: JW Player 6 Plugin for Wordpress
 Plugin URI: http://www.longtailvideo.com/
 Description: Embed a JW Player 6 for HTML5 (or Flash) into your WordPress articles. <strong>Please note</strong>: The part of this plugin that works with JW Player 6 is new and might not be as polished as the part for player 5. If you find bugs, please report them in <a href="http://www.longtailvideo.com/support/forums/addons/working-with-wordpress">the Wordpress section of our forum</a>.
-Version: 2.1.9
+Version: 2.1.10
 Author: LongTail Video Inc.
 Author URI: http://www.longtailvideo.com/
 

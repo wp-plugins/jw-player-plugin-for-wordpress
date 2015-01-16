@@ -238,7 +238,7 @@ class JWP6_Media {
      * @param <type> $id The id of the post.
      * @return string The modified URL.
      */
-    function url_attachment_filter($url, $id) {
+    public static function url_attachment_filter($url, $id) {
         preg_match_all("/http:\/\/|rtmp:\/\//", $url, $matches);
         if (count($matches[0]) > 1) {
             $upload_dir = wp_upload_dir();
