@@ -5,7 +5,7 @@ Contributors: LongTail Video Inc.
 Tags: JW Player, Video, Flash, LongTail Video, Playlists, Audio, HTML5, iPad, iPhone, iPod, Mobile
 Requires at least: 3.0
 Tested up to: 3.5.1
-Stable tag: 2.1.10
+Stable tag: 2.1.11
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -85,7 +85,7 @@ See the <a href='http://www.longtailvideo.com/support/jw-player/31560/jw-player-
 1. Deep Media Manager integration, including the ability to set poster thumbnails.
 1. Support for External Media in the Manager, including Youtube, RTMP and HLS streams.
 1. Create, manage and publish playlists of multiple audio or video files.
-1. Create and mange multiple player templates, containing JW Player layout and playback settings. 
+1. Create and mange multiple player templates, containing JW Player layout and playback settings.
 1. Add custom configuration options to the JW Player Short Codes.
 1. Settings for inserting a JW Player License Key, changing Short Code behaviour and more.
 
@@ -98,6 +98,10 @@ Additionally, all the embedding, skinning and scripting functionalities of JW Pl
 3. Control almost every aspect of your player right within Wordpress.
 
 == Changelog ==
+
+= 2.1.11 =
+
+* ENHANCEMENT: Support for JW Player 6.12 (See the <a href="http://support.jwplayer.com/customer/portal/articles/1403726-what-s-new-in-jw-player-6-x-#version612">Player release notes</a> for more info).
 
 = 2.1.10 =
 
@@ -318,7 +322,7 @@ See <a href='http://www.longtailvideo.com/support/jw-player/29912/upgrading-word
 * ENHANCEMENT: Use WordPress' built in ssl detection
 * BUG: Adjusted category/archive page behavior.  Checkbox now controls whether the jwplayer tag filter runs on the_excerpt() or the_content().
 
-= 1.4.1 = 
+= 1.4.1 =
 
 * BUG: Tweaked handling of https
 * BUG: Fixed a warning message

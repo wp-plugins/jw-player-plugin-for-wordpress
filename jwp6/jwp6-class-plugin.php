@@ -3,11 +3,11 @@
 // Utility class that holds accessible settings and methods.
 class JWP6_Plugin {
 
-    public static $player_version = '6.11';
+    public static $player_version = '6.12';
 
-    public static $cdn_http_player = 'http://p.jwpcdn.com/6/11/jwplayer.js';
+    public static $cdn_http_player = 'http://p.jwpcdn.com/6/12/jwplayer.js';
 
-    public static $cdn_https_player = 'https://ssl.p.jwpcdn.com/6/11/jwplayer.js';
+    public static $cdn_https_player = 'https://ssl.p.jwpcdn.com/6/12/jwplayer.js';
 
     public static $default_image = 'img/default-image.png';
 
