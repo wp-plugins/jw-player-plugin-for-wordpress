@@ -117,12 +117,20 @@ class JWP6_Admin_Page_Licensing extends JWP6_Admin_Page {
         return ( preg_match('/^\S*$/', $value) ) ? $value : NULL;
     }
 
+    public function process_post_data($post_data) {
+        if (! wp_verify_nonce($_REQUEST['jwp6_nonce'], $this->page_slug)) {
+            wp_nonce_ays($this->page_slug);
+        }
+        parent::process_post_data($post_data, false);
+    }
+
     public function render() {
         $this->render_page_start('License and Location');
         $this->render_all_messages();
         ?>
         <form method="post" action="<?php echo $this->page_url(); ?>">
-            <?php settings_fields(JWP6 . 'menu_licensing'); ?>
+            <?php //settings_fields(JWP6 . 'menu_licensing'); ?>
+            <input type="hidden" name="jwp6_nonce" value="<?php echo wp_create_nonce($this->page_slug); ?>" />
 
             <h3>License Settings</h3>
 

@@ -43,6 +43,9 @@ class JWP6_Admin_Page_Players extends JWP6_Admin_Page {
     }
 
     public function process_post_data($post_data) {
+        if (! wp_verify_nonce($_REQUEST['jwp6_nonce'], $this->page_slug . $_REQUEST['player_id'])) {
+            wp_nonce_ays($this->page_slug);
+        }
         parent::process_post_data($post_data, false);
         if ( isset($_GET['player_id']) ) {
             return $this->process_edit_post_data($post_data);
@@ -490,7 +493,8 @@ class JWP6_Admin_Page_Players extends JWP6_Admin_Page {
         ?>
 
         <form method="post" action="<?php echo $this->page_url(array('noheader' => 'true', 'player_id' => $this->player->get_id())) ?>">
-            <?php settings_fields(JWP6 . 'menu'); ?>
+            <?php //settings_fields(JWP6 . 'menu'); ?>
+            <input type="hidden" name="jwp6_nonce" value="<?php echo wp_create_nonce($this->page_slug . $this->player->get_id()); ?>" />
 
             <h3>Basic Settings</h3>
             <table class="form-table">
@@ -555,8 +559,9 @@ class JWP6_Admin_Page_Players extends JWP6_Admin_Page {
         </table>
 
         <form method="post" id="add_player_form" name="add_player_form" action="<?php echo $this->page_url(array('noheader'=>'true')) ?>">
-            <?php settings_fields(JWP6 . 'menu'); ?>
+            <?php //settings_fields(JWP6 . 'menu'); ?>
             <p class="submit">
+                <input type="hidden" name="jwp6_nonce" value="<?php echo wp_create_nonce($this->page_slug); ?>" />
                 <input type="hidden" name="noheader" value="true" />
                 <input type="hidden" name="copy_from_player" id="copy_from_player" value="" />
                 <input type="submit" name="submit_form" id="submit_form" class="button-primary" value="Create a new player"  />
