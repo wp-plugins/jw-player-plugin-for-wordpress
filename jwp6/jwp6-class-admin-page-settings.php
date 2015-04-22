@@ -121,7 +121,7 @@ class JWP6_Admin_Page_Licensing extends JWP6_Admin_Page {
         if (! wp_verify_nonce($_REQUEST['jwp6_nonce'], $this->page_slug)) {
             wp_nonce_ays($this->page_slug);
         }
-        parent::process_post_data($post_data, false);
+        parent::process_post_data($post_data, true);
     }
 
     public function render() {
