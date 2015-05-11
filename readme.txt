@@ -4,8 +4,8 @@
 Contributors: LongTail Video Inc.
 Tags: JW Player, Video, Flash, LongTail Video, Playlists, Audio, HTML5, iPad, iPhone, iPod, Mobile
 Requires at least: 3.0
-Tested up to: 3.5.1
-Stable tag: 2.1.13
+Tested up to: 4.2.2
+Stable tag: 2.1.14
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -98,6 +98,10 @@ Additionally, all the embedding, skinning and scripting functionalities of JW Pl
 3. Control almost every aspect of your player right within Wordpress.
 
 == Changelog ==
+
+= 2.1.14 =
+
+* BUG: Updated the readme to mention support for the latest WP version.
 
 = 2.1.13 =
 
