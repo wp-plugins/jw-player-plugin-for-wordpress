@@ -2,6 +2,10 @@
 
 define('JWP6_PL', JWP6 . 'playlists_');
 
+if (count($_POST) > 0 && ! wp_verify_nonce($_POST['jwp6_nonce'], JWP6_PL)) {
+  wp_nonce_ays(JWP6_PL);
+}
+
 $p_items = array();
 $playlists = jwp6_pl_get_playlists();
 $form_action_url = admin_url('upload.php?page=' . JWP6 . 'playlists');
@@ -31,7 +35,7 @@ if (!isset($current_playlist)) {
   if (isset($_POST[JWP6_PL . "playlist_select"])) {
     $current_playlist = $_POST[JWP6_PL . "playlist_select"];
   } else if (isset($_GET["playlist"])) {
-    $current_playlist = $_GET["playlist"];
+    $current_playlist = intval($_GET["playlist"]);
   } else if (!empty($playlists)) {
     $current_playlist = $playlists[0]->ID;
   } else {
@@ -53,11 +57,17 @@ $file_order = "asc";
 $file_class = "sortable asc";
 $author_order = "asc";
 $author_class = "sortable asc";
-$date_order = "asc";
-$date_class = "sortable asc";
+$date_order = "desc";
+$date_class = "sortable desc";
 $order_by = "date";
 $order = "desc";
-if (isset($_GET["orderby"]) && isset($_GET["order"])) {
+$order_by_options = array("title", "date");
+$order_options = array("desc", "asc");
+if (
+    (isset($_GET["orderby"]) && in_array($_GET["orderby"], $order_by_options))
+    &&
+    (isset($_GET["order"]) && in_array($_GET['order'], $order_options))
+  ) {
   $order_by = $_GET["orderby"];
   $order = $_GET["order"];
   if ($order_by == "title") {
@@ -70,14 +80,11 @@ if (isset($_GET["orderby"]) && isset($_GET["order"])) {
     $date_order = $order == "desc" ? "asc" : "desc";
     $date_class = "sorted $order";
   }
-} else {
-  $date_order = "desc";
-  $date_class = "sortable desc";
 }
 
 $playlist_items = jwp6_get_playlist_items($p_items);
-$paged = isset($_GET['paged']) ? $_GET['paged'] : 1;
-$search = isset($_POST["s"]) ? $_POST["s"] : "";
+$paged = isset($_GET['paged']) ? intval($_GET['paged']) : 1;
+$search = (isset($_POST["s"])) ? $_POST["s"] : "";
 $media_items = jwp6_get_media_items($paged, $order_by, $order, $search, $p_items);
 if ($paged > 1 && !$media_items->have_posts()) {
   $paged = 1;
@@ -278,6 +285,7 @@ function jwp6_pl_get_playlists() {
 
   <form action="<?php echo $form_action_url; ?>" method="post">
     <div>
+      <input type="hidden" name="jwp6_nonce" value="<?php echo wp_create_nonce(JWP6_PL); ?>" />
       <div style="width: 890px;">
         <p class="ml-submit">
           <label for="<?php echo JWP6_PL . "playlist_name"; ?>"><?php _e("New Playlist:"); ?></label>

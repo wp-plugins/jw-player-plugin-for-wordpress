@@ -24,10 +24,10 @@ class JWP6_Media {
 
     public static function admin_menu() {
         add_media_page(
-            "JW Player Playlist Manager",    //$page_title
-            "JW Player Playlists",                     //$menu_title
-            "publish_posts",                          //$capability
-            JWP6 . "playlists",              //$menu_slug
+            "JW Player Playlist Manager",           //$page_title
+            "JW Player Playlists",                  //$menu_title
+            "publish_posts",                        //$capability
+            JWP6 . "playlists",                     //$menu_slug
             array('JWP6_Media', 'playlist_manager') //$function
         );
     }
